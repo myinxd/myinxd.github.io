@@ -11,12 +11,12 @@
 <meta property="og:url" content="http://blog.mazhixian.me/2017/08/23/Build-your-blog/index.html">
 <meta property="og:site_name" content="Canal">
 <meta property="og:description" content="Build your own blog with github and hexo (利用hexo搭建博客)在师兄的怂恿下，买了域名，搭了博客，开博第一篇就用来记录这个过程吧。写之前立个flag，下一步我要开自己的公众号[手动坏笑]。搭建过程主要分为四步：  注册github帐号，建立username.github.io仓库; 配置基于nodejs和hexo的环境; 生成blog环境并部署到gith">
-<meta property="og:image" content="https://images2015.cnblogs.com/blog/984702/201702/984702-20170224154921632-571213502.png">
-<meta property="og:updated_time" content="2017-08-23T16:06:58.438Z">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-170823.png">
+<meta property="og:updated_time" content="2017-08-23T16:21:13.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Build-your-blog">
 <meta name="twitter:description" content="Build your own blog with github and hexo (利用hexo搭建博客)在师兄的怂恿下，买了域名，搭了博客，开博第一篇就用来记录这个过程吧。写之前立个flag，下一步我要开自己的公众号[手动坏笑]。搭建过程主要分为四步：  注册github帐号，建立username.github.io仓库; 配置基于nodejs和hexo的环境; 生成blog环境并部署到gith">
-<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/984702/201702/984702-20170224154921632-571213502.png">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-170823.png">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -110,32 +110,14 @@
 </li>
 </ul>
 <p>最后，可以通过输入<code>node -v</code>查看nodejs的版本，目前最新的稳定版是<code>8.4.0</code>.</p>
-<h5 id="Step2-安装hexo"><a href="#Step2-安装hexo" class="headerlink" title="Step2: 安装hexo"></a>Step2: 安装hexo</h5><p>下面配置<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>, 因为刚接触前端的开发，还不太会用JavaScript，这里不详细介绍hexo，后面我会争取学会JS. 主要的安装过程如下，依然是命令行。</p>
-<ul>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm config <span class="built_in">set</span> user 0</div><div class="line">$ npm config <span class="built_in">set</span> unsafe-perm <span class="literal">true</span></div><div class="line">$ sudo npm install -g hexo-cli</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>注意前两句指令是用来配置npm的安全许可的，如果没有配置，安装过程中会提示<code>permision denied</code>的问题，无论是否使用<code>root</code>权限安装，这个坑的解决方法参考了<a href="https://www.cnblogs.com/jiangzilong/p/6438748.html" target="_blank" rel="external">linux系统下使用hexo搭建个人博客</a>。测试是否成功，可以简单的用<code>nhexo -v</code>来看版本情况，显示结果类似如下情形，</p>
-<ul>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">hexo-cli: 1.0.3</div><div class="line">os: Linux 4.8.0-59-generic linux x64</div><div class="line">http_parser: 2.7.0</div><div class="line">node: 8.4.0</div><div class="line">v8: 6.0.286.52</div><div class="line">uv: 1.13.1</div><div class="line">zlib: 1.2.11</div><div class="line">ares: 1.10.1-DEV</div><div class="line">modules: 57</div><div class="line">nghttp2: 1.22.0</div><div class="line">openssl: 1.0.2l</div><div class="line">icu: 59.1</div><div class="line">unicode: 9.0</div><div class="line">cldr: 31.0.1</div><div class="line">tz: 2017b</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="生成blog的配置文件并部署到github"><a href="#生成blog的配置文件并部署到github" class="headerlink" title="生成blog的配置文件并部署到github"></a>生成blog的配置文件并部署到github</h4><p>搭建好nodejs+hexo环境以后，便可以生成blog的配置文件，并在本地进行预览，主要步骤如下。</p>
-<ul>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> user.github.io</div><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo s</div></pre></td></tr></table></figure>
-</li>
-</ul>
+<h5 id="Step2-安装hexo"><a href="#Step2-安装hexo" class="headerlink" title="Step2: 安装hexo"></a>Step2: 安装hexo</h5><p>下面配置<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>, 因为刚接触前端的开发，还不太会用JavaScript，这里不详细介绍hexo，后面我会争取学会JS. 主要的安装过程如下，依然是命令行。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm config <span class="built_in">set</span> user 0</div><div class="line">$ npm config <span class="built_in">set</span> unsafe-perm <span class="literal">true</span></div><div class="line">$ sudo npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
+<p>注意前两句指令是用来配置npm的安全许可的，如果没有配置，安装过程中会提示<code>permision denied</code>的问题，无论是否使用<code>root</code>权限安装，这个坑的解决方法参考了<a href="https://www.cnblogs.com/jiangzilong/p/6438748.html" target="_blank" rel="external">linux系统下使用hexo搭建个人博客</a>。测试是否成功，可以简单的用<code>nhexo -v</code>来看版本情况，显示结果类似如下情形，<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">hexo-cli: 1.0.3</div><div class="line">os: Linux 4.8.0-59-generic linux x64</div><div class="line">http_parser: 2.7.0</div><div class="line">node: 8.4.0</div><div class="line">v8: 6.0.286.52</div><div class="line">uv: 1.13.1</div><div class="line">zlib: 1.2.11</div><div class="line">ares: 1.10.1-DEV</div><div class="line">modules: 57</div><div class="line">nghttp2: 1.22.0</div><div class="line">openssl: 1.0.2l</div><div class="line">icu: 59.1</div><div class="line">unicode: 9.0</div><div class="line">cldr: 31.0.1</div><div class="line">tz: 2017b</div></pre></td></tr></table></figure></p>
+<h4 id="生成blog的配置文件并部署到github"><a href="#生成blog的配置文件并部署到github" class="headerlink" title="生成blog的配置文件并部署到github"></a>生成blog的配置文件并部署到github</h4><p>搭建好nodejs+hexo环境以后，便可以生成blog的配置文件，并在本地进行预览，主要步骤如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> user.github.io</div><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
 <p>其中，第一步是进入<code>clone</code>到本地的仓库中，注意该文件夹应该为空，否则无法初始化。如果不为空，例如包含有README.md等文件，可以考虑在新建的空文件夹中实例hexo环境，再复制文件到仓库中。第二、三步是实例一个hexo环境。第四步是在本地启动网页环境，默认的本地地址为<code>localhost:4000</code>. 进入浏览器，在地址栏输入该地址即可预览页面，类似于下图，</p>
-<p><img src="https://images2015.cnblogs.com/blog/984702/201702/984702-20170224154921632-571213502.png" alt="hexo preview"></p>
+<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170823.png" alt="hexo preview"></p>
 <p>预览成功以后，便可以部署网站到github中，其原理是在本地编译好网页环境，然后<code>push</code>到github服务器上。流程如下，</p>
-<h5 id="Step1-修改-config-yml文件"><a href="#Step1-修改-config-yml文件" class="headerlink" title="Step1: 修改_config.yml文件"></a>Step1: 修改<code>_config.yml</code>文件</h5><ul>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    <span class="built_in">type</span>: git</div><div class="line">    repo: https://github.com/username/username.github.io</div><div class="line">    branch: master</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h5 id="Step2-部署"><a href="#Step2-部署" class="headerlink" title="Step2: 部署"></a>Step2: 部署</h5><ul>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div><div class="line">$ hexo generate</div><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-</li>
-</ul>
+<h5 id="Step1-修改-config-yml文件"><a href="#Step1-修改-config-yml文件" class="headerlink" title="Step1: 修改_config.yml文件"></a>Step1: 修改<code>_config.yml</code>文件</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    <span class="built_in">type</span>: git</div><div class="line">    repo: https://github.com/username/username.github.io</div><div class="line">    branch: master</div></pre></td></tr></table></figure>
+<h5 id="Step2-部署"><a href="#Step2-部署" class="headerlink" title="Step2: 部署"></a>Step2: 部署</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div><div class="line">$ hexo generate</div><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
 <p><code>deploy</code>命令将修改和重新编译的网页环境进行<code>commit</code>并<code>push</code>到github服务器中，后面在浏览器输入<code>https://github.com/username/username.github.io</code>即可进入网页，如果没有编译错误的话。</p>
 <h4 id="申请域名"><a href="#申请域名" class="headerlink" title="申请域名"></a>申请域名</h4><p>最后我们可以给自己的博客申请域名，推荐<a href="https://www.gandi.net" target="_blank" rel="external">gandi</a>和<a href="https://www.namecheap.com" target="_blank" rel="external">namecheap</a>，可以自己搜索域名，会显示该域名是否可用，第一年的价格是多少。例如，<strong>bazhaoyu</strong>和<strong>clytze</strong>对应的多数域名都还在，当然我自己名字对应的域名也有很多。我是在gandi注册的域名，流程比较简单，注册帐号，选择域名，付费即可。通过对比，gandi相对于namecheap的租金更低，并且提供两个免费的邮箱帐号。重点要解决的是域名和<code>github.io</code>地址的映射，步骤如下。</p>
 <ol>
@@ -153,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj6p7r0qb0001dkr3krnwpvqz" class="article-share-link">Share</a>
+      <a data-url="http://blog.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj6p888w60000wyr31qfgvpwp" class="article-share-link">Share</a>
       
       
     </footer>
