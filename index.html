@@ -68,6 +68,77 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-matplotlib-AxesGrid" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/24/matplotlib-AxesGrid/" class="article-date">
+  <time datetime="2017-08-24T09:31:16.000Z" itemprop="datePublished">2017-08-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/24/matplotlib-AxesGrid/">matplotlib AxesGrid</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天花了一天的时间帮同学做图，又体验了一遍<code>matplotlib</code>的复杂！之所以用AxesGrid,是因为<a href="https://yt-project.org/" target="_blank" rel="external">yt</a>的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理<a href="http://wwwmpa.mpa-garching.mpg.de/gadget/" target="_blank" rel="external">Gadget</a>仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。</p>
+<p>主要分三个部分来说</p>
+<ol>
+<li>AxesGrid的参数及使用方法</li>
+<li>Axes类的参数调整，作出更好看的图</li>
+<li>遇到<strong>segmentation fault</strong>时的解决思路</li>
+</ol>
+<h4 id="AxesGrid的参数及使用方法"><a href="#AxesGrid的参数及使用方法" class="headerlink" title="AxesGrid的参数及使用方法"></a>AxesGrid的参数及使用方法</h4><p>AxesGrid是<a href="https://www.matplotlib.org" target="_blank" rel="external">matplotlib</a>的<a href="http://matplotlib.org/mpl_toolkits/" target="_blank" rel="external">mapping toolkits</a>的一个类，用于生成网格化的figure，类似于<a href="http://matplotlib.org/api/pyplot_api.html?highlight=subplot#matplotlib.pyplot.subplot" target="_blank" rel="external">subplot</a>, 但相对于后者处理起来更容易。</p>
+<p>AxesGrid的参数主要有<code>rect</code>,<code>nrows_ncols</code>,<code>axes_pad</code>,以及<strong>colorbar</strong>相关的<code>cbar*</code>参数，具体的参数定义可以参见它的官方文档，这里我想介绍一下<code>rect</code>，<code>axes_pad</code>和<code>cbar*</code>参数。</p>
+<ul>
+<li>rect: 定义了AxesGrid在fig中的位置，是一个四维的列表，对应[left,bottom,width,height]</li>
+<li>axes_pad: 控制相邻两个axes的间隔，单位是inch</li>
+<li>cbar_location: colorbar 的位置，可以放置在上、下、左和右这四个位置</li>
+<li>cbar_size: 提供的参数为百分制的字符串，用于设定colorbar的宽度</li>
+<li>cbar_mode: colorbar的模式，可以为“each”，“single”或”edge”，通常会选择“single”</li>
+</ul>
+<p>AxesGrid的实例化和使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> mpl_toolkits.axes_grid1 <span class="keyword">import</span> AxesGrid</div><div class="line">fig = plt.figure()</div><div class="line">grid = AxesGrid(fig=fig, rect=(<span class="number">0.075</span>,<span class="number">0.075</span>,<span class="number">0.85</span>,<span class="number">0.85</span>),</div><div class="line">                nrows_ncols = (<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">                axes_pad = <span class="number">0.05</span>,</div><div class="line">                label_mode = <span class="string">"L"</span>,</div><div class="line">                share_all = <span class="keyword">True</span>,</div><div class="line">                cbar_location=<span class="string">"right"</span>,</div><div class="line">                cbar_mode=<span class="string">"single"</span>,</div><div class="line">                cbar_size=<span class="string">"3%"</span>,</div><div class="line">                cbar_pad=<span class="string">"0%"</span>)</div></pre></td></tr></table></figure></p>
+<p>做图时采用<code>grid[idx].axes</code>的方式获得axes对象，并进行相应的参数设置。以2x2的网格为例，下图给出了效果图 (图片来自yt的<a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">官方文档</a>)<br><img src="http://yt-project.org/doc/_images/multiplot_2x2_time_series__multiplot_2x2_time_series.png" alt="yt Time Series Multiplanel"></p>
+<h4 id="Axes类的参数调整，作出更好看的图"><a href="#Axes类的参数调整，作出更好看的图" class="headerlink" title="Axes类的参数调整，作出更好看的图"></a>Axes类的参数调整，作出更好看的图</h4><p>这里的参数调整主要涉及<code>grid[idx].axes</code>对象的参数调整，包括调整字体、大小以及坐标轴等。下面给出一个简要的调整样例及注释，后面我会针对yt的样例代码中的<code>p._setup_plots()</code>方法以及它隐藏的坑进行说明。</p>
+<ul>
+<li>参数设定样例<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">grid[i].axes.text(x,y,s,fontdict) <span class="comment"># 在图中添加文字</span></div><div class="line">grid[i].scatter(x,y,s=<span class="number">100</span>, c=<span class="string">'b'</span>, marker=<span class="string">'x'</span>) <span class="comment"># 在图中添加标记</span></div><div class="line"><span class="comment"># 手动设定坐标轴的范围</span></div><div class="line">grid[i].set_xticks([<span class="number">-0.3</span>,<span class="number">-0.2</span>,<span class="number">-0.1</span>,<span class="number">0.0</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>])</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>通过<code>set_xticks</code>方法可以避免相邻网格图的坐标轴标记重叠，影响视觉效果，后面我会添加图例。</p>
+<ul>
+<li><code>p._setup_plots()</code>方法<br>这个方法在<code>yt.visualization.plot_window</code>类定义，主要作用是在指定的axes上做图。每次执行这个方法，就会重新做图。但该方法会导致一个问题，如果我们在做图过程中要添加文字(annotate_text)和标记，那么重新执行<code>p._setup_plot</code>后，这些additional staff会消失。所以后来我采用了直接在AxesGrid的axes对象中利用<code>axes.text</code>进行添加。具体的原因我还没有完全理解，后面争取补上。</li>
+</ul>
+<h4 id="遇到segmentation-fault问题的解决思路"><a href="#遇到segmentation-fault问题的解决思路" class="headerlink" title="遇到segmentation fault问题的解决思路"></a>遇到segmentation fault问题的解决思路</h4><p>网上对”python segmentation fault”错误的解答众说纷纭，有的说法是“<a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">因为python里的C扩展导致(访问了非法内存区域)</a>”,解决方法是<code>sys.setrecursionlimit(100000)</code>，避免内存的越界访问。</p>
+<p>但是在代码里加了这行语句以后并没有解决问题，后来发现报错出现在执行<code>fig=plot.figure()</code>语句，师兄采用了最简单粗暴的方法，更新matploblib,解决了问题。所以这里记录一下这个解决思路，还是值得借鉴的，虽然没什么科学含量。。。</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">Time Series Multipanel of yt</a></li>
+<li><a href="http://matplotlib.org/mpl_toolkits/axes_grid/api/axes_grid_api.html" target="_blank" rel="external">mpl_toolkits.axes_grid.axes_grid help</a></li>
+<li><a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">Python 脚本运行时Segmentation fault (core dumped)</a></li>
+</ul>
+<h4 id="Github-repo-gastrack"><a href="#Github-repo-gastrack" class="headerlink" title="Github repo. gastrack"></a>Github repo. gastrack</h4><p>这个项目的github repo. <a href="https://github.com/myinxd/gastrack" target="_blank" rel="external">gastrack</a>. 断断续续写了很久，每次有需求了会修改，但版本控制还是没有做得很好。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" data-id="cj6qc5i5h00019j67bdolru57" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Build-your-blog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/08/23/Build-your-blog/" class="article-date">
@@ -113,7 +184,7 @@
 <p>注意前两句指令是用来配置npm的安全许可的，如果没有配置，安装过程中会提示<code>permision denied</code>的问题，无论是否使用<code>root</code>权限安装，这个坑的解决方法参考了<a href="https://www.cnblogs.com/jiangzilong/p/6438748.html" target="_blank" rel="external">linux系统下使用hexo搭建个人博客</a>。测试是否成功，可以简单的用<code>nhexo -v</code>来看版本情况，显示结果类似如下情形，<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">hexo-cli: 1.0.3</div><div class="line">os: Linux 4.8.0-59-generic linux x64</div><div class="line">http_parser: 2.7.0</div><div class="line">node: 8.4.0</div><div class="line">v8: 6.0.286.52</div><div class="line">uv: 1.13.1</div><div class="line">zlib: 1.2.11</div><div class="line">ares: 1.10.1-DEV</div><div class="line">modules: 57</div><div class="line">nghttp2: 1.22.0</div><div class="line">openssl: 1.0.2l</div><div class="line">icu: 59.1</div><div class="line">unicode: 9.0</div><div class="line">cldr: 31.0.1</div><div class="line">tz: 2017b</div></pre></td></tr></table></figure></p>
 <h4 id="生成blog的配置文件并部署到github"><a href="#生成blog的配置文件并部署到github" class="headerlink" title="生成blog的配置文件并部署到github"></a>生成blog的配置文件并部署到github</h4><p>搭建好nodejs+hexo环境以后，便可以生成blog的配置文件，并在本地进行预览，主要步骤如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> user.github.io</div><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
 <p>其中，第一步是进入<code>clone</code>到本地的仓库中，注意该文件夹应该为空，否则无法初始化。如果不为空，例如包含有README.md等文件，可以考虑在新建的空文件夹中实例hexo环境，再复制文件到仓库中。第二、三步是实例一个hexo环境。第四步是在本地启动网页环境，默认的本地地址为<code>localhost:4000</code>. 进入浏览器，在地址栏输入该地址即可预览页面，类似于下图，</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170823.png" alt="hexo preview"></p>
+<p><img src="https://raw.githubusercontent.com/myinxd/canal-images/master/images/blog-170823.png" alt="hexo preview"></p>
 <p>预览成功以后，便可以部署网站到github中，其原理是在本地编译好网页环境，然后<code>push</code>到github服务器上。流程如下，</p>
 <h5 id="Step1-修改-config-yml文件"><a href="#Step1-修改-config-yml文件" class="headerlink" title="Step1: 修改_config.yml文件"></a>Step1: 修改<code>_config.yml</code>文件</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    <span class="built_in">type</span>: git</div><div class="line">    repo: https://github.com/username/username.github.io</div><div class="line">    branch: master</div></pre></td></tr></table></figure>
 <h5 id="Step2-部署"><a href="#Step2-部署" class="headerlink" title="Step2: 部署"></a>Step2: 部署</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div><div class="line">$ hexo generate</div><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
@@ -134,52 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj6p888w60000wyr31qfgvpwp" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/23/hello-world/" class="article-date">
-  <time datetime="2017-08-23T14:22:01.075Z" itemprop="datePublished">2017-08-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/23/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.mazhixian.me/2017/08/23/hello-world/" data-id="cj6p888w90001wyr3okbagg4f" class="article-share-link">Share</a>
+      <a data-url="http://blog.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj6qc5i5c00009j67pn4vvq6g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -219,11 +245,11 @@
       <ul>
         
           <li>
-            <a href="/2017/08/23/Build-your-blog/">Build-your-blog</a>
+            <a href="/2017/08/24/matplotlib-AxesGrid/">matplotlib AxesGrid</a>
           </li>
         
           <li>
-            <a href="/2017/08/23/hello-world/">Hello World</a>
+            <a href="/2017/08/23/Build-your-blog/">Build-your-blog</a>
           </li>
         
       </ul>
