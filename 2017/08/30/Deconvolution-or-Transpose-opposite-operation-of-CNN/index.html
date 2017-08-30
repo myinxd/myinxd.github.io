@@ -3,17 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Archives | Canal</title>
+  <title>Deconvolution or Transpose: opposite operation of CNN | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Valar morghulis, valar dohaeris.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Canal">
-<meta property="og:url" content="http://blog.mazhixian.me/archives/index.html">
+  <meta name="description" content="写之前吐个槽，因为昨晚开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，今天想聊聊反向卷积神经网络，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会。先挖个坑，等明天把程序写出来可能会写得更有调理一些。 最近用过的开源深度学习框架有Theano/Lasagne和 TensorFlow，其中前者更容易上手，但后者速度快，而且已">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deconvolution or Transpose: opposite operation of CNN">
+<meta property="og:url" content="http://blog.mazhixian.me/2017/08/30/Deconvolution-or-Transpose-opposite-operation-of-CNN/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:description" content="写之前吐个槽，因为昨晚开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，今天想聊聊反向卷积神经网络，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会。先挖个坑，等明天把程序写出来可能会写得更有调理一些。 最近用过的开源深度学习框架有Theano/Lasagne和 TensorFlow，其中前者更容易上手，但后者速度快，而且已">
+<meta property="og:updated_time" content="2017-08-30T14:10:02.157Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Canal">
-<meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
+<meta name="twitter:title" content="Deconvolution or Transpose: opposite operation of CNN">
+<meta name="twitter:description" content="写之前吐个槽，因为昨晚开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，今天想聊聊反向卷积神经网络，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会。先挖个坑，等明天把程序写出来可能会写得更有调理一些。 最近用过的开源深度学习框架有Theano/Lasagne和 TensorFlow，其中前者更容易上手，但后者速度快，而且已">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -66,134 +68,56 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/30/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="archive-article-date">
-  <time datetime="2017-08-30T13:39:45.000Z" itemprop="datePublished">Aug 30</time>
+        <section id="main"><article id="post-Deconvolution-or-Transpose-opposite-operation-of-CNN" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/30/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="article-date">
+  <time datetime="2017-08-30T13:39:45.000Z" itemprop="datePublished">2017-08-30</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/30/Deconvolution-or-Transpose-opposite-operation-of-CNN/">Deconvolution or Transpose: opposite operation of CNN</a>
+    <h1 class="article-title" itemprop="name">
+      Deconvolution or Transpose: opposite operation of CNN
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/29/我们去拍飞机吧/" class="archive-article-date">
-  <time datetime="2017-08-29T04:11:35.000Z" itemprop="datePublished">Aug 29</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/29/我们去拍飞机吧/">我们去拍飞机吧</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/28/Change-your-iphone-s-ringtone/" class="archive-article-date">
-  <time datetime="2017-08-28T15:30:41.000Z" itemprop="datePublished">Aug 28</time>
-</a>
+        <p>写之前吐个槽，因为昨晚开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，今天想聊聊<strong>反向卷积神经网络</strong>，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会。先挖个坑，等明天把程序写出来可能会写得更有调理一些。</p>
+<p>最近用过的开源深度学习框架有<a href="http://www.deeplearning.net/software/theano/" target="_blank" rel="external">Theano</a>/<a href="https://lasagne.readthedocs.io/en/latest/index.html" target="_blank" rel="external">Lasagne</a>和 <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>，其中前者更容易上手，但后者速度快，而且已经成为主流框架，更新也很频繁。</p>
+<script type="math/tex; mode=display">
+o = i - k + 1</script>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/28/Change-your-iphone-s-ringtone/">Change your iphone&#39;s ringtone</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/27/Has-your-new-iphone-been-activated/" class="archive-article-date">
-  <time datetime="2017-08-27T00:26:22.000Z" itemprop="datePublished">Aug 27</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.mazhixian.me/2017/08/30/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj6z3xuao00038p6738zidrvt" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/27/Has-your-new-iphone-been-activated/">Has your new iphone been activated?</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/24/matplotlib-AxesGrid/" class="archive-article-date">
-  <time datetime="2017-08-24T09:31:16.000Z" itemprop="datePublished">Aug 24</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/24/matplotlib-AxesGrid/">matplotlib AxesGrid</a>
-    </h1>
-  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
 
-    </header>
+    </footer>
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/08/23/Build-your-blog/" class="archive-article-date">
-  <time datetime="2017-08-23T14:25:17.000Z" itemprop="datePublished">Aug 23</time>
-</a>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/23/Build-your-blog/">Build-your-blog</a>
-    </h1>
   
+    <a href="/2017/08/29/我们去拍飞机吧/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">我们去拍飞机吧</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-  
-    </div></section>
-  
 
 </section>
         
