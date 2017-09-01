@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Deconvolution or Transpose: opposite operation of CNN | Canal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deconvolution or Transpose: opposite operation of CNN">
+<meta property="og:url" content="http://blog.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/index.html">
+<meta property="og:site_name" content="Canal">
+<meta property="og:description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
+<meta property="og:image" content="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif">
+<meta property="og:updated_time" content="2017-09-01T09:38:34.763Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deconvolution or Transpose: opposite operation of CNN">
+<meta name="twitter:description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
+<meta name="twitter:image" content="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Canal</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Valar morghulis, valar dohaeris.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.mazhixian.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Deconvolution-or-Transpose-opposite-operation-of-CNN" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="article-date">
+  <time datetime="2017-09-01T07:26:45.000Z" itemprop="datePublished">2017-09-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Deconvolution or Transpose: opposite operation of CNN
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊<strong>反向卷积神经网络</strong>。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。]</p>
+<p>最近用过的开源深度学习框架有<a href="http://www.deeplearning.net/software/theano/" target="_blank" rel="external">Theano</a>/<a href="https://lasagne.readthedocs.io/en/latest/index.html" target="_blank" rel="external">Lasagne</a>、<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>和<a href="http://caffe.berkeleyvision.org/" target="_blank" rel="external">caffe</a>。其中前两个框架主要基于Python实现，容易上手；第三个基于C++,也提供了python和MATLAB的接口，三者在Deep Learning中都有广泛的应用和实现。今天，我要讨论的<em>反向卷积 (Transposed convolution)</em> 参考了Theano的<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/" target="_blank" rel="external">tutorial</a>, 以及这个主题为”全卷积”的自动编码器的<a href="https://github.com/loliverhennigh/All-Convnet-Autoencoder-Example" target="_blank" rel="external">repo</a>. </p>
+<p><strong>Note:</strong> 我会尽量用中文写，但有些地方我可能会偷懒。。。</p>
+<h4 id="Auto-encoder"><a href="#Auto-encoder" class="headerlink" title="Auto-encoder"></a>Auto-encoder</h4><p>首先，我来简要说一下自动编码器 (<a href="https://en.wikipedia.org/wiki/Autoencoder" target="_blank" rel="external">AutoEncoder, AE</a>)。参考Wiki的定义，AE是一种人工神经网络 (ANN)，擅长无监督学习 (unsupervised learning) 以及特征表示 (feature representation) 和特征降维 (dimensionality reduction)。更通俗地理解，AE的目的是在没有任何标记的情况下从事物中提取出最能够表征他们的特点。我们来看看Wiki上训练AE网络的思路，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">For each input x,</div><div class="line">    Do a feed-forward pass to compute activations at all hidden layers, then at the output layer to obtain an output x&apos;.</div><div class="line">    Measure the deviation of x&apos; from the input x (typically using squared error).</div><div class="line">    Backpropagate the error through the net and perform weight updates.</div></pre></td></tr></table></figure></p>
+<p>为了实现这一结果，最naive的做法是建立镜像对称的网络。将网络拆分为编码 (encoder) 和解码 (decoder) 两个部分，后者和前者具有镜像对称的结构，并且共享对应层的权值参数矩阵(weight parameters)。这样，在训练的网络中，我们不仅可以利用编码器进行特征提取和降维的工作，还可以利用解码器生成新的样本，这也是生成对抗网络(Generative Adverserial Network, GAN)的主要思路。</p>
+<p>当然也有论文指出，共享权值和镜像网络并不是好的选择，尤其是在卷积神经网络中。虽然卷积是线性的，但卷积的逆运算通常是超定的，不可逆，所以镜像的网络并不一定有效 (需要再确认一下，总觉得怪怪的。。。)。 因此，对于卷积自动编码器(CAE)而言，其解码部分的反向卷积虽然称为Deconvolution,但不是真正意义上的逆向，而应该称为<strong>Transposed convolution</strong>. </p>
+<h4 id="Deconvolution-or-transposed-convolution"><a href="#Deconvolution-or-transposed-convolution" class="headerlink" title="Deconvolution or transposed convolution"></a>Deconvolution or transposed convolution</h4><p>下面，我们来讨论<strong>transposed convolution</strong>。首先从Theano的tutorial上摘了一些观点，里面对于卷积和矩阵乘法的理解非常棒！！！</p>
+<h5 id="Understanding-of-Transposed-convolution"><a href="#Understanding-of-Transposed-convolution" class="headerlink" title="Understanding of Transposed convolution"></a>Understanding of Transposed convolution</h5><ul>
+<li>Transposed convolution: map from output-vector space to the input-vector space, while keeping the connectivity pattern of the convolution depicted. <strong>Also called fractionally strided convolutions.</strong></li>
+<li>The need for transposed convolutions generally arises from the desire to use a transformation going in the opposite direction of a normal convolution. One might use such a transformation as the decoding layer of a convolutional autoencoder or to project feature maps to a higher-dimensional space. (转置卷积的意义)</li>
+<li>Every convolution boils down to an efficient implementation of a matrix operation, thus the insights gained from the fully-connected case are useful solving the convolutional case. (卷积运算的内凛属性依然是矩阵乘法)</li>
+<li>The dissertation about transposed convolution arithmetic is simplified by the fact that transposed convolution properties don’t interact across axes.</li>
+</ul>
+<h5 id="卷积和矩阵乘法的关系"><a href="#卷积和矩阵乘法的关系" class="headerlink" title="卷积和矩阵乘法的关系"></a>卷积和矩阵乘法的关系</h5><p>为了说明transposed convolution的可行性，首先得解释卷积运算和矩阵乘法的关系。我们定义输入矩阵为$\mathbf{I}$，卷积核为$\mathbf{K}$，以及输出矩阵为$\mathbf{O}$, 那么三者的关系如下，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{O} = \mathbf{I} * \mathbf{K}.
+\end{equation}</script><p>卷积神经网络中的卷积与传统的二维卷积是不一样的，CNN中的卷积只考虑某一区域与卷积核相乘的累计和，不会在计算初始对卷积核做镜像对称。这一点倒是更像correlation的运算。下图给了一个例子，摘自Theano tutorial,<br><img src="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif" alt="Convolution example, $i=4,k=3,s=1,p=0$"></p>
+<p>那么这种运算的本质是什么呢？ 我们可以将卷积运算转变成矩阵的乘法。我们将$\mathbf{I}$,$\mathbf{O}$按先列再行的顺序展开为vector, 定义为$\mathbf{I<em>{v}}$和$\mathbf{O</em>{v}}$, 以上图中对应的参数为例，则有，</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{I_{v}} &= [I_{0,0},I_{0,1},I_{0,2},I_{0,3},\cdots,I_{3,0},I_{3,1},I_{3,2},I_{3,3}] \notag \\
+\mathbf{O_{v}} &= [O_{0,0},O_{0,1},O_{0,2},O_{0,3}].
+\end{align}</script><p>紧接着，我们用矩阵$\mathbf{C}$来定义卷积运算，其中$\mathbf{C}$的元素由核矩阵$\mathbf{K}$的元素定义，如下所示，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{C} = 
+\begin{bmatrix}
+w_{0,0} & 0 & 0 & 0 \\
+w_{0,1} & w_{0,0} & 0 & 0 \\
+w_{0,2} & w_{0,1} & 0 & 0 \\
+0 & w_{0,2} & w_{0,1} & 0 \\
+w_{1,0} & 0 & w_{0,0} & 0 \\
+w_{1,1} & w_{1,0} & w_{0,1} & w_{0,0} \\
+w_{1,2} & w_{1,1} & w_{0,2} & w_{0,1} \\
+0 & w_{1,2} & 0 & w_{0,2} \\
+w_{2,0} & 0 & w_{1,0} & 0 \\
+w_{2,1} & w_{2,0} & w_{1,1} & w_{1,0} \\
+w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
+0 & w_{2,2} & 0 & w_{1,2} \\
+0 & 0 & w_{2,0} & 0 \\
+0 & 0 & w_{2,1} & w_{2,0} \\
+0 & 0 & w_{2,2} & w_{2,1} \\
+0 & 0 & 0 & w_{2,2}\\
+\end{bmatrix}
+\end{equation}</script><p>最后，公式(1)的卷积运算便可由公式(4)转化为矩阵运算，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{O_{v}} = \mathbf{I_{v}} \cdot \mathbf{C}.
+\end{equation}</script><p>Toturial中也指出，矩阵$\mathbf{C}$正是CNN训练中前向 (forward) 和后向 (back propogation)的关键，对$\mathbf{C}$做转置换，便可以<br>通过网络的输出将梯度传递给输入，即 </p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{I_{v}} = \mathbf{O_{v}} \cdot \mathbf{C^{T}}.
+\end{equation}</script><p>我们发现，公式(5)正是我们需要的“反向卷积”，我们来看看Theano tutorial的观点，</p>
+<ul>
+<li>Though the kernel defines a convolution, whether it’s a direct convolution or a transposed convolution is determined by how the forward and backward passes are computed.</li>
+<li>For instance, the kernel $w$ defines a convolution whose forward and backward passes are computed by multiplying with $C$ and $C^{T}$ respectively, but it is also defines a transposed convolution whose forward and backward passes are computed by multiplying with $C^{T}$ and $(C^{T})^{T} = C$ respectively.</li>
+</ul>
+<p>因此，利用网络训练中的Back propogation运算进行transposed convolution是可行的，只需要在运算时调换一下$\mathbf{C}$和$\mathbf{C^{T}}$的顺序。</p>
+<h5 id="Execute-transposed-convolution"><a href="#Execute-transposed-convolution" class="headerlink" title="Execute transposed convolution"></a>Execute transposed convolution</h5><p>最后，我们来说一下怎么实现“反向卷积”。通过前面的分析，transposed convolution的运算可以概括为convolution的逆运算，所以最简单的方式是用卷积，也即deconvolution。但tutorial中也指出，卷积运算通常需要做zero padding，引入不必要的运算，所以Theano内部定义了新的函数<a href="http://deeplearning.net/software/theano_versions/dev/library/tensor/nnet/conv.html" target="_blank" rel="external">theano.tensor.nnet.abstract_conv.conv2d_grad_wrt_inputs</a>来实现简化了的卷积运算。</p>
+<ul>
+<li>It is always possible to implement a trasnposed convolution with a direct convolution. The disadvantage is that it usually involves adding many columns and rows of zeros to the input, resulting in a much less efficient implementation.</li>
+<li>The simples way to think about a transposed convolution is by computing the output shape of the direct convolution for a given input shape first, and the inverting the input and output shapes for the transposed convolution.</li>
+<li>To maintain the same connectivity pattern in the equivalent convolution it is necessary to zero pad the input in such a way that the first (top-left) application of the kernel only touches the top-left pixel, i.e., the padding has to be equal to the size of the kernel minus one.</li>
+</ul>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">[1] Convolution arithmetic tutorial</a></li>
+<li><a href="https://github.com/loliverhennigh/All-Convnet-Autoencoder-Example" target="_blank" rel="external">[2] All-Convnet-Autoencoder-Example</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj70gxa4h000003r3f6otqmyh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/08/30/Applying-MathJax-to-hexo/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Applying MathJax to hexo</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/deep-learning/" style="font-size: 10px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">Deconvolution or Transpose: opposite operation of CNN</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/30/Applying-MathJax-to-hexo/">Applying MathJax to hexo</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/29/我们去拍飞机吧/">我们去拍飞机吧</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/28/Change-your-iphone-s-ringtone/">Change your iphone&#39;s ringtone</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/27/Has-your-new-iphone-been-activated/">Has your new iphone been activated?</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Jason Ma<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
