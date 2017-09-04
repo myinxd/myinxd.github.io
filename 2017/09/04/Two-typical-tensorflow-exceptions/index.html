@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Two typical tensorflow exceptions | Canal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。 两个Bug的Exception如下，我会逐个解释，  ValueError: No gradients provided for any variable FailedPrecondition">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Two typical tensorflow exceptions">
+<meta property="og:url" content="http://blog.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/index.html">
+<meta property="og:site_name" content="Canal">
+<meta property="og:description" content="几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。 两个Bug的Exception如下，我会逐个解释，  ValueError: No gradients provided for any variable FailedPrecondition">
+<meta property="og:updated_time" content="2017-09-04T13:04:52.611Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Two typical tensorflow exceptions">
+<meta name="twitter:description" content="几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。 两个Bug的Exception如下，我会逐个解释，  ValueError: No gradients provided for any variable FailedPrecondition">
+  
+    <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Canal</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Valar morghulis, valar dohaeris.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.mazhixian.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Two-typical-tensorflow-exceptions" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" class="article-date">
+  <time datetime="2017-09-04T12:32:22.000Z" itemprop="datePublished">2017-09-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Two typical tensorflow exceptions
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。</p>
+<p>两个Bug的Exception如下，我会逐个解释，</p>
+<ol>
+<li>ValueError: No gradients provided for any variable</li>
+<li>FailedPreconditionError: Attempting to use uninitialized value xxx</li>
+</ol>
+<h4 id="ValueError-No-gradients-provided-for-any-variable"><a href="#ValueError-No-gradients-provided-for-any-variable" class="headerlink" title="ValueError: No gradients provided for any variable"></a>ValueError: No gradients provided for any variable</h4><p>首先交代一下出错的语境，这里我在用<code>tf.nn.softmax_cross_entropy_with_logits</code>定义网络的损失函数，我的写法如下, 其中<code>y</code>表示网络预测的(输出的)labels, <code>y_</code>表示真实的labels。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss = tf.nn.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_))</div></pre></td></tr></table></figure></p>
+<p>紧接着，实例化网络并进行测试，然后程序报错了，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ValueError: No gradients provided <span class="keyword">for</span> any variable</div></pre></td></tr></table></figure></p>
+<p>具体的内容我就不截图了，因为论文还没投稿。这个错误的含义是网络中存在不能进行<strong>梯度传递</strong>的变量或者说是tensor。而导致这一错误的问题是我将<code>labels</code>和<code>logits</code>两个参数理解反了，这里的正确写法是，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss = tf.nn.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))</div></pre></td></tr></table></figure></p>
+<p>也即<code>logits</code>代表网络的输出。除此之外，还要注意<code>y</code>和<code>y_</code>均为one hot 形式，下面提供了向量形式转one hot形式的代码，实现方法比较naive。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">vec2onehot</span><span class="params">(label,numclass)</span>:</span></div><div class="line">    label_onehot = np.zeros((len(label),numclass))</div><div class="line">    <span class="keyword">for</span> i,l <span class="keyword">in</span> enumerate(label):</div><div class="line">        label_onehot[i, int(l)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> label_onehot</div></pre></td></tr></table></figure></p>
+<h4 id="FailedPreconditionError-Attempting-to-use-uninitialized-value-xxx"><a href="#FailedPreconditionError-Attempting-to-use-uninitialized-value-xxx" class="headerlink" title="FailedPreconditionError: Attempting to use uninitialized value xxx"></a>FailedPreconditionError: Attempting to use uninitialized value xxx</h4><p>这个错误隐藏地比较深，诱发它的机制是我在做fine tuning时定义了新的需要训练的变量，但没有在<code>session</code>中进行初始化。报错的样例如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FailedPreconditionError: Attempting to use uninitialized value beta1_power_1</div><div class="line">	[[Node: beta1_power_1/<span class="built_in">read</span> = Identity[T=DT_FLOAT, _class=[]...]]]</div></pre></td></tr></table></figure></p>
+<p>我的解决方法比较暴力，在做预训练之前定义好fine-tuning要用到的变量，与其他的变量一起做初始化。这样后面在重新训练的时候，直接调用<code>sess.run</code>即可。</p>
+<h4 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h4><p>单独列一个tip, 如果要多次训练网络，或者运行tensorflow的graph,建议在实例化session的时候用<code>InteractiveSession</code>而不是<code>Session</code>。</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/nn/softmax_cross_entropy_with_logits" target="_blank" rel="external">tf.nn.softmax_cross_entropy_with_logits</a></li>
+<li>[2] <a href="https://stackoverflow.com/questions/38778760/tensorflow-no-gradients-provided-for-any-variable" target="_blank" rel="external">Tensorflow: No gradients provided for any variable</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj766d1xo0003wa670frgb2c3" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">Deconvolution or Transpose: opposite operation of CNN</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/09/04/Two-typical-tensorflow-exceptions/">Two typical tensorflow exceptions</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">Deconvolution or Transpose: opposite operation of CNN</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/30/Applying-MathJax-to-hexo/">Applying MathJax to hexo</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/29/我们去拍飞机吧/">我们去拍飞机吧</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/28/Change-your-iphone-s-ringtone/">Change your iphone&#39;s ringtone</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Jason Ma<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
