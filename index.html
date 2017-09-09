@@ -57,7 +57,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
@@ -67,6 +67,54 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-Catch-data-with-provided-keys" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/09/Catch-data-with-provided-keys/" class="article-date">
+  <time datetime="2017-09-09T14:51:49.000Z" itemprop="datePublished">2017-09-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/09/Catch-data-with-provided-keys/">Catch data with provided keys</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了<a href="https://www.arxiv.org" target="_blank" rel="external">arXiv</a>的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式<code>re</code>.</p>
+<p>以arXiv为例，每篇文章都有一个确定的ID,形如<code>17MM.xxxxx</code>，其中MM表示月份，xxxxx表示五位数的编号。那么，其对应的正则表达式可以用如下字符串表示，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div></pre></td></tr></table></figure></p>
+<p>然后利用python的正则表达式包<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">re</a>，用如下的语句从邮件里抓取即可，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">key = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div><div class="line">filename = <span class="string">"cs-arxiv.txt"</span></div><div class="line"><span class="keyword">with</span> open(filename, <span class="string">'r'</span>) <span class="keyword">as</span> fp:</div><div class="line">	lines = fp.readlines()</div><div class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> lines:</div><div class="line">    	s = re.findall(key,l)</div><div class="line">        <span class="keyword">if</span> len(s):</div><div class="line">        	print(<span class="string">"Find id %s"</span> % s[<span class="number">0</span>])</div></pre></td></tr></table></figure></p>
+<p>其中最关键的语句是第7行，即在邮件中按行搜索key制定的关键词或者关键词格式。详细的下载程序可以参考我的程序<a href="https://github.com/myinxd/canal-tools/blob/master/python-based/download-arxiv-paper.py" target="_blank" rel="external">download-arxiv-paper.py</a>. 根据提供的关键词进行数据提取，可以参考这个程序<a href="https://github.com/myinxd/gastrack/blob/master/utils/catch-with-keys.py" target="_blank" rel="external">catch-with-keys.py</a>.</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li>[1] <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">https://docs.python.org/3/library/re.html</a></li>
+<li>[2] <a href="http://www.cnblogs.com/jiu0821/p/6275685.html" target="_blank" rel="external">http://www.cnblogs.com/jiu0821/p/6275685.html</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7dgjet40000iur3t83omoab" class="article-share-link">Delen</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Commentaren</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-matplotlib-tips-I" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -99,9 +147,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7c1eqhs000a7dr3hf5gizzy" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7dgjetq000uiur3k5hqfbd8" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -152,9 +200,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7c1eqhu000f7dr3v8jkslw6" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7dgjete0008iur3pg6ejari" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -201,9 +249,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7c1eqhv000i7dr3v4k1w8h9" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7dgjetf0009iur3llnp17qt" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MATLAB/">MATLAB</a></li></ul>
@@ -258,9 +306,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7c1eqht000d7dr3lv6ht0eg" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7dgjetg000diur3605nkaeq" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -367,9 +415,9 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7c1eqho00037dr3l9k2n0m3" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7dgjetc0004iur3ddvexren" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -434,9 +482,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7c1eqhh00007dr3mjrodqv3" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7dgjetd0005iur36vwmar2k" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -495,9 +543,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cj7c1eqhw000k7dr3fc8ak2aa" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cj7dgjeth000giur37s1bp5cf" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
@@ -563,9 +611,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cj7c1eqhl00017dr3jasnchrb" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cj7dgjetb0003iur3syvr3fu9" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
@@ -617,87 +665,12 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/" data-id="cj7c1eqhs00087dr3i9thtrym" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/" data-id="cj7dgjetg000biur38ifmyk9k" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-matplotlib-AxesGrid" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/24/matplotlib-AxesGrid/" class="article-date">
-  <time datetime="2017-08-24T09:31:16.000Z" itemprop="datePublished">2017-08-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/24/matplotlib-AxesGrid/">matplotlib AxesGrid</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天花了一天的时间帮同学做图，又体验了一遍<code>matplotlib</code>的复杂！之所以用AxesGrid,是因为<a href="https://yt-project.org/" target="_blank" rel="external">yt</a>的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理<a href="http://wwwmpa.mpa-garching.mpg.de/gadget/" target="_blank" rel="external">Gadget</a>仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。</p>
-<p>主要分三个部分来说</p>
-<ol>
-<li>AxesGrid的参数及使用方法</li>
-<li>Axes类的参数调整，作出更好看的图</li>
-<li>遇到<strong>segmentation fault</strong>时的解决思路</li>
-</ol>
-<h4 id="AxesGrid的参数及使用方法"><a href="#AxesGrid的参数及使用方法" class="headerlink" title="AxesGrid的参数及使用方法"></a>AxesGrid的参数及使用方法</h4><p>AxesGrid是<a href="https://www.matplotlib.org" target="_blank" rel="external">matplotlib</a>的<a href="http://matplotlib.org/mpl_toolkits/" target="_blank" rel="external">mapping toolkits</a>的一个类，用于生成网格化的figure，类似于<a href="http://matplotlib.org/api/pyplot_api.html?highlight=subplot#matplotlib.pyplot.subplot" target="_blank" rel="external">subplot</a>, 但相对于后者处理起来更容易。</p>
-<p>AxesGrid的参数主要有<code>rect</code>,<code>nrows_ncols</code>,<code>axes_pad</code>,以及<strong>colorbar</strong>相关的<code>cbar*</code>参数，具体的参数定义可以参见它的官方文档，这里我想介绍一下<code>rect</code>，<code>axes_pad</code>和<code>cbar*</code>参数。</p>
-<ul>
-<li>rect: 定义了AxesGrid在fig中的位置，是一个四维的列表，对应[left,bottom,width,height]</li>
-<li>axes_pad: 控制相邻两个axes的间隔，单位是inch</li>
-<li>cbar_location: colorbar 的位置，可以放置在上、下、左和右这四个位置</li>
-<li>cbar_size: 提供的参数为百分制的字符串，用于设定colorbar的宽度</li>
-<li>cbar_mode: colorbar的模式，可以为“each”，“single”或”edge”，通常会选择“single”</li>
-</ul>
-<p>AxesGrid的实例化和使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> mpl_toolkits.axes_grid1 <span class="keyword">import</span> AxesGrid</div><div class="line">fig = plt.figure()</div><div class="line">grid = AxesGrid(fig=fig, rect=(<span class="number">0.075</span>,<span class="number">0.075</span>,<span class="number">0.85</span>,<span class="number">0.85</span>),</div><div class="line">                nrows_ncols = (<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">                axes_pad = <span class="number">0.05</span>,</div><div class="line">                label_mode = <span class="string">"L"</span>,</div><div class="line">                share_all = <span class="keyword">True</span>,</div><div class="line">                cbar_location=<span class="string">"right"</span>,</div><div class="line">                cbar_mode=<span class="string">"single"</span>,</div><div class="line">                cbar_size=<span class="string">"3%"</span>,</div><div class="line">                cbar_pad=<span class="string">"0%"</span>)</div></pre></td></tr></table></figure></p>
-<p>做图时采用<code>grid[idx].axes</code>的方式获得axes对象，并进行相应的参数设置。以2x2的网格为例，下图给出了效果图 (图片来自yt的<a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">官方文档</a>)<br><img src="http://yt-project.org/doc/_images/multiplot_2x2_time_series__multiplot_2x2_time_series.png" alt="yt Time Series Multiplanel"></p>
-<h4 id="Axes类的参数调整，作出更好看的图"><a href="#Axes类的参数调整，作出更好看的图" class="headerlink" title="Axes类的参数调整，作出更好看的图"></a>Axes类的参数调整，作出更好看的图</h4><p>这里的参数调整主要涉及<code>grid[idx].axes</code>对象的参数调整，包括调整字体、大小以及坐标轴等。下面给出一个简要的调整样例及注释，后面我会针对yt的样例代码中的<code>p._setup_plots()</code>方法以及它隐藏的坑进行说明。</p>
-<ul>
-<li>参数设定样例<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">grid[i].axes.text(x,y,s,fontdict) <span class="comment"># 在图中添加文字</span></div><div class="line">grid[i].scatter(x,y,s=<span class="number">100</span>, c=<span class="string">'b'</span>, marker=<span class="string">'x'</span>) <span class="comment"># 在图中添加标记</span></div><div class="line"><span class="comment"># 手动设定坐标轴的范围</span></div><div class="line">grid[i].set_xticks([<span class="number">-0.3</span>,<span class="number">-0.2</span>,<span class="number">-0.1</span>,<span class="number">0.0</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>])</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>通过<code>set_xticks</code>方法可以避免相邻网格图的坐标轴标记重叠，影响视觉效果，后面我会添加图例。</p>
-<ul>
-<li><code>p._setup_plots()</code>方法<br>这个方法在<code>yt.visualization.plot_window</code>类定义，主要作用是在指定的axes上做图。每次执行这个方法，就会重新做图。但该方法会导致一个问题，如果我们在做图过程中要添加文字(annotate_text)和标记，那么重新执行<code>p._setup_plot</code>后，这些additional staff会消失。所以后来我采用了直接在AxesGrid的axes对象中利用<code>axes.text</code>进行添加。具体的原因我还没有完全理解，后面争取补上。</li>
-</ul>
-<h4 id="遇到segmentation-fault问题的解决思路"><a href="#遇到segmentation-fault问题的解决思路" class="headerlink" title="遇到segmentation fault问题的解决思路"></a>遇到segmentation fault问题的解决思路</h4><p>网上对”python segmentation fault”错误的解答众说纷纭，有的说法是“<a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">因为python里的C扩展导致(访问了非法内存区域)</a>”,解决方法是<code>sys.setrecursionlimit(100000)</code>，避免内存的越界访问。</p>
-<p>但是在代码里加了这行语句以后并没有解决问题，后来发现报错出现在执行<code>fig=plot.figure()</code>语句，师兄采用了最简单粗暴的方法，更新matploblib,解决了问题。所以这里记录一下这个解决思路，还是值得借鉴的，虽然没什么科学含量。。。</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">Time Series Multipanel of yt</a></li>
-<li><a href="http://matplotlib.org/mpl_toolkits/axes_grid/api/axes_grid_api.html" target="_blank" rel="external">mpl_toolkits.axes_grid.axes_grid help</a></li>
-<li><a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">Python 脚本运行时Segmentation fault (core dumped)</a></li>
-</ul>
-<h4 id="Github-repo-gastrack"><a href="#Github-repo-gastrack" class="headerlink" title="Github repo. gastrack"></a>Github repo. gastrack</h4><p>这个项目的github repo. <a href="https://github.com/myinxd/gastrack" target="_blank" rel="external">gastrack</a>. 断断续续写了很久，每次有需求了会修改，但版本控制还是没有做得很好。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" data-id="cj7c1eqhq00057dr3kbyjal5q" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -720,7 +693,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Labels</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
     </div>
@@ -732,14 +705,14 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 15px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archieven</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
     </div>
@@ -749,9 +722,13 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Recente berichten</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/09/09/Catch-data-with-provided-keys/">Catch data with provided keys</a>
+          </li>
         
           <li>
             <a href="/2017/09/08/matplotlib-tips-I/">matplotlib tips I</a>
@@ -767,10 +744,6 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
         
           <li>
             <a href="/2017/09/04/Two-typical-tensorflow-exceptions/">Two typical tensorflow exceptions</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">Deconvolution or Transpose: opposite operation of CNN</a>
           </li>
         
       </ul>

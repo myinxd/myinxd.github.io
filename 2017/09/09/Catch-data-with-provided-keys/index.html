@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>matplotlib tips I | Canal</title>
+  <title>Catch data with provided keys | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。 1. matplotlib的默认字体首先，我们从字体开始。matplot">
+  <meta name="description" content="晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="matplotlib tips I">
-<meta property="og:url" content="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/index.html">
+<meta property="og:title" content="Catch data with provided keys">
+<meta property="og:url" content="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。 1. matplotlib的默认字体首先，我们从字体开始。matplot">
-<meta property="og:updated_time" content="2017-09-08T15:28:47.945Z">
+<meta property="og:description" content="晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种">
+<meta property="og:updated_time" content="2017-09-09T15:19:58.619Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="matplotlib tips I">
-<meta name="twitter:description" content="感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。 1. matplotlib的默认字体首先，我们从字体开始。matplot">
+<meta name="twitter:title" content="Catch data with provided keys">
+<meta name="twitter:description" content="晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -68,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-matplotlib-tips-I" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Catch-data-with-provided-keys" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/09/08/matplotlib-tips-I/" class="article-date">
-  <time datetime="2017-09-08T15:00:34.000Z" itemprop="datePublished">2017-09-08</time>
+    <a href="/2017/09/09/Catch-data-with-provided-keys/" class="article-date">
+  <time datetime="2017-09-09T14:51:49.000Z" itemprop="datePublished">2017-09-09</time>
 </a>
     
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      matplotlib tips I
+      Catch data with provided keys
     </h1>
   
 
@@ -90,18 +90,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是<code>matplotlib.pyplot</code>做图的tips，准备写成一个系列，先开个头。积少成多吧。</p>
-<h5 id="1-matplotlib的默认字体"><a href="#1-matplotlib的默认字体" class="headerlink" title="1. matplotlib的默认字体"></a>1. matplotlib的默认字体</h5><p>首先，我们从字体开始。matplotlib的默认字体和MATLAB一样，是<strong>Helvetica</strong>，一种和<strong>Arial</strong>长得非常像的字体，<a href="https://www.zhihu.com/question/19562456" target="_blank" rel="external">知乎</a>上有类似的讨论，多数认为Helvetica比较好看，LOL. 我倒是两种都挺喜欢的，论文里也经常用。但这里要注意， 这两种字体在IEEE的pdf格式审查里会出问题，可能事因为Adobe并不会自动嵌入这两种字体。。。</p>
-<h5 id="2-colorbar、坐标轴标注的问题"><a href="#2-colorbar、坐标轴标注的问题" class="headerlink" title="2. colorbar、坐标轴标注的问题"></a>2. colorbar、坐标轴标注的问题</h5><p>我们知道，matplotlib和matlab中colorbar、坐标轴的标签(label)和刻度(tick)的参数名称和配置方法是类似的，通常都是<code>set_xxx</code>的格式。在matplotlib中tick的缺省值是根据数据自动添加的，而label默认没有，他们的设置样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line">plt.set_xticks([<span class="number">0.0</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,]) <span class="comment"># 修改刻度</span></div><div class="line">plt.set_xlabel(<span class="string">"X axis"</span>) <span class="comment"># 修改label</span></div></pre></td></tr></table></figure></p>
-<p>这里要注意，类似colorbar这种对象，它的设置等同于坐标轴，也有<code>set_label</code>方法。</p>
-<p>先写两点吧，前面写过一篇关于<a href="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/">AxesGrid</a>的，有兴趣也可以看看。</p>
+        <p>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了<a href="https://www.arxiv.org" target="_blank" rel="external">arXiv</a>的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式<code>re</code>.</p>
+<p>以arXiv为例，每篇文章都有一个确定的ID,形如<code>17MM.xxxxx</code>，其中MM表示月份，xxxxx表示五位数的编号。那么，其对应的正则表达式可以用如下字符串表示，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div></pre></td></tr></table></figure></p>
+<p>然后利用python的正则表达式包<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">re</a>，用如下的语句从邮件里抓取即可，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">key = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div><div class="line">filename = <span class="string">"cs-arxiv.txt"</span></div><div class="line"><span class="keyword">with</span> open(filename, <span class="string">'r'</span>) <span class="keyword">as</span> fp:</div><div class="line">	lines = fp.readlines()</div><div class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> lines:</div><div class="line">    	s = re.findall(key,l)</div><div class="line">        <span class="keyword">if</span> len(s):</div><div class="line">        	print(<span class="string">"Find id %s"</span> % s[<span class="number">0</span>])</div></pre></td></tr></table></figure></p>
+<p>其中最关键的语句是第7行，即在邮件中按行搜索key制定的关键词或者关键词格式。详细的下载程序可以参考我的程序<a href="https://github.com/myinxd/canal-tools/blob/master/python-based/download-arxiv-paper.py" target="_blank" rel="external">download-arxiv-paper.py</a>. 根据提供的关键词进行数据提取，可以参考这个程序<a href="https://github.com/myinxd/gastrack/blob/master/utils/catch-with-keys.py" target="_blank" rel="external">catch-with-keys.py</a>.</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li>[1] <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">https://docs.python.org/3/library/re.html</a></li>
+<li>[2] <a href="http://www.cnblogs.com/jiu0821/p/6275685.html" target="_blank" rel="external">http://www.cnblogs.com/jiu0821/p/6275685.html</a></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7dgjetq000uiur3k5hqfbd8" class="article-share-link">Delen</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7dgjet40000iur3t83omoab" class="article-share-link">Delen</a>
       
-        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Commentaren</a>
+        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Commentaren</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -112,19 +115,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/09/09/Catch-data-with-provided-keys/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Nieuwer</strong>
-      <div class="article-nav-title">
-        
-          Catch data with provided keys
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/09/08/matplotlib-tips-I/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">Install R on Ubuntu16.04 and configure jupyter-notebook</div>
+      <div class="article-nav-title">matplotlib tips I</div>
     </a>
   
 </nav>
@@ -229,7 +223,7 @@
 <script>
   var disqus_shortname = 'mazhixian';
   
-  var disqus_url = 'http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/';
+  var disqus_url = 'http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/';
   
   (function(){
     var dsq = document.createElement('script');
