@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Applying MathJax to hexo | Canal</title>
+  <title>Fourier transform on 2D image | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
-<meta name="keywords" content="hexo">
+  <meta name="description" content="今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。 基本的傅立叶变换我就不介绍了。它的定义很简单，用正交的余弦函数作为b">
+<meta name="keywords" content="signal-processing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Applying MathJax to hexo">
-<meta property="og:url" content="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/index.html">
+<meta property="og:title" content="Fourier transform on 2D image">
+<meta property="og:url" content="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
-<meta property="og:updated_time" content="2017-08-30T15:19:31.614Z">
+<meta property="og:description" content="今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。 基本的傅立叶变换我就不介绍了。它的定义很简单，用正交的余弦函数作为b">
+<meta property="og:updated_time" content="2017-09-12T16:02:33.365Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Applying MathJax to hexo">
-<meta name="twitter:description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
+<meta name="twitter:title" content="Fourier transform on 2D image">
+<meta name="twitter:description" content="今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。 基本的傅立叶变换我就不介绍了。它的定义很简单，用正交的余弦函数作为b">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -68,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Applying-MathJax-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Fourier-transform-on-2D-image" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="article-date">
-  <time datetime="2017-08-30T14:24:53.000Z" itemprop="datePublished">2017-08-30</time>
+    <a href="/2017/09/12/Fourier-transform-on-2D-image/" class="article-date">
+  <time datetime="2017-09-12T14:55:34.000Z" itemprop="datePublished">2017-09-12</time>
 </a>
     
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Applying MathJax to hexo
+      Fourier transform on 2D image
     </h1>
   
 
@@ -90,43 +90,34 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>下班前简单写一下怎么在Hexo中应用<a href="https://www.mathjax.org/" target="_blank" rel="external">MathJex</a>，参考了两篇博客，后面会列出。具体步骤如下，</p>
-<ul>
-<li>进入博客所在文件夹 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> username.github.io</div></pre></td></tr></table></figure>
-<ul>
-<li>安装hexo-math,并解决兼容问题 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-math</div><div class="line">$ npm uninstall hexo-renderer-marked --save</div><div class="line">$ npm install hexo-renderer-kramed --save</div></pre></td></tr></table></figure>
-<ul>
-<li>解决行内公式渲染问题</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/node_modules/kramed/lib/rules/inline.js</div><div class="line"></div><div class="line">change line 11 from `escape: /^\\([\\`*&#123;&#125;\[\]()<span class="comment">#$+\-.!_&gt;])/,` to `escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,`</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改配置文件<code>_config.yml</code></li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ vim _config.yml</div><div class="line">Add following lines</div><div class="line"><span class="comment"># MathJax Support</span></div><div class="line">mathjax:</div><div class="line">	<span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">    per_page: <span class="literal">true</span></div></pre></td></tr></table></figure>
-<ul>
-<li>重新编译Hexo</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>测试一下效果，比如一维Gauss分布，</p>
+        <p>今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。</p>
+<p>基本的傅立叶变换我就不介绍了。它的定义很简单，<strong>用正交的余弦函数作为base，对时域或空域的信号进行分解，并在频域描述信号.</strong> 这样做的好处很多，例如能够实现信号的滤波、能够压缩信号、能够将卷积转化为乘法等。</p>
+<p>我准备先零散地抛几个“有(wu)趣(liao)”的点出来，第一个就是二维傅立叶变换的<code>时移问题</code>，这里我觉得用<code>bias</code>来描述更好，很无聊，但它的推导还是挺有价值的。设二维实数空间<script type="math/tex">f(x,y), x,y\in R</script>，其傅立叶变换为<script type="math/tex">F(m,n)</script>，则有，</p>
 <script type="math/tex; mode=display">
-f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a href="http://www.jianshu.com/p/7ab21c7f0674" target="_blank" rel="external">在Hexo中渲染MathJax数学公式</a></li>
-<li><a href="http://blog.csdn.net/sysushui/article/details/54585908" target="_blank" rel="external">在Hexo中使用mathjax来渲染latex</a></li>
-</ul>
+\begin{equation}
+F(m,n) = \iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx,
+\end{equation}</script><p>现假设在$x$和$y$方向的偏移(时移)分别为$b_x$和$b_y$，那么，Eq.(1)变为，</p>
+<script type="math/tex; mode=display">
+\begin{align}
+F(m,n) &= \iint{f(x,y)e^{-j2\pi m(x-b_x)}e^{-j2\pi n(y-b_y)}}dydx \notag \\
+       &= e^{-j2\pi(mb_x + nb_y)}\iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx。
+\end{align}</script><p>而上式中的<script type="math/tex">e^{-j2\pi(mb_x + nb_y)}</script>利用欧拉公式展开，我们得到，</p>
+<script type="math/tex; mode=display">
+\begin{align}
+e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).
+\end{align}</script><p>显然，<script type="math/tex">mb_x+nb_y</script>可以拆分成向量$(m,n)$与$(b_x,b_y)$的内积，代表频域空间的向量<script type="math/tex">(m,n)</script>在偏移方向<script type="math/tex">(b_x,b_y)</script>上的投影，而<script type="math/tex">(b_x,b_y)</script>又共同构成了该种投影的周期性，导致在傅立叶变换的图像上出现周期性变化的明暗条纹。</p>
+<p>说完时移的问题，我们来提出图像傅立叶变换以后<strong>诡异十字</strong>问题的猜想，<strong>图像边界处有明显的灰度变化会导致傅立叶变换后的频域图像出现十字。</strong>可以理解为在图像边界处人为做了<code>truncated</code>，即给图像加了矩形窗，导致在频域的<strong>vertical</strong>和<strong>horizontal</strong>两个方向乘了一个<code>sinc</code>函数，而由于这个窗很大，所以<code>sinc</code>的影响集中在靠近中心(低频)的区域。</p>
+<p>先留个坑，明天加图。。。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7hrdf250001e1r312w4phjm" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7hrdf2a0005e1r3oizpniie" class="article-share-link">Partager</a>
       
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Commentaires</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/signal-processing/">signal-processing</a></li></ul>
 
     </footer>
   </div>
@@ -134,19 +125,10 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
     
 <nav id="article-nav">
   
-    <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
-      <div class="article-nav-title">
-        
-          Deconvolution or Transpose: opposite operation of CNN
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/08/29/我们去拍飞机吧/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/09/11/Data-visualization-with-t-SNE/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">我们去拍飞机吧</div>
+      <div class="article-nav-title">Data visualization with t-SNE</div>
     </a>
   
 </nav>
@@ -251,7 +233,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
 <script>
   var disqus_shortname = 'mazhixian';
   
-  var disqus_url = 'http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/';
+  var disqus_url = 'http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/';
   
   (function(){
     var dsq = document.createElement('script');
