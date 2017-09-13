@@ -55,9 +55,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
@@ -67,6 +67,59 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-Transfer-learning-with-TensorFlow" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/13/Transfer-learning-with-TensorFlow/" class="article-date">
+  <time datetime="2017-09-13T08:07:45.000Z" itemprop="datePublished">2017-09-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
+<p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p>
+<p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p>
+<h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p>
+<p>It should be noted that, the instancing of <code>saver</code> should be after defination of the network. I find that though the restored session <code>sess</code> saved the graph of the newtork, including tensors, variables, and operations, the variables still need to be initialized when training after restoration.</p>
+<h4 id="2-How-to-realize-the-transfer-learning"><a href="#2-How-to-realize-the-transfer-learning" class="headerlink" title="2. How to realize the transfer learning?"></a>2. How to realize the transfer learning?</h4><p>Here we come to the transfer learning. A typical process is that we save the paramters of the convolutional layers (ConvLayer), and replace the fully connected and output layers with new weights and biases. This is because the ConvLayers are the part to <strong>extract features</strong> of those samples, while the fully connected layers composing the <strong>classifier</strong> itself. Our target is to save the feature represantation part and update the classifier according to our project.</p>
+<p>Denote the last output of the ConvLayers is a tensor with name <code>ConvLayer_output</code>, and suppose a session namely <code>sess</code> has been restored, then we can build our own classifier, see as follows,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Get tensor 'ConvLayer_output' from sess</span></div><div class="line">l_conv_output = sess.graph.get_tensor_by_name(<span class="string">"ConvLayer_output"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add new fully connected layers and softmax layer</span></div><div class="line"><span class="comment"># Suppose we have 10 class to be classied</span></div><div class="line">numclass = <span class="number">10</span></div><div class="line">y_ = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, numclass], name=<span class="string">"cnn-softmax"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add a fully connected as an example</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape)</span>:</span></div><div class="line">	initial = tf.truncated_normal(shape, stddev=<span class="number">0.1</span>)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line">last_conv_shape = l_conv_output.get_shape().as_list()</div><div class="line">input_shape = last_conv_shape[<span class="number">1</span>] * last_conv_shape[<span class="number">2</span>] * last_conv_shape[<span class="number">3</span>]</div><div class="line">output_shape = <span class="number">1024</span></div><div class="line">W_fc = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_fc = bias_variable(shape=[output_shape])</div><div class="line">l_fc = tf.nn.relu(tf.matmul(l_conv_output, W_fc) + b_fc)</div><div class="line"></div><div class="line"><span class="comment"># Fully connected to softmax</span></div><div class="line">input_shape = <span class="number">1024</span></div><div class="line">output_shape = numclass</div><div class="line">W_soft = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_soft = bias_variable(shape = [output_shape])</div><div class="line">l_y = tf.nn.softmax(tf.matmul(l_fc, W_soft) + b_soft)</div></pre></td></tr></table></figure></p>
+<p>After that, our new network can be trained on our samples,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Initialize all the parameters, including the pretrained net and concated layers</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line"><span class="comment"># [Training lines goes here]</span></div></pre></td></tr></table></figure></p>
+<p>Finally, we obtain the network, and evaluations can be conducted, enjoy yourselves.</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="https://stackoverflow.com/questions/36281129/no-variable-to-save-error-in-tensorflow" target="_blank" rel="external">No variable to save error in Tensorflow</a></li>
+<li><a href="https://www.tensorflow.org" target="_blank" rel="external">Tensorflow</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7isy4an000cqd67jqgc8oeq" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Fourier-transform-on-2D-image" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -112,9 +165,9 @@ e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7hsg4az000b8vr3n3w93317" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7isy4ao000dqd674lxtl5y5" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/signal-processing/">signal-processing</a></li></ul>
@@ -186,9 +239,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7hsg4ax00088vr34twqsahw" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7isy4ar000hqd67exqockfr" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -234,9 +287,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7hsg4av00048vr31scbbga0" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7isy4al0009qd67lw73t0j4" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -279,9 +332,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7hsg4b4000l8vr3ymyns1b6" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7isy4bc000zqd67qpo63542" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -332,9 +385,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7hsg4b0000d8vr3bap3s8c3" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7isy4bd0010qd67obgo1ukb" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -381,9 +434,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7hsg4as00018vr3u95vkyy1" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7isy4ai0005qd67ha0al8we" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MATLAB/">MATLAB</a></li></ul>
@@ -438,9 +491,9 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7hsg4b2000h8vr3ngpxubm8" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7isy4be0012qd67vs1xim91" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -547,9 +600,9 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7hsg4ay00098vr3x7p7naco" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7isy4ah0004qd673jvarrsk" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -614,73 +667,12 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7hsg4ao00008vr36ddu238j" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7isy4a70000qd67fjyc294s" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-我们去拍飞机吧" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/29/我们去拍飞机吧/" class="article-date">
-  <time datetime="2017-08-29T04:11:35.000Z" itemprop="datePublished">2017-08-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/29/我们去拍飞机吧/">我们去拍飞机吧</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>刚吃完午饭，趁着困意写点好(wu)玩(liao)的事情吧，<strong>跟导师去虹桥机场看飞机</strong>。有一次和同学争论，什么样的兴趣爱好是正常的？他认为<strong>玩魔方</strong>属于正常的，但是<strong>痴迷飞机和汽车</strong>不太正常。论点是玩魔方是可实现并且能够提升自己能力的，但飞机和汽车属于奢侈品，只能看不能体验，不能算是有意义的兴趣爱好。我倒是挺同意这个观点的，然而还是喜欢，很纯粹。。。</p>
-<p>言归正传，这篇blog，我们来说说怎么在魔都看飞机起降吧。目前我只知道<strong>虹桥机场</strong>的追机路线，等忙完了，我会去浦东机场探探路，网上还是有不少攻略的。</p>
-<p>分三步展开，</p>
-<ol>
-<li>虹桥机场（SHA）最佳的拍机点，以及如何到达</li>
-<li>利用Flightradar24实时监控飞机航路和起降方向</li>
-<li>一些照片 (多图预警)</li>
-</ol>
-<h4 id="虹桥机场最佳拍机地点"><a href="#虹桥机场最佳拍机地点" class="headerlink" title="虹桥机场最佳拍机地点"></a>虹桥机场最佳拍机地点</h4><p>虹桥机场有两条跑道 (18R/36L 和 18L/36R)，其中18R/36L主要用于起飞，18L/36R用于降落，如下图所示。(这里插一句，跑道编号的数字表明跑道的方向角，18则表示为南北走向。如果数字后面有字母L和R，则表示有两条同一朝向的平行跑道。)</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic1.png?raw=true" alt="map of Hongqiao airport"></p>
-<p>由于SHA的南边有高架，阻挡视线，且安全性低，我们考虑去北边看飞机的起降。通常起降的方向是相反的，所以出发之前建议提前查看飞机的起降方向，我会在下一步来说。这里先说说怎么到<strong>最佳地点</strong>，即上图中的红色十字的位置(如下图右所示)。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic-map.jpg?raw=true" alt="Landing at 18L/36R from north"></p>
-<p>我们可以清楚地看到跑道灯，守在附近便可以近距离观察飞机的起降。而且附近是绿化带，安全性可以得到保障。那么，如何去呢？离这里最近的地铁站是2号线淞虹路站，下车以后沿着天山西路一直走便能找到。</p>
-<h4 id="利用Flightradar24实时监控飞机航路和起降方向"><a href="#利用Flightradar24实时监控飞机航路和起降方向" class="headerlink" title="利用Flightradar24实时监控飞机航路和起降方向"></a>利用Flightradar24实时监控飞机航路和起降方向</h4><p>为了提前获取飞机起降方向，以及进近的飞机的型号、航班号等信息，可以使用<a href="https://www.flightradar24.com" target="_blank" rel="external">Flightradar24</a>，免费版已经可以提供我们需要的所有信息。当然他们目前只提供iphone端的应用，所以我买iphone是因为要看飞机吗(手动滑稽)？ </p>
-<p>网页版的界面如下图所示，从图中可以看出SHA今天的进近方向是南边，即在36R跑道降落，36L跑道起飞。随便点击其中某架飞机，便可以查询其相关信息，非常方便。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic2.png?raw=true" alt="Check plane info with flightradar24"></p>
-<h4 id="一些照片"><a href="#一些照片" class="headerlink" title="一些照片"></a>一些照片</h4><p>最后，放几张我拍的照片，手机是魅族note，像素非常低。但能近距离看飞机已经很开心了，等下次去可以测试一下iphone的效果。如果能有台单反，那就再好不过了！！<br><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic-planes.jpg?raw=true" alt="Photos by Jason"></p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="http://www.vatprc.net/index.php/zh/introduction" target="_blank" rel="external">VATPRC-VATSIM</a></li>
-<li><a href="https://www.flightradar24.com/31.27,121.44/10" target="_blank" rel="external">Flightradar24</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cj7hsg4b6000o8vr37xz63kkm" class="article-share-link">Partager</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Commentaires</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
 
     </footer>
   </div>
@@ -703,7 +695,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
     </div>
@@ -713,9 +705,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/signal-processing/" style="font-size: 10px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 13.33px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 10px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
   </div>
 
@@ -732,9 +724,13 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
+          </li>
         
           <li>
             <a href="/2017/09/12/Fourier-transform-on-2D-image/">Fourier transform on 2D image</a>
@@ -752,10 +748,6 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
             <a href="/2017/09/08/matplotlib-tips-I/">matplotlib tips I</a>
           </li>
         
-          <li>
-            <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">Install R on Ubuntu16.04 and configure jupyter-notebook</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -769,7 +761,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 Jason Ma<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Transfer learning with TensorFlow | Canal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transfer learning with TensorFlow">
+<meta property="og:url" content="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/index.html">
+<meta property="og:site_name" content="Canal">
+<meta property="og:description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+<meta property="og:updated_time" content="2017-09-13T09:14:59.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Transfer learning with TensorFlow">
+<meta name="twitter:description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+  
+    <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Canal</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Valar morghulis, valar dohaeris.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Transfer-learning-with-TensorFlow" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/13/Transfer-learning-with-TensorFlow/" class="article-date">
+  <time datetime="2017-09-13T08:07:45.000Z" itemprop="datePublished">2017-09-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Transfer learning with TensorFlow
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
+<p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p>
+<p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p>
+<h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p>
+<p>It should be noted that, the instancing of <code>saver</code> should be after defination of the network. I find that though the restored session <code>sess</code> saved the graph of the newtork, including tensors, variables, and operations, the variables still need to be initialized when training after restoration.</p>
+<h4 id="2-How-to-realize-the-transfer-learning"><a href="#2-How-to-realize-the-transfer-learning" class="headerlink" title="2. How to realize the transfer learning?"></a>2. How to realize the transfer learning?</h4><p>Here we come to the transfer learning. A typical process is that we save the paramters of the convolutional layers (ConvLayer), and replace the fully connected and output layers with new weights and biases. This is because the ConvLayers are the part to <strong>extract features</strong> of those samples, while the fully connected layers composing the <strong>classifier</strong> itself. Our target is to save the feature represantation part and update the classifier according to our project.</p>
+<p>Denote the last output of the ConvLayers is a tensor with name <code>ConvLayer_output</code>, and suppose a session namely <code>sess</code> has been restored, then we can build our own classifier, see as follows,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Get tensor 'ConvLayer_output' from sess</span></div><div class="line">l_conv_output = sess.graph.get_tensor_by_name(<span class="string">"ConvLayer_output"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add new fully connected layers and softmax layer</span></div><div class="line"><span class="comment"># Suppose we have 10 class to be classied</span></div><div class="line">numclass = <span class="number">10</span></div><div class="line">y_ = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, numclass], name=<span class="string">"cnn-softmax"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add a fully connected as an example</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape)</span>:</span></div><div class="line">	initial = tf.truncated_normal(shape, stddev=<span class="number">0.1</span>)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line">last_conv_shape = l_conv_output.get_shape().as_list()</div><div class="line">input_shape = last_conv_shape[<span class="number">1</span>] * last_conv_shape[<span class="number">2</span>] * last_conv_shape[<span class="number">3</span>]</div><div class="line">output_shape = <span class="number">1024</span></div><div class="line">W_fc = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_fc = bias_variable(shape=[output_shape])</div><div class="line">l_fc = tf.nn.relu(tf.matmul(l_conv_output, W_fc) + b_fc)</div><div class="line"></div><div class="line"><span class="comment"># Fully connected to softmax</span></div><div class="line">input_shape = <span class="number">1024</span></div><div class="line">output_shape = numclass</div><div class="line">W_soft = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_soft = bias_variable(shape = [output_shape])</div><div class="line">l_y = tf.nn.softmax(tf.matmul(l_fc, W_soft) + b_soft)</div></pre></td></tr></table></figure></p>
+<p>After that, our new network can be trained on our samples,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Initialize all the parameters, including the pretrained net and concated layers</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line"><span class="comment"># [Training lines goes here]</span></div></pre></td></tr></table></figure></p>
+<p>Finally, we obtain the network, and evaluations can be conducted, enjoy yourselves.</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="https://stackoverflow.com/questions/36281129/no-variable-to-save-error-in-tensorflow" target="_blank" rel="external">No variable to save error in Tensorflow</a></li>
+<li><a href="https://www.tensorflow.org" target="_blank" rel="external">Tensorflow</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7isy4an000cqd67jqgc8oeq" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/12/Fourier-transform-on-2D-image/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Fourier transform on 2D image</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 13.33px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 10px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/12/Fourier-transform-on-2D-image/">Fourier transform on 2D image</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/11/Data-visualization-with-t-SNE/">Data visualization with t-SNE</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/09/Catch-data-with-provided-keys/">Catch data with provided keys</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/08/matplotlib-tips-I/">matplotlib tips I</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Jason Ma<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'mazhixian';
+  
+  var disqus_url = 'http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
