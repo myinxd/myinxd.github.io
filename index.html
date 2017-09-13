@@ -90,7 +90,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
+        <p>Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
 <p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p>
 <p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p>
 <h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p>
@@ -107,7 +107,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7isy4an000cqd67jqgc8oeq" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7itkr9j000h9r670qfbmbzl" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -165,7 +165,7 @@ e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7isy4ao000dqd674lxtl5y5" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7itkr9f000b9r67n86d9v8l" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -239,7 +239,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7isy4ar000hqd67exqockfr" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7itkr9c00089r67xnnnh47s" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -287,7 +287,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7isy4al0009qd67lw73t0j4" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7itkr9900049r672a8m80h0" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -332,7 +332,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7isy4bc000zqd67qpo63542" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7itkr9o000n9r67rz51ibk8" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -385,7 +385,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7isy4bd0010qd67obgo1ukb" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7itkr9i000f9r67eu3h67a7" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -434,7 +434,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7isy4ai0005qd67ha0al8we" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7itkr9400019r67hewh8t8c" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -491,7 +491,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7isy4be0012qd67vs1xim91" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7itkr9l000j9r67d185iiz3" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -600,7 +600,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7isy4ah0004qd673jvarrsk" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7itkr9d00099r670g514arv" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -667,7 +667,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7isy4a70000qd67fjyc294s" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7itkr8z00009r67dnxppoc3" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Comments</a>
       

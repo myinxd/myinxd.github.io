@@ -5,17 +5,17 @@
   
   <title>Transfer learning with TensorFlow | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+  <meta name="description" content="Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Transfer learning with TensorFlow">
 <meta property="og:url" content="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
-<meta property="og:updated_time" content="2017-09-13T09:14:59.514Z">
+<meta property="og:description" content="Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+<meta property="og:updated_time" content="2017-09-13T09:24:13.095Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Transfer learning with TensorFlow">
-<meta name="twitter:description" content="Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
+<meta name="twitter:description" content="Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks,">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -90,7 +90,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Today, Let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
+        <p>Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
 <p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p>
 <p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p>
 <h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p>
@@ -107,7 +107,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7isy4an000cqd67jqgc8oeq" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7itkr9j000h9r670qfbmbzl" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
       
