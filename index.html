@@ -68,6 +68,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Tensorflow-namespace-and-network-restoration" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" class="article-date">
+  <time datetime="2017-09-14T08:20:37.000Z" itemprop="datePublished">2017-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">Tensorflow namespace and network restoration</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。</p>
+<p>概括为如下三个问题：</p>
+<ol>
+<li>变量的命名空间问题;</li>
+<li>网络的恢复问题;</li>
+<li>网络中tensor名称和数据的获取</li>
+</ol>
+<h4 id="变量命名空间"><a href="#变量命名空间" class="headerlink" title="变量命名空间"></a>变量命名空间</h4><p>首先，来说明命名空间的问题。通常我们利用<code>tf.Variable</code>或<code>tf.placeholder</code>等初始话一个变量，这两个类都有缺省的命名参数，例如<code>tf.Variable</code>的参数<code>name=Variable</code>。相应的，tf在我们新建变量的过程中按顺序在<code>Variable</code>后添加数字，例如<code>Variable_1</code>,<code>Variable_2</code>等。</p>
+<p>这种缺省命名虽然方便，但对网络的存储和恢复会造成很大的影响，所以如果要保存我们的网络，最好的方法是给每个变量设置命名空间。这些变量包括<code>Variables</code>,<code>placeholder</code>以及<code>optimizer</code>。</p>
+<h4 id="网络的恢复问题"><a href="#网络的恢复问题" class="headerlink" title="网络的恢复问题"></a>网络的恢复问题</h4><p>如上一篇<a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">博客</a>所述，tensorflow的<code>tf.train.Saver</code>类既可以存储网络，也可以恢复网络。其中Saver保存的<code>.ckpt</code>文件包含<strong>checkpoint</strong>和<strong>metadata</strong>，分别存储了graph的命名空间和元数据。恢复的时候便是基于他们读取数据到网络中。</p>
+<p><strong>但是</strong>，单有checkpoint和metadata是没有用的，tensorflow的核心就是graph，所以我们需要在恢复网络前重新搭建graph，并且这个graph的命名空间要与checkpoint的相同。因此，一定要养成好习惯，在定义网络的时候，给每个变量都设置固定的名称。</p>
+<p>除此之外，在一个ipython环境或者notebook下，如果要保存网络，建议只搭建一个graph。因为我发现，<code>tf.train.Saver</code>类在保存checkpoint的时候，会将目前存在的graph全部保存。</p>
+<p>下面给一段代码，从这篇<a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">文章</a>复制来的。。。</p>
+<h5 id="保存模型"><a href="#保存模型" class="headerlink" title="保存模型"></a>保存模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">init_op = tf.global_variables_initializer() </div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line">savepath = <span class="string">"./model.ckpt"</span></div><div class="line">saver.save(sess, savepath)</div></pre></td></tr></table></figure>
+<h5 id="恢复模型"><a href="#恢复模型" class="headerlink" title="恢复模型"></a>恢复模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">modelpath = <span class="string">"./model.ckpt"</span></div><div class="line">sess = saver.restore(sess, modelpath)</div></pre></td></tr></table></figure>
+<p>从上面可以看出，二者的区别在于<strong>是否需要初始化变量</strong>，这也是网络恢复的核心问题，因为我们的目的就是恢复参数。</p>
+<h4 id="网络中tensor名称和数据的获取"><a href="#网络中tensor名称和数据的获取" class="headerlink" title="网络中tensor名称和数据的获取"></a>网络中tensor名称和数据的获取</h4><p>如何从存储的网络中提取变量的命名及其数据，可以参考下面的程序，也是<a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">抄来的</a>。。。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tensorflow.python <span class="keyword">import</span> pywrap_tensorflow  </div><div class="line">checkpoint_path = os.path.join(model_dir, <span class="string">"model.ckpt"</span>)  </div><div class="line">reader = pywrap_tensorflow.NewCheckpointReader(checkpoint_path)  </div><div class="line">var_to_shape_map = reader.get_variable_to_shape_map()  </div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> var_to_shape_map:  </div><div class="line">    print(<span class="string">"tensor_name: "</span>, key)  <span class="comment"># Ouput variables name</span></div><div class="line">    print(reader.get_tensor(key)) <span class="comment"># Output variables data</span></div></pre></td></tr></table></figure></p>
+<p>输出结果类似这样，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">tensor_name:  Conv_En_b2/cae-optimizer</div><div class="line">tensor_name:  Conv_De_b1/cae-optimizer_1</div><div class="line">tensor_name:  Conv_En_W0</div><div class="line">tensor_name:  De_b/cae-optimizer</div></pre></td></tr></table></figure></p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">TensorFlow学习笔记（8）—网络模型的保存和读取</a></li>
+<li><a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">查看TensorFlow checkpoint文件中的变量名和对应值</a></li>
+<li><a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-id="cj7k938tg000c5967pswproe4" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Transfer-learning-with-TensorFlow" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/09/13/Transfer-learning-with-TensorFlow/" class="article-date">
@@ -107,7 +170,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7itkr9j000h9r670qfbmbzl" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj7k938th000d59674t8b1ral" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -165,7 +228,7 @@ e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7itkr9f000b9r67n86d9v8l" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj7k938te00095967khnctm8g" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -239,7 +302,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7itkr9c00089r67xnnnh47s" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj7k938ug00135967oo0xt0co" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -287,7 +350,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7itkr9900049r672a8m80h0" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj7k938ti000f5967nxbaxdie" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -332,7 +395,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7itkr9o000n9r67rz51ibk8" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj7k938uh00155967h8x1gpfn" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -385,7 +448,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7itkr9i000f9r67eu3h67a7" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj7k938uf00125967eawdoyif" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -434,7 +497,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7itkr9400019r67hewh8t8c" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj7k938t900045967rrgtr3qz" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -491,7 +554,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7itkr9l000j9r67d185iiz3" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj7k938tv000x5967b6pthvdi" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -600,79 +663,12 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7itkr9d00099r670g514arv" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj7k938tb00055967w3fbog6l" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Applying-MathJax-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="article-date">
-  <time datetime="2017-08-30T14:24:53.000Z" itemprop="datePublished">2017-08-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/30/Applying-MathJax-to-hexo/">Applying MathJax to hexo</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下班前简单写一下怎么在Hexo中应用<a href="https://www.mathjax.org/" target="_blank" rel="external">MathJex</a>，参考了两篇博客，后面会列出。具体步骤如下，</p>
-<ul>
-<li>进入博客所在文件夹 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> username.github.io</div></pre></td></tr></table></figure>
-<ul>
-<li>安装hexo-math,并解决兼容问题 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-math</div><div class="line">$ npm uninstall hexo-renderer-marked --save</div><div class="line">$ npm install hexo-renderer-kramed --save</div></pre></td></tr></table></figure>
-<ul>
-<li>解决行内公式渲染问题</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/node_modules/kramed/lib/rules/inline.js</div><div class="line"></div><div class="line">change line 11 from `escape: /^\\([\\`*&#123;&#125;\[\]()<span class="comment">#$+\-.!_&gt;])/,` to `escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,`</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改配置文件<code>_config.yml</code></li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ vim _config.yml</div><div class="line">Add following lines</div><div class="line"><span class="comment"># MathJax Support</span></div><div class="line">mathjax:</div><div class="line">	<span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">    per_page: <span class="literal">true</span></div></pre></td></tr></table></figure>
-<ul>
-<li>重新编译Hexo</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>测试一下效果，比如一维Gauss分布，</p>
-<script type="math/tex; mode=display">
-f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a href="http://www.jianshu.com/p/7ab21c7f0674" target="_blank" rel="external">在Hexo中渲染MathJax数学公式</a></li>
-<li><a href="http://blog.csdn.net/sysushui/article/details/54585908" target="_blank" rel="external">在Hexo中使用mathjax来渲染latex</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj7itkr8z00009r67dnxppoc3" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
 
     </footer>
   </div>
@@ -729,6 +725,10 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       <ul>
         
           <li>
+            <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">Tensorflow namespace and network restoration</a>
+          </li>
+        
+          <li>
             <a href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
           </li>
         
@@ -742,10 +742,6 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
         
           <li>
             <a href="/2017/09/09/Catch-data-with-provided-keys/">Catch data with provided keys</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/08/matplotlib-tips-I/">matplotlib tips I</a>
           </li>
         
       </ul>
