@@ -68,6 +68,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" class="article-date">
+  <time datetime="2017-09-06T15:52:22.000Z" itemprop="datePublished">2017-09-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">Install R on Ubuntu16.04 and configure jupyter-notebook</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。</p>
+<p>第二篇是“[R]Ubuntu-16.04 R 安装及Jupyter notebook 配置” （<a href="http://blog.sina.com.cn/s/blog_9b6253b10102xu8s.html" target="_blank" rel="external">原文链接</a>)。</p>
+<h4 id="问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel"><a href="#问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel" class="headerlink" title="问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel."></a>问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel.</h4><p>解决方法如下，</p>
+<h5 id="1-R-安装"><a href="#1-R-安装" class="headerlink" title="1. R 安装"></a>1. R 安装</h5><p>通常在Terminal下直接apt-get 即可，在16.10下可以get到R-3.3.1，目前最新好像是 R-3.4.2，可以去官方网站下载源码编译 (<a href="https://www.r-project.org)​" target="_blank" rel="external">https://www.r-project.org)​</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install r-base</div></pre></td></tr></table></figure></p>
+<h5 id="2-在jupyter-notebook中配置R的kernel"><a href="#2-在jupyter-notebook中配置R的kernel" class="headerlink" title="2. 在jupyter notebook中配置R的kernel"></a>2. 在jupyter notebook中配置R的kernel</h5><p>近期在Jupyter下跑python，方便边调试边记笔记。因为Jupyter也支持R语言，所以尝试添加R kernel到Jupyter中。 主要依赖 “IRkernel” 包。(有些包可能需要翻墙才能下载，具体的方法请DIY…) 配置方法如下：</p>
+<p>(1) 安装必要的lib</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install libzmq3-dev libssl-dev libcurl​4-openssl-dev</div><div class="line">$ sudo R <span class="comment"># 进入R环境</span></div></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; install.packages(c(<span class="string">'repr'</span>, <span class="string">'IRdisplay'</span>, <span class="string">'evaluate'</span>, <span class="string">'crayon'</span>, <span class="string">'pbdZMQ'</span>, <span class="string">'devtools'</span>, <span class="string">'uuid'</span>, <span class="string">'digest'</span>))</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>： 会提示选择mirrors， 建议选择 0-cloud<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; devtools::install_github(<span class="string">'IRkernel/IRkernel'</span>)</div><div class="line">&gt; IRkernel::installspec()</div></pre></td></tr></table></figure></p>
+<p>如果显示​如下结果，说明配置成功。<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[InstallKernelSpec] Installed kernelspec ir <span class="keyword">in</span> /home/xxx/.local/share/jupyter/kernels/ir​</div></pre></td></tr></table></figure></p>
+<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><p>[1] <a href="https://irkernel.github.io/installation/" target="_blank" rel="external">https://irkernel.github.io/installation/</a></p>
+<p>[2] <a href="http://blog.csdn.net/reallocing1/article/details/51396539" target="_blank" rel="external">http://blog.csdn.net/reallocing1/article/details/51396539</a></p>
+<p>[3] <a href="http://blog.csdn.net/songying2012/article/details/51123475" target="_blank" rel="external">http://blog.csdn.net/songying2012/article/details/51123475</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj8l78kwv000rn0r3p9c39fsg" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-BP神经网络sim函数的MATLAB和C实现" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" class="article-date">
@@ -103,7 +156,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj87eos9m000404r3ejuxvb0g" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cj8l78kwj0005n0r3vyiacwfe" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -160,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj87eos9z000v04r34o11f125" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cj8l78kww000vn0r30kznvf8j" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -269,7 +322,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj87eos9t000g04r3zxgpolr3" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cj8l78kwn000bn0r3nnqhvrpb" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -336,7 +389,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj87eos9n000504r3jkud64tw" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cj8l78kwl0008n0r3esu0kwtb" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -397,7 +450,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cj87eosa0001004r3938e8pub" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cj8l78kwx000xn0r351vyjqeg" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -465,7 +518,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cj87eos9q000c04r38agrastu" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cj8l78kwm0009n0r3vqpqs6q4" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -519,7 +572,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/" data-id="cj87eos9v000k04r3sg98yh8r" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/" data-id="cj8l78kwv000tn0r33ah4jmqv" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -594,7 +647,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" data-id="cj87eos9y000t04r3ci53fhtq" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" data-id="cj8l78kwu000pn0r39i4m0eoq" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -674,7 +727,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj87eos9o000804r3as1ma9lu" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/08/23/Build-your-blog/" data-id="cj8l78kwo000dn0r3p7dd023b" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/08/23/Build-your-blog/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -714,7 +767,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 10px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
   </div>
 
@@ -723,7 +776,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
     </div>
   </div>
 
@@ -734,6 +787,10 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/10/10/20171010/">Convolution in signal processing VS. convolution in CNN</a>
+          </li>
         
           <li>
             <a href="/2017/09/30/20170930/">喝醉了，说说故事</a>
@@ -749,10 +806,6 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
         
           <li>
             <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">Tensorflow namespace and network restoration</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
           </li>
         
       </ul>

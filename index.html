@@ -68,6 +68,74 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20171010" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/10/10/20171010/" class="article-date">
+  <time datetime="2017-10-10T04:59:54.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/10/20171010/">Convolution in signal processing VS. convolution in CNN</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>萌节快乐，LOL!!</p>
+<p>中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。）</p>
+<h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong><strong><em>*</em></strong></strong>信号通过系统以后的输出，是信号与系统相互作用的结果**.</p>
+<p>定义<script type="math/tex">f(t)</script>表示信号，<script type="math/tex">h(t)</script>表示，输出信号为<script type="math/tex">g(t)</script>，则有</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+g(t) = f(t)*h(t) = \int^{\infty}_{-\infty}{f(t-\tau)h(\tau)d\tau}.
+\end{equation}</script><p>其中<script type="math/tex">\tau</script>是积分变量。</p>
+<p>这里的<script type="math/tex">t-\tau</script>理解为对信号做对称 (翻折) 变换，其物理意义是在<script type="math/tex">t_0</script>时刻通过系统并输出的信号<script type="math/tex">g(t_0)</script>除了受到<script type="math/tex">f(t_0)</script>的影响，还受到<script type="math/tex">t<t_0</script>的信号通过系统以后的累积作用的影响。通俗的说，某时刻的输出信号是该时刻之前的信号与此刻信号共同作用的结果。</p>
+<p>以上是卷积在信号处理中的理解。</p>
+<p>推广到高维空间也是如此，最典型的就是图像空间的滤波，用某个核函数与原图做卷积，进行图像处理。例如用拉普拉斯核与原图做图像锐化。下面给出二维空间滤波的连续和离散表达。</p>
+<h4 id="Continous"><a href="#Continous" class="headerlink" title="Continous"></a>Continous</h4><script type="math/tex; mode=display">
+\begin{align}
+g(u,v) &= f(u,v)*h(u,v) \notag \\
+&=\int^{\infty}_{-\infty}{\int^{\infty}_{-\infty}}{f(u-\mu,v-\nu)h(\mu,\nu)d{\mu}d{\nu}}.
+\end{align}</script><h4 id="Discrete"><a href="#Discrete" class="headerlink" title="Discrete"></a>Discrete</h4><script type="math/tex; mode=display">
+\begin{align}
+g(m,n) &= f(m,n)*h(n,n) \notag \\
+&=\sum_{i}{\sum_{j}{f(m-i,n-j)h(i,j)}}.
+\end{align}</script><h3 id="Convolution-in-CNN"><a href="#Convolution-in-CNN" class="headerlink" title="Convolution in CNN"></a>Convolution in CNN</h3><p>然后我们来说卷积神经网络 (Convolutional Neural Network, CNN) 中的卷积，这里卷积的目的除了提取图像的特征，更重要的是缩小网络的参数数量。其物理意义是<strong>利用共享的权值矩阵 (卷积核) 以小块的形式遍历图像矩阵，获取图像在该卷积核下的响应，作为图像的特征</strong>。这里获取的特征也被成为特征图 (feature map)。</p>
+<p>因为图像空间不考虑时序性，也即某点与卷积核作用的输出不会受到其他时刻的影响，所以直接做图像与卷积核的相关(correlation)即可。</p>
+<p>定义图像矩阵为<script type="math/tex">I(m,n), m=1,\dots,M, n=1,\dots,N</script>，卷积核<script type="math/tex">G(i,j), i,j = 1,\dots,K</script>, 输出的特征图<script type="math/tex">F(p,q), p=1,\dots,P, q=1,\dots,Q</script>,则有</p>
+<script type="math/tex; mode=display">
+\begin{align}
+F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
+&=\sum^{K}_{i=1}{\sum^{K}_{j=1}{I(i,j)G(i,j)}}.
+\end{align}</script><p>通常，CNN卷积运算的输出矩阵与输入矩阵大小是不同的，这里涉及到”zero padding”的问题，在离散信号处理中也很常见。我在<a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">这篇文章</a>讨论过，感兴趣的可以去围观。</p>
+<p>最后，我认为CNN的卷积本质上就是相关运算，与信号处理的卷积不等价。只是因为相关运算的两个矩阵通常具有相同的大小，而CNN的卷积核通常远小于图像矩阵。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/10/10/20171010/" data-id="cj8l78kw90000n0r3ngls0f3c" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/10/10/20171010/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/signal-processing/">signal-processing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20170930" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/09/30/20170930/" class="article-date">
@@ -100,7 +168,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/30/20170930/" data-id="cj87eos9l000304r3anjq2d1x" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/30/20170930/" data-id="cj8l78kwj0004n0r3ywsj7nfe" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/30/20170930/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -144,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/26/20170926/" data-id="cj87eos9i000104r3ycsi0iq5" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/26/20170926/" data-id="cj8l78kwh0003n0r38jjakwom" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/26/20170926/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -193,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/17/20170917/" data-id="cj87eos9e000004r31z9x7esk" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/17/20170917/" data-id="cj8l78kwe0001n0r3skukehxr" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/17/20170917/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -256,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-id="cj87eos9w000p04r3lllvprf3" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-id="cj8l78kwt000mn0r3otodnuz1" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -309,7 +377,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj87eos9x000r04r3lf9y9ypv" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" data-id="cj8l78kwy0010n0r3gw4t85mc" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -367,7 +435,7 @@ e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj87eos9u000i04r3y3y7ptqx" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/" data-id="cj8l78kwq000in0r31jc5pk8h" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -441,7 +509,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj87eos9s000d04r3cni9ui39" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cj8l78kwp000gn0r3jt4bxlh5" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -489,7 +557,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj87eos9p000904r32dqfur6w" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cj8l78kwr000kn0r3oksvd2rb" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -534,65 +602,12 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj87eosa0000y04r38p7qu8bi" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cj8l78kwz0012n0r3rh3sgz6s" class="article-share-link">Share</a>
       
         <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" class="article-date">
-  <time datetime="2017-09-06T15:52:22.000Z" itemprop="datePublished">2017-09-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">Install R on Ubuntu16.04 and configure jupyter-notebook</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。</p>
-<p>第二篇是“[R]Ubuntu-16.04 R 安装及Jupyter notebook 配置” （<a href="http://blog.sina.com.cn/s/blog_9b6253b10102xu8s.html" target="_blank" rel="external">原文链接</a>)。</p>
-<h4 id="问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel"><a href="#问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel" class="headerlink" title="问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel."></a>问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel.</h4><p>解决方法如下，</p>
-<h5 id="1-R-安装"><a href="#1-R-安装" class="headerlink" title="1. R 安装"></a>1. R 安装</h5><p>通常在Terminal下直接apt-get 即可，在16.10下可以get到R-3.3.1，目前最新好像是 R-3.4.2，可以去官方网站下载源码编译 (<a href="https://www.r-project.org)​" target="_blank" rel="external">https://www.r-project.org)​</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install r-base</div></pre></td></tr></table></figure></p>
-<h5 id="2-在jupyter-notebook中配置R的kernel"><a href="#2-在jupyter-notebook中配置R的kernel" class="headerlink" title="2. 在jupyter notebook中配置R的kernel"></a>2. 在jupyter notebook中配置R的kernel</h5><p>近期在Jupyter下跑python，方便边调试边记笔记。因为Jupyter也支持R语言，所以尝试添加R kernel到Jupyter中。 主要依赖 “IRkernel” 包。(有些包可能需要翻墙才能下载，具体的方法请DIY…) 配置方法如下：</p>
-<p>(1) 安装必要的lib</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install libzmq3-dev libssl-dev libcurl​4-openssl-dev</div><div class="line">$ sudo R <span class="comment"># 进入R环境</span></div></pre></td></tr></table></figure>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; install.packages(c(<span class="string">'repr'</span>, <span class="string">'IRdisplay'</span>, <span class="string">'evaluate'</span>, <span class="string">'crayon'</span>, <span class="string">'pbdZMQ'</span>, <span class="string">'devtools'</span>, <span class="string">'uuid'</span>, <span class="string">'digest'</span>))</div></pre></td></tr></table></figure>
-<p><strong>注意</strong>： 会提示选择mirrors， 建议选择 0-cloud<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; devtools::install_github(<span class="string">'IRkernel/IRkernel'</span>)</div><div class="line">&gt; IRkernel::installspec()</div></pre></td></tr></table></figure></p>
-<p>如果显示​如下结果，说明配置成功。<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[InstallKernelSpec] Installed kernelspec ir <span class="keyword">in</span> /home/xxx/.local/share/jupyter/kernels/ir​</div></pre></td></tr></table></figure></p>
-<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><p>[1] <a href="https://irkernel.github.io/installation/" target="_blank" rel="external">https://irkernel.github.io/installation/</a></p>
-<p>[2] <a href="http://blog.csdn.net/reallocing1/article/details/51396539" target="_blank" rel="external">http://blog.csdn.net/reallocing1/article/details/51396539</a></p>
-<p>[3] <a href="http://blog.csdn.net/songying2012/article/details/51123475" target="_blank" rel="external">http://blog.csdn.net/songying2012/article/details/51123475</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cj87eos9v000m04r3daslsh3s" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
 
     </footer>
   </div>
@@ -627,7 +642,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 10px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
+      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
   </div>
 
@@ -636,7 +651,7 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
     </div>
   </div>
 
@@ -647,6 +662,10 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/10/10/20171010/">Convolution in signal processing VS. convolution in CNN</a>
+          </li>
         
           <li>
             <a href="/2017/09/30/20170930/">喝醉了，说说故事</a>
@@ -662,10 +681,6 @@ q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\n
         
           <li>
             <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">Tensorflow namespace and network restoration</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a>
           </li>
         
       </ul>
