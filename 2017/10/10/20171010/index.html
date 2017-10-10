@@ -5,17 +5,17 @@
   
   <title>Convolution in signal processing VS. convolution in CNN | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是*信号通过系统以后的输出，是信号与系统相互作用的结果**. 定义f(t)表">
+  <meta name="description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是信号通过系统以后的输出，是信号与系统相互作用的结果. 定义f(t)表示信号">
 <meta name="keywords" content="signal-processing">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Convolution in signal processing VS. convolution in CNN">
 <meta property="og:url" content="http://www.mazhixian.me/2017/10/10/20171010/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是*信号通过系统以后的输出，是信号与系统相互作用的结果**. 定义f(t)表">
-<meta property="og:updated_time" content="2017-10-10T06:13:33.382Z">
+<meta property="og:description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是信号通过系统以后的输出，是信号与系统相互作用的结果. 定义f(t)表示信号">
+<meta property="og:updated_time" content="2017-10-10T06:16:14.502Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Convolution in signal processing VS. convolution in CNN">
-<meta name="twitter:description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是*信号通过系统以后的输出，是信号与系统相互作用的结果**. 定义f(t)表">
+<meta name="twitter:description" content="萌节快乐，LOL!! 中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。） Convolution in signal processing首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是信号通过系统以后的输出，是信号与系统相互作用的结果. 定义f(t)表示信号">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -57,9 +57,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
@@ -92,7 +92,7 @@
       
         <p>萌节快乐，LOL!!</p>
 <p>中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。）</p>
-<h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong><strong><em>*</em></strong></strong>信号通过系统以后的输出，是信号与系统相互作用的结果**.</p>
+<h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong>信号通过系统以后的输出，是信号与系统相互作用的结果</strong>.</p>
 <p>定义<script type="math/tex">f(t)</script>表示信号，<script type="math/tex">h(t)</script>表示，输出信号为<script type="math/tex">g(t)</script>，则有</p>
 <script type="math/tex; mode=display">
 \begin{equation}
@@ -122,9 +122,9 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/10/10/20171010/" data-id="cj8l78kw90000n0r3ngls0f3c" class="article-share-link">Share</a>
+      <a data-url="http://www.mazhixian.me/2017/10/10/20171010/" data-id="cj8l7r35500049hr3sqesyzki" class="article-share-link">Partager</a>
       
-        <a href="http://www.mazhixian.me/2017/10/10/20171010/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://www.mazhixian.me/2017/10/10/20171010/#disqus_thread" class="article-comment-link">Commentaires</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/signal-processing/">signal-processing</a></li></ul>
@@ -137,7 +137,7 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
   
   
     <a href="/2017/09/30/20170930/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ancien</strong>
       <div class="article-nav-title">喝醉了，说说故事</div>
     </a>
   
@@ -161,7 +161,7 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
     </div>
@@ -171,7 +171,7 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
       <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
@@ -190,7 +190,7 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -227,7 +227,7 @@ F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 Jason Ma<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
