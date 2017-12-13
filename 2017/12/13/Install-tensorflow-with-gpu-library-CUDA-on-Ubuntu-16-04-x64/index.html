@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Applying MathJax to hexo | Canal</title>
+  <title>Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64 | Canal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
-<meta name="keywords" content="hexo">
+  <meta name="description" content="System and Software info System: Ubuntu16.04 GPU card: Nvidia GeForce GT 620 tensoflow-gpu==1.2.1 CUDA: 8.0 https://developer.nvidia.com/cuda-downloads  cuDNN: v5.1 https://developer.nvidia.com/rdp/cu">
+<meta name="keywords" content="deep-learning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Applying MathJax to hexo">
-<meta property="og:url" content="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/index.html">
+<meta property="og:title" content="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
+<meta property="og:url" content="http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/index.html">
 <meta property="og:site_name" content="Canal">
-<meta property="og:description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
-<meta property="og:updated_time" content="2017-08-30T15:19:31.614Z">
+<meta property="og:description" content="System and Software info System: Ubuntu16.04 GPU card: Nvidia GeForce GT 620 tensoflow-gpu==1.2.1 CUDA: 8.0 https://developer.nvidia.com/cuda-downloads  cuDNN: v5.1 https://developer.nvidia.com/rdp/cu">
+<meta property="og:updated_time" content="2017-12-13T06:38:08.299Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Applying MathJax to hexo">
-<meta name="twitter:description" content="下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，  进入博客所在文件夹   1$ cd username.github.io  安装hexo-math,并解决兼容问题   123$ npm install hexo-math$ npm uninstall hexo-renderer-marked --save$ npm install hexo-ren">
+<meta name="twitter:title" content="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
+<meta name="twitter:description" content="System and Software info System: Ubuntu16.04 GPU card: Nvidia GeForce GT 620 tensoflow-gpu==1.2.1 CUDA: 8.0 https://developer.nvidia.com/cuda-downloads  cuDNN: v5.1 https://developer.nvidia.com/rdp/cu">
   
     <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
   
@@ -68,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Applying-MathJax-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="article-date">
-  <time datetime="2017-08-30T14:24:53.000Z" itemprop="datePublished">2017-08-30</time>
+    <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" class="article-date">
+  <time datetime="2017-12-13T06:33:31.000Z" itemprop="datePublished">2017-12-13</time>
 </a>
     
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Applying MathJax to hexo
+      Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64
     </h1>
   
 
@@ -90,43 +90,42 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>下班前简单写一下怎么在Hexo中应用<a href="https://www.mathjax.org/" target="_blank" rel="external">MathJex</a>，参考了两篇博客，后面会列出。具体步骤如下，</p>
-<ul>
-<li>进入博客所在文件夹 </li>
+        <h3 id="System-and-Software-info"><a href="#System-and-Software-info" class="headerlink" title="System and Software info"></a>System and Software info</h3><ol>
+<li>System: Ubuntu16.04</li>
+<li>GPU card: Nvidia GeForce GT 620</li>
+<li>tensoflow-gpu==1.2.1</li>
+<li>CUDA: 8.0 <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">https://developer.nvidia.com/cuda-downloads</a> </li>
+<li>cuDNN: v5.1 <a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="external">https://developer.nvidia.com/rdp/cudnn-download</a></li>
+</ol>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol>
+<li>TensofFlow <a href="http://www.tensorflow.org" target="_blank" rel="external">http://www.tensorflow.org</a></li>
+<li>Chinese staffs<br>[1] <a href="http://blog.csdn.net/yichenmoyan/article/details/48679777" target="_blank" rel="external">http://blog.csdn.net/yichenmoyan/article/details/48679777</a><br>[2] <a href="http://blog.csdn.net/niuwei22007/article/details/50439478" target="_blank" rel="external">http://blog.csdn.net/niuwei22007/article/details/50439478</a></li>
+</ol>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><ul>
+<li><p>Install cuda, and configure path and LD_LIBRARY_PATH</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo dpkg -i cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb</div><div class="line">$ sudo apt-get update</div><div class="line">$ sudo apt-get install cuda</div></pre></td></tr></table></figure>
+</li>
+<li><p>Configure path</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/.bashrc</div><div class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/cuda-8.0/bin</div><div class="line">$ <span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/cuda-8.0/lib64:/lib</div></pre></td></tr></table></figure>
+</li>
+<li><p>Install cuDNN</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf cudnn-8.0-linux-x64-v5.1.tgz</div><div class="line">$ <span class="built_in">cd</span> cuda</div><div class="line">$ sudo cp ./lib64/* /usr/<span class="built_in">local</span>/cuda/lib64/</div><div class="line">$ sudo chmod 755 /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</div><div class="line">$ sudo cp ./include/cudnn.h /usr/<span class="built_in">local</span>/cuda/include/</div></pre></td></tr></table></figure>
+</li>
+<li><p>Install TensorFlow</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ &lt;sudo&gt; pip3 install &lt;--user&gt; &lt;--update&gt; tenforflow-gpu==1.2.1</div></pre></td></tr></table></figure>
+</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> username.github.io</div></pre></td></tr></table></figure>
-<ul>
-<li>安装hexo-math,并解决兼容问题 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-math</div><div class="line">$ npm uninstall hexo-renderer-marked --save</div><div class="line">$ npm install hexo-renderer-kramed --save</div></pre></td></tr></table></figure>
-<ul>
-<li>解决行内公式渲染问题</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/node_modules/kramed/lib/rules/inline.js</div><div class="line"></div><div class="line">change line 11 from `escape: /^\\([\\`*&#123;&#125;\[\]()<span class="comment">#$+\-.!_&gt;])/,` to `escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,`</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改配置文件<code>_config.yml</code></li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ vim _config.yml</div><div class="line">Add following lines</div><div class="line"><span class="comment"># MathJax Support</span></div><div class="line">mathjax:</div><div class="line">	<span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">    per_page: <span class="literal">true</span></div></pre></td></tr></table></figure>
-<ul>
-<li>重新编译Hexo</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>测试一下效果，比如一维Gauss分布，</p>
-<script type="math/tex; mode=display">
-f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a href="http://www.jianshu.com/p/7ab21c7f0674" target="_blank" rel="external">在Hexo中渲染MathJax数学公式</a></li>
-<li><a href="http://blog.csdn.net/sysushui/article/details/54585908" target="_blank" rel="external">在Hexo中使用mathjax来渲染latex</a></li>
-</ul>
+<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>Note that cuda 8.0 doesn’t support the default g++ version. Install an supported version and make it the default.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install g++-4.9</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> cc /usr/bin/gcc</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> c++ /usr/bin/g++</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cjb4omtd80003bg67ac88irot" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" data-id="cjb4opx1y001kbg67nct55y6m" class="article-share-link">Partager</a>
       
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/#disqus_thread" class="article-comment-link">Commentaires</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
 
     </footer>
   </div>
@@ -134,19 +133,10 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
     
 <nav id="article-nav">
   
-    <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
-      <div class="article-nav-title">
-        
-          Deconvolution or Transpose: opposite operation of CNN
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/08/29/我们去拍飞机吧/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/11/18/20171118/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">我们去拍飞机吧</div>
+      <div class="article-nav-title">Happy or sad?</div>
     </a>
   
 </nav>
@@ -251,7 +241,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
 <script>
   var disqus_shortname = 'mazhixian';
   
-  var disqus_url = 'http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/';
+  var disqus_url = 'http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/';
   
   (function(){
     var dsq = document.createElement('script');
