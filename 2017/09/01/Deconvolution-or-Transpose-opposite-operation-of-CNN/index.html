@@ -3,14 +3,14 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Deconvolution or Transpose: opposite operation of CNN | Canal</title>
+  <title>Deconvolution or Transpose: opposite operation of CNN | Astrogramer&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Deconvolution or Transpose: opposite operation of CNN">
 <meta property="og:url" content="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/index.html">
-<meta property="og:site_name" content="Canal">
+<meta property="og:site_name" content="Astrogramer&#39;s blog">
 <meta property="og:description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
 <meta property="og:image" content="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif">
 <meta property="og:updated_time" content="2017-09-01T09:38:34.763Z">
@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。] 最近用过的开源深度学习框架有Theano/Lasag">
 <meta name="twitter:image" content="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif">
   
-    <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Astrogramer&#39;s blog" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -40,11 +40,11 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Canal</a>
+        <a href="/" id="logo">Astrogramer&#39;s blog</a>
       </h1>
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Valar morghulis, valar dohaeris.</a>
+          <a href="/" id="subtitle">We are in the same story.</a>
         </h2>
       
     </div>
@@ -59,9 +59,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
@@ -165,9 +165,9 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cjb4omtdi000kbg67q4vumui5" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cjbeotrer000e5h6720wutq1a" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -179,7 +179,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
 <nav id="article-nav">
   
     <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           Two typical tensorflow exceptions
@@ -189,7 +189,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   
   
     <a href="/2017/08/30/Applying-MathJax-to-hexo/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Applying MathJax to hexo</div>
     </a>
   
@@ -213,7 +213,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
     </div>
@@ -223,7 +223,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
       <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
@@ -232,7 +232,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Arkiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
     </div>
@@ -242,9 +242,13 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Siste innlegg</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/12/20/matplotlib-tips-II/">matplotlib tips II</a>
+          </li>
         
           <li>
             <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/">Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64</a>
@@ -262,10 +266,6 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
             <a href="/2017/09/30/20170930/">喝醉了，说说故事</a>
           </li>
         
-          <li>
-            <a href="/2017/09/26/20170926/">为什么我们乐意对陌生人敞开心扉？</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -279,7 +279,7 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 Jason Ma<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

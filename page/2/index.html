@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Canal</title>
+  <title>Astrogramer&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Canal">
+<meta property="og:title" content="Astrogramer&#39;s blog">
 <meta property="og:url" content="http://www.mazhixian.me/page/2/index.html">
-<meta property="og:site_name" content="Canal">
+<meta property="og:site_name" content="Astrogramer&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Canal">
+<meta name="twitter:title" content="Astrogramer&#39;s blog">
 <meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
   
-    <link rel="alternate" href="/atom.xml" title="Canal" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Astrogramer&#39;s blog" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -36,11 +36,11 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Canal</a>
+        <a href="/" id="logo">Astrogramer&#39;s blog</a>
       </h1>
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Valar morghulis, valar dohaeris.</a>
+          <a href="/" id="subtitle">We are in the same story.</a>
         </h2>
       
     </div>
@@ -55,9 +55,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
@@ -67,6 +67,80 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-Data-visualization-with-t-SNE" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="article-date">
+  <time datetime="2017-09-11T06:21:55.000Z" itemprop="datePublished">2017-09-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/11/Data-visualization-with-t-SNE/">Data visualization with t-SNE</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是<strong>映射高维数据向量到低维，并保留向量的相似性或者距离</strong>。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。</p>
+<p>SNE算法最早由 <a href="http://papers.nips.cc/paper/2276-stochastic-neighbor-embedding" target="_blank" rel="external">Hinton &amp; Roweis</a> 在2002年提出。他们定义高维空间两个点<script type="math/tex">\bf{x_i}</script>和<script type="math/tex">\bf{x_j}</script>相似度的联合概率分布<script type="math/tex">P = p_{ij}</script>，和要映射到的低维空间对应两点<script type="math/tex">\bf{y_i}</script>和<script type="math/tex">\bf{y_j}</script>的联合概率<script type="math/tex">Q = q_{ij}</script>. 利用<a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence" target="_blank" rel="external">Kullback-Leibler divergence</a>衡量分布$P$和$Q$的相似性，进而最小化这一距离来确定低维空间的映射点<script type="math/tex">\bf{y_i}</script>.</p>
+<p>考虑到SNE算法存在三个缺陷,</p>
+<ol>
+<li>KL-divergence 不是对称的;</li>
+<li>从高维空间映射到低维空间，距离会发生变化;</li>
+<li>高斯分布不是长尾的，对小概率的异常点描述能力较差;</li>
+</ol>
+<p>为了解决这一问题，<a href="http://jmlr.csail.mit.edu/papers/v9/vandermaaten08a.html" target="_blank" rel="external">Van der Maaten &amp; Hinton</a> 在2008年提出了改进算法，利用自由度为1的t分布替换高斯分布来定义低维空间的距离，避免异常点，保留高维空间两点的距离关系；设计了具有对称性的概率分布函数。最后，分布$P$和$Q$，KL-divergence $\mathrm{KL}$ 以及对应的梯度公式<script type="math/tex">\partial{\mathrm{KL}}/\partial{y_i}</script>如下，</p>
+<h5 id="高维空间分布-P"><a href="#高维空间分布-P" class="headerlink" title="高维空间分布$P$"></a>高维空间分布$P$</h5><script type="math/tex; mode=display">
+\begin{equation}
+p_{j|i} = \frac{\exp{(-\lVert{\bf{x_{i}} - \bf{x_{j}}}\rVert}^2 / 2\sigma^2_{i})}{\sum_{k\neq i }{\exp{(-\lVert{\bf{x_{i}} - \bf{x_{k}}}\rVert}^2 / 2\sigma^2_{i})}},
+\end{equation}</script><p>其中，<script type="math/tex">p_{j|i}</script>表示<script type="math/tex">\bf{x_i}</script>接受<script type="math/tex">\bf{x_j}</script>为其同类点的条件概率，相应的<script type="math/tex">p_{ij}</script>由下式给出，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+p_{ij} = \frac{p_{j|i} + p_{i|j}} {2N}.
+\end{equation}</script><p>其中$N$表示样本点的个数。</p>
+<h5 id="低维空间分布-Q"><a href="#低维空间分布-Q" class="headerlink" title="低维空间分布$Q$"></a>低维空间分布$Q$</h5><script type="math/tex; mode=display">
+\begin{equation}
+q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\neq m}{(1 + {\lVert {\bf{y_{k}} - \bf{y_{m}}} \rVert}^2)^{-1}}}.
+\end{equation}</script><h5 id="KL-divergence"><a href="#KL-divergence" class="headerlink" title="KL-divergence"></a>KL-divergence</h5><script type="math/tex; mode=display">
+\begin{equation}
+\mathrm{KL}(P||Q) = \sum_{i\neq j}{p_{ij}\log{\frac{p_{ij}}{q_{ij}}}}.
+\end{equation}</script><h5 id="partial-difference-of-KL-over-bf-y-i"><a href="#partial-difference-of-KL-over-bf-y-i" class="headerlink" title="partial difference of KL over $\bf{y_i}$"></a>partial difference of KL over $\bf{y_i}$</h5><script type="math/tex; mode=display">
+\begin{equation}
+\frac{\partial{\mathrm{KL}}}{\partial{\bf{y_{i}}}} = 4\sum_{j}{(p_{ij}-q_{ij})(y_{i}-y_{j})(1+(\lVert{y_{i} - y_{j}})^{2})^{-1}},
+\end{equation}</script><p>基于以上公式，利用梯度进行优化，求解局部最优，即可对$\bf{y_i}$进行定位。</p>
+<h4 id="t-SNE的python实现"><a href="#t-SNE的python实现" class="headerlink" title="t-SNE的python实现"></a>t-SNE的python实现</h4><p>python的<a href="http://scikit-learn.org/" target="_blank" rel="external">Scikit-learn</a>提供了TSNE类，用于自动化实现数据可视化，代码样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">dimension_reduction_tSNE</span><span class="params">(code,params=None)</span>:</span></div><div class="line">	tsne = TSNE()</div><div class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> params.keys():</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            setattr(tsne, key, params[<span class="string">'key'</span>])</div><div class="line">        <span class="keyword">except</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">    code_dim = tsne.fit_transform(code)</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> code_dim</div><div class="line"></div><div class="line">code = xxx</div><div class="line">params=&#123;<span class="string">'n_components'</span>: <span class="number">2</span>, <span class="string">'learning_rate'</span>: <span class="number">100</span>&#125;</div><div class="line"></div><div class="line">code_dim = dimension_reduction_tSNE(code, params)</div></pre></td></tr></table></figure></p>
+<p>其中<code>code</code>表示高维空间的样本矩阵，每行对应一个样本。参数<code>params</code>里的<code>n_components</code>表示低维空间的维数。</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://bindog.github.io/blog/2016/06/04/from-sne-to-tsne-to-largevis/" target="_blank" rel="external">从SNE到t-SNE再到LargeVis</a></li>
+<li><a href="https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding" target="_blank" rel="external">t-distributed stochastic neighbor embedding</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution" target="_blank" rel="external">Student’s t-distrubiton</a> </li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cjbeotrex000q5h67qkb37mpp" class="article-share-link">Share</a>
+      
+        <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Kommentarer</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Catch-data-with-provided-keys" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -102,9 +176,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cjb4omtdc0008bg67kwdvcsyy" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cjbeotret000h5h67t2qp6qxu" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -147,9 +221,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cjb4omtdt0014bg670589fidg" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cjbeotrf2000y5h67k0wrn8kt" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -200,9 +274,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cjb4omtdn000ubg6784k5zqtg" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cjbeotrez000s5h67rg8vdiig" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -249,9 +323,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cjb4omtdf000dbg674vupjoqt" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cjbeotrej00045h67tsuhwuxh" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MATLAB/">MATLAB</a></li></ul>
@@ -306,9 +380,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cjb4omte8001ibg67k5yfx17y" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cjbeotrfg001k5h67oxn4mnln" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -415,9 +489,9 @@ w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cjb4omtdi000kbg67q4vumui5" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cjbeotrer000e5h6720wutq1a" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
@@ -482,9 +556,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cjb4omtd80003bg67ac88irot" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cjbeotrek00055h67wgykga7e" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -543,9 +617,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cjb4omtds0012bg67fqefns8o" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cjbeotrf400125h67ll1eb73r" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
@@ -611,63 +685,9 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cjb4omtdd000abg67rff78kci" class="article-share-link">Partager</a>
+      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cjbeotrep00095h67w5po1sh0" class="article-share-link">Share</a>
       
-        <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Commentaires</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Has-your-new-iphone-been-activated" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/27/Has-your-new-iphone-been-activated/" class="article-date">
-  <time datetime="2017-08-27T00:26:22.000Z" itemprop="datePublished">2017-08-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/27/Has-your-new-iphone-been-activated/">Has your new iphone been activated?</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>两天没写了，我又来叨叨了，今天的主题是<strong>“如何查询你新买的iphone是否是翻新机？”</strong></p>
-<p>趁着京东818的活动，入手了长草已久的iphone6sp，一方面因为它便宜，一方面也是不喜欢iphone7的<strong>无耳机孔</strong>设计。购买当天32G的价格降了500左右，到了3599。今天的价格是<a href="https://item.jd.com/3726830.html" target="_blank" rel="external">3899</a>，也是很有吸引力的，所以妹子在生着病，都要给家人买。</p>
-<p>那么，问题来了！ 为什么京东等第三方渠道比苹果管网便宜了这么多 (约2000)，会不会买到翻新机？ 首先，针对官方售价高的问题，可以看看<a href="https://www.zhihu.com/question/26974985" target="_blank" rel="external">知乎</a>上的讨论，主要就是销售渠道的问题。iphone的成本虽然高，但远低于苹果的官方价格。如果第三方零售商从生产渠道进货，那么便能够以较低的售价来吸引顾客，实现薄利多销。而京东这种大型的电商，现金流比利润更重要，相对便宜的价格也能培养足够的剁手党。经过对比，iphone6sp 32G在亚马逊和苏宁的价格与京东的差价不多，因此可以放心购买。</p>
-<p>然而，看了京东的“评论”，我们发现很多人吐槽自己买到了翻新机，或者买到了瑕疵机，而且是在京东的“激活iphone不能7天无条件退换货”的政策下。所以如何避免遇到这种情况，有一些简单的解决方法，我会以我的购买经历按步骤列出。</p>
-<h5 id="Step1-检验是否有瑕疵？"><a href="#Step1-检验是否有瑕疵？" class="headerlink" title="Step1: 检验是否有瑕疵？"></a>Step1: 检验是否有瑕疵？</h5><p>针对刚收到的iphone，检验包装盒是否有划痕，是否拆开过？ 京东的包装有塑封，并且贴了京东的贴纸，还是比较贴心的。拆开塑封包装，打开包装盒，第一层是手机; 第二层是说明书和取卡针; 第三层是充电器和耳机。通过仔细观察耳机的绕线和充电器的外观，可以初步判断拿到的手机是否是退货产品。</p>
-<p>因为iphone必须在插入sim卡的情况下才能激活，所以我们可以在不要插入sim卡的情况下开机，以检查屏幕是否有瑕疵。将手机放在黑暗环境或灯光环境下，如果视觉上没有不是感，屏幕的边界没有漏光，那么有瑕疵的可能性相对较小，可以考虑激活手机了。</p>
-<h5 id="Step2-检查手机是否已经激活？如何查询保修信息"><a href="#Step2-检查手机是否已经激活？如何查询保修信息" class="headerlink" title="Step2: 检查手机是否已经激活？如何查询保修信息"></a>Step2: 检查手机是否已经激活？如何查询保修信息</h5><p>查询手机是否激活过，最简单的方法是查询其保修信息。苹果官方提供全国联保，保修期自激活以后的一年，通过<a href="https://checkcoverage.apple.com/cn/zh/" target="_blank" rel="external">管网</a>查询保修日期，往前推一年便是激活日期。另外，也可以在第三方网站例如<a href="https://www.apple110.com" target="_blank" rel="external">apple110</a>查询，都是可信的。以下是我的iphone6sp的管网查询结果，我的手机是2017-08-13购买并激活的。</p>
-<p><img src="https://raw.githubusercontent.com/myinxd/canal-images/master/images/blog-170827.jpg" alt="activation"></p>
-<p>除此之外，对于未激活的设备，可以在手机的包装盒背部查询其序列号。在管网输入并查询时，会显示手机未激活，无法查询相关的保修信息(我忘了截图了，这里木有图)。那么，便可以放心地插入sim卡，激活手机了。</p>
-<p>最后，唠叨一下，网上还有有个观点，苹果的序列号是手机内的CPU和GPU等序列号共同计算得到的 (<strong>出处后续补上</strong>)，所以如果内部有元件更换过，手机是无法使用的，听起来靠谱。。。</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="https://checkcoverage.apple.com/cn/zh/" target="_blank" rel="external">苹果官方查看保修状态</a></li>
-<li><a href="https://www.zhihu.com/question/26974985" target="_blank" rel="external">知乎：京东价格为什么比苹果专卖店便宜？</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/" data-id="cjb4omtdh000ibg67xkjk3qcl" class="article-share-link">Partager</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/27/Has-your-new-iphone-been-activated/#disqus_thread" class="article-comment-link">Commentaires</a>
+        <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Kommentarer</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
@@ -693,7 +713,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
     </div>
@@ -703,7 +723,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
       <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
     </div>
@@ -712,7 +732,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Arkiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
     </div>
@@ -722,9 +742,13 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Siste innlegg</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/12/20/matplotlib-tips-II/">matplotlib tips II</a>
+          </li>
         
           <li>
             <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/">Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64</a>
@@ -742,10 +766,6 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
             <a href="/2017/09/30/20170930/">喝醉了，说说故事</a>
           </li>
         
-          <li>
-            <a href="/2017/09/26/20170926/">为什么我们乐意对陌生人敞开心扉？</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -759,7 +779,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 Jason Ma<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
