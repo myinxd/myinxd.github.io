@@ -20,7 +20,8 @@ $(document).ready(function () {
             "top": e.pageY-15,
             "left": e.pageX,
             "position": "absolute",
-            "color": "red"
+            "color": "red",
+            "fontsize": 30
         });
         $("body").append($i);
         $i.animate(
