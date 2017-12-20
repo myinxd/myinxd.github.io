@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Astrogramer&#39;s blog</title>
+  
+  <subtitle>We are in the same story.</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://www.mazhixian.me/"/>
+  <updated>2017-12-20T07:58:09.043Z</updated>
+  <id>http://www.mazhixian.me/</id>
+  
+  <author>
+    <name>Jason Ma</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>matplotlib tips II</title>
+    <link href="http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/"/>
+    <id>http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/</id>
+    <published>2017-12-20T05:16:34.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --></p><p>好久没写了，来填坑，<code>matplotlib</code>相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.</p><h5 id="1-matplotlib-gridspec"><a href="#1-matplotlib-gridspec" class="headerlink" title="1. matplotlib.gridspec"></a>1. matplotlib.gridspec</h5><p>首先是子图网格化，比较简单但高效的一种方式，相对subplot更好用。样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> gridspec</div><div class="line"><span class="comment"># initial grid 2 x 2</span></div><div class="line">gs = gridspec.GridSpec(<span class="number">2</span>, <span class="number">2</span>, width_ratios=[<span class="number">1</span>,<span class="number">1</span>], height_ratios=[<span class="number">1</span>,<span class="number">1</span>])</div><div class="line"></div><div class="line">ax0 = plt.subplot(gs[<span class="number">0</span>])</div><div class="line">xxxxxx</div><div class="line"></div><div class="line">as1 = plt.subplot(gs[<span class="number">1</span>])</div><div class="line">xxxxxx</div></pre></td></tr></table></figure></p><p>此处<code>width_ratios</code>和<code>height_ratios</code>参数用于调整横向和纵向的子图之间的比例关系，效果见Tip2.</p><h5 id="2-matplotlib的坐标轴翻转-反向"><a href="#2-matplotlib的坐标轴翻转-反向" class="headerlink" title="2. matplotlib的坐标轴翻转 (反向)"></a>2. matplotlib的坐标轴翻转 (反向)</h5><p>坐标轴反向主要出现在image相关的问题中。image通常以(row,column,channel)的数据结构出现，其y轴方向 (Vertical)与我们习惯的纵坐标镜像对称。因此，在处理图像的过程中，需要对坐标进行镜像对称，或者更简单的，对坐标轴进行翻转 (invert)。</p><ul><li>图像矩阵翻转<br>numpy包中的<code>flipud</code>方法可以用于图像的翻转，是常用方法之一。</li><li>坐标轴翻转<br>matplotlib.Axis类中提供了<code>invert_xaxis</code>和<code>invert_yaxis</code>两个方法，下面结合第一点的gridspec给出样例。</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line"><span class="comment"># display and invert</span></div><div class="line">plt.rcParams[<span class="string">"figure.figsize"</span>] = [<span class="number">10.0</span>, <span class="number">24.0</span>]</div><div class="line"></div><div class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> gridspec</div><div class="line">gs = gridspec.GridSpec(<span class="number">1</span>,<span class="number">3</span>, width_ratios=[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</div><div class="line"></div><div class="line"><span class="comment"># raw direction</span></div><div class="line">ax0 = plt.subplot(gs[<span class="number">0</span>])</div><div class="line">ax0.imshow(img)</div><div class="line">ax0.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">ax0.set_ylabel(<span class="string">"Vertical"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"Raw direction"</span>,fontsize=<span class="number">12</span>)</div><div class="line"></div><div class="line"><span class="comment"># Y invert</span></div><div class="line">ax1 = plt.subplot(gs[<span class="number">1</span>])</div><div class="line">ax1.imshow(img)</div><div class="line">ax1.invert_yaxis()</div><div class="line">ax1.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"Y invert"</span>,fontsize=<span class="number">12</span>)</div><div class="line"></div><div class="line"><span class="comment"># X invert</span></div><div class="line">ax2 = plt.subplot(gs[<span class="number">2</span>])</div><div class="line">ax2.imshow(img)</div><div class="line">ax2.invert_xaxis()</div><div class="line">ax2.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"X invert"</span>,fontsize=<span class="number">12</span>)</div></pre></td></tr></table></figure><p>其输出的图像如下图所示</p><center><img src="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_invert.png" height="170" width="480"></center><h5 id="3-savefig问题"><a href="#3-savefig问题" class="headerlink" title="3. savefig问题"></a>3. savefig问题</h5><p>保存图像是最近遇到的问题，主要涉及分辨率和去白边的问题。当然，如果能得到矢量图，尽量做矢量图。。。savefig的形式如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">xxxxx <span class="comment"># 做图的相关程序...</span></div><div class="line"></div><div class="line"><span class="comment"># save</span></div><div class="line">plt.savefig(name,dpi=<span class="number">300</span>,bbox_inches=<span class="string">"tight"</span>)</div></pre></td></tr></table></figure></p><p>此处的<code>dpi</code>表示“digits per inch”，数值越大分辨率越高;而<code>bbox_inches</code>用于控制输出的margin，如果实例化为”tight”可以去掉白边。</p><h5 id="4-stacked-bar"><a href="#4-stacked-bar" class="headerlink" title="4. stacked bar"></a>4. stacked bar</h5><p>Stacked bar属于直方图的一种，考虑到每个bin内部的样本可能会细分为某些类或者某些区间，为了更好的描述bin内部样本的分布，可以采用stacked bar plot. 在matplotlib的pyplot类中提供了<code>bar</code>方法用于做直方图，该方法的<code>bottom</code>参数用于vertical方向的stacked bar,而<code>left</code>和<code>right</code>参数可以用于horitontal方向的stacked bar。样例代码如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">plt.rcParams[<span class="string">"figure.figsize"</span>] = [<span class="number">7.0</span>, <span class="number">5.0</span>]</div><div class="line"></div><div class="line">bins = np.arange(<span class="number">0.5</span>, <span class="number">2.5</span>+<span class="number">0.5</span>, <span class="number">0.5</span>)</div><div class="line">data = np.array([[<span class="number">2</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>],[<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">2</span> ,<span class="number">3</span>, <span class="number">1</span>, <span class="number">3</span>]])</div><div class="line">data = data.T</div><div class="line">plt.bar(bins, data[:,<span class="number">0</span>], width=<span class="number">0.2</span>)</div><div class="line">plt.bar(bins, data[:,<span class="number">1</span>], width=<span class="number">0.2</span>, bottom=data[:,<span class="number">0</span>])</div><div class="line">plt.bar(bins, data[:,<span class="number">2</span>], width=<span class="number">0.2</span>, bottom=data[:,<span class="number">0</span>]+data[:,<span class="number">1</span>])</div><div class="line"></div><div class="line">plt.xlabel(<span class="string">"Bins"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.ylabel(<span class="string">"Bars"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.legend([<span class="string">"data-1"</span>, <span class="string">"data-2"</span>, <span class="string">"data-3"</span>],loc=<span class="number">2</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.ylim([<span class="number">0</span>,<span class="number">12</span>])</div></pre></td></tr></table></figure></p><p>其输出结果如下图</p><center><img src="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_stackbar.png" height="240" width="360"></center>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没写了，来填坑，matplotlib相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://www.mazhixian.me/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64</title>
+    <link href="http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/"/>
+    <id>http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/</id>
+    <published>2017-12-13T06:33:31.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --></p><h3 id="System-and-Software-info"><a href="#System-and-Software-info" class="headerlink" title="System and Software info"></a>System and Software info</h3><ol><li>System: Ubuntu16.04</li><li>GPU card: Nvidia GeForce GT 620</li><li>tensoflow-gpu==1.2.1</li><li>CUDA: 8.0 <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">https://developer.nvidia.com/cuda-downloads</a> </li><li>cuDNN: v5.1 <a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="external">https://developer.nvidia.com/rdp/cudnn-download</a></li></ol><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol><li>TensofFlow <a href="http://www.tensorflow.org" target="_blank" rel="external">http://www.tensorflow.org</a></li><li>Chinese staffs<br>[1] <a href="http://blog.csdn.net/yichenmoyan/article/details/48679777" target="_blank" rel="external">http://blog.csdn.net/yichenmoyan/article/details/48679777</a><br>[2] <a href="http://blog.csdn.net/niuwei22007/article/details/50439478" target="_blank" rel="external">http://blog.csdn.net/niuwei22007/article/details/50439478</a></li></ol><h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><ul><li><p>Install cuda, and configure path and LD_LIBRARY_PATH</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo dpkg -i cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb</div><div class="line">$ sudo apt-get update</div><div class="line">$ sudo apt-get install cuda</div></pre></td></tr></table></figure></li><li><p>Configure path</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/.bashrc</div><div class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/cuda-8.0/bin</div><div class="line">$ <span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/cuda-8.0/lib64:/lib</div></pre></td></tr></table></figure></li><li><p>Install cuDNN</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf cudnn-8.0-linux-x64-v5.1.tgz</div><div class="line">$ <span class="built_in">cd</span> cuda</div><div class="line">$ sudo cp ./lib64/* /usr/<span class="built_in">local</span>/cuda/lib64/</div><div class="line">$ sudo chmod 755 /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</div><div class="line">$ sudo cp ./include/cudnn.h /usr/<span class="built_in">local</span>/cuda/include/</div></pre></td></tr></table></figure></li><li><p>Install TensorFlow</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ &lt;sudo&gt; pip3 install &lt;--user&gt; &lt;--update&gt; tenforflow-gpu==1.2.1</div></pre></td></tr></table></figure></li></ul><h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>Note that cuda 8.0 doesn’t support the default g++ version. Install an supported version and make it the default.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install g++-4.9</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> cc /usr/bin/gcc</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> c++ /usr/bin/g++</div></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;System and Software info&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Happy or sad?</title>
+    <link href="http://www.mazhixian.me/2017/11/18/20171118/"/>
+    <id>http://www.mazhixian.me/2017/11/18/20171118/</id>
+    <published>2017-11-18T08:02:06.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><br>整一个月没有写过东西了，无论线上还是线下。每天重复着调程序，改论文，收发邮件的工作，突然有个周六闲下来了，反而很恐慌。好像总会在情绪很低的时候才会有记录的冲动。这一个月其实有很多故事，等理清了头绪，也许可以好好说说。</p><p>从标题开始说吧，”Happy or sad?”是我空间的访客问题，答案一开始是No，后来改成了未知。情绪的变化往往在一瞬间，前一秒会因为程序跑出好结果而开心，后一秒可能看到心仪的人有了新欢而难过。喜怒无偿是个贬义词，但又悲喜至少说明对周遭还有反应，还好好地活着。</p><p>师弟遇到了人生中的一个大槛，与他深谈的过程中，我总在强调一个观点，“如果过得很累，至少说明还活着”。这句话想想就很丧，然而也是现实。每个阶段都有每个阶段的痛苦，真的只有彻底gg了才不会再有劳累。所以，与其这么丧，不如好好做手头的事，充实起来的感觉好过无所事事。</p><p>再问个问题吧，“如果你喜欢的人有喜欢的人，你会如何调节自己“？又是一个好丧的问题。。。一个月前我有了这种体会，一个月后好友也遇到了这个问题。我们当然可以在释然以后说一句”C’est la vie.” 但心结真的能解开吗？ 哈哈，这就是生活吧。</p><p>不知道怎么结尾了，假装这里有个结尾吧，有些事只能藏在心里。</p><p>Nice day.</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;整一个月没有写过东西了，无论线上还是线下。每天重复着调程序，改论文，收发邮件的工作，突然有个周六闲下来了，反而很恐慌。好像总会在情绪很低的时候才会有记录的冲动。这一个月其实有很多故事，等理清了头绪，也许可以好好说说。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="life" scheme="http://www.mazhixian.me/tags/life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Convolution in signal processing VS. convolution in CNN</title>
+    <link href="http://www.mazhixian.me/2017/10/10/20171010/"/>
+    <id>http://www.mazhixian.me/2017/10/10/20171010/</id>
+    <published>2017-10-10T04:59:54.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --></p><p>萌节快乐，LOL!!</p><p>中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。）</p><h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong>信号通过系统以后的输出，是信号与系统相互作用的结果</strong>.</p><p>定义<script type="math/tex">f(t)</script>表示信号，<script type="math/tex">h(t)</script>表示，输出信号为<script type="math/tex">g(t)</script>，则有</p><script type="math/tex; mode=display">\begin{equation}g(t) = f(t)*h(t) = \int^{\infty}_{-\infty}{f(t-\tau)h(\tau)d\tau}.\end{equation}</script><p>其中<script type="math/tex">\tau</script>是积分变量。</p><p>这里的<script type="math/tex">t-\tau</script>理解为对信号做对称 (翻折) 变换，其物理意义是在<script type="math/tex">t_0</script>时刻通过系统并输出的信号<script type="math/tex">g(t_0)</script>除了受到<script type="math/tex">f(t_0)</script>的影响，还受到<script type="math/tex">t<t_0</script>的信号通过系统以后的累积作用的影响。通俗的说，某时刻的输出信号是该时刻之前的信号与此刻信号共同作用的结果。</p><p>以上是卷积在信号处理中的理解。</p><p>推广到高维空间也是如此，最典型的就是图像空间的滤波，用某个核函数与原图做卷积，进行图像处理。例如用拉普拉斯核与原图做图像锐化。下面给出二维空间滤波的连续和离散表达。</p><h4 id="Continous"><a href="#Continous" class="headerlink" title="Continous"></a>Continous</h4><script type="math/tex; mode=display">\begin{align}g(u,v) &= f(u,v)*h(u,v) \notag \\&=\int^{\infty}_{-\infty}{\int^{\infty}_{-\infty}}{f(u-\mu,v-\nu)h(\mu,\nu)d{\mu}d{\nu}}.\end{align}</script><h4 id="Discrete"><a href="#Discrete" class="headerlink" title="Discrete"></a>Discrete</h4><script type="math/tex; mode=display">\begin{align}g(m,n) &= f(m,n)*h(n,n) \notag \\&=\sum_{i}{\sum_{j}{f(m-i,n-j)h(i,j)}}.\end{align}</script><h3 id="Convolution-in-CNN"><a href="#Convolution-in-CNN" class="headerlink" title="Convolution in CNN"></a>Convolution in CNN</h3><p>然后我们来说卷积神经网络 (Convolutional Neural Network, CNN) 中的卷积，这里卷积的目的除了提取图像的特征，更重要的是缩小网络的参数数量。其物理意义是<strong>利用共享的权值矩阵 (卷积核) 以小块的形式遍历图像矩阵，获取图像在该卷积核下的响应，作为图像的特征</strong>。这里获取的特征也被成为特征图 (feature map)。</p><p>因为图像空间不考虑时序性，也即某点与卷积核作用的输出不会受到其他时刻的影响，所以直接做图像与卷积核的相关(correlation)即可。</p><p>定义图像矩阵为<script type="math/tex">I(m,n), m=1,\dots,M, n=1,\dots,N</script>，卷积核<script type="math/tex">G(i,j), i,j = 1,\dots,K</script>, 输出的特征图<script type="math/tex">F(p,q), p=1,\dots,P, q=1,\dots,Q</script>,则有</p><script type="math/tex; mode=display">\begin{align}F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\&=\sum^{K}_{i=1}{\sum^{K}_{j=1}{I(i,j)G(i,j)}}.\end{align}</script><p>通常，CNN卷积运算的输出矩阵与输入矩阵大小是不同的，这里涉及到”zero padding”的问题，在离散信号处理中也很常见。我在<a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">这篇文章</a>讨论过，感兴趣的可以去围观。</p><p>最后，我认为CNN的卷积本质上就是相关运算，与信号处理的卷积不等价。只是因为相关运算的两个矩阵通常具有相同的大小，而CNN的卷积核通常远小于图像矩阵。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;萌节快乐，LOL!!&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="signal-processing" scheme="http://www.mazhixian.me/tags/signal-processing/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>喝醉了，说说故事</title>
+    <link href="http://www.mazhixian.me/2017/09/30/20170930/"/>
+    <id>http://www.mazhixian.me/2017/09/30/20170930/</id>
+    <published>2017-09-30T14:04:46.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --></p><p>九月的最后一天，趁着醉意写点东西吧。</p><p>昨天熬夜赶完了老板的工作，白天整个人状态都不好。最近熬了太多通宵，陷入了恶性循环，不敢想像工作以后会是什么状态。。。希望还能有自己的生活。</p><p>傍晚的时候，被老板叫去讨论今天的工作，趁机喝了点酒。在坐的还有一位老师，老板在介绍我的时候，有句话让我特别感动， “这个孩子很踏实，交待他的事能够按时完成，而且每次还会多做一些。” 想到了高三的某天，因为语文听写没过，被小白叫去办公室重写。这个时候物理老师克余进来了，两人开始寒暄。小白也说了同样的话，“这个孩子很踏实，他肯定能考好的。” 那一刻很感动，即使当时状态很差，数学刚考了67。但是，后来高考考了班级第一，一步步走到现在。</p><p>喝酒的时候，一边听着老板吐槽 (并没有听进去。。。)，一边和好友聊天，提到成年人与孩子的不同。然后就特别感谢这几年遇到的人和事，说不上大彻大悟，但是看淡了很多事情。不再介意别人怎么看你，不去计较无足轻重的得失，每天想着就是做好工作，锻炼身体。这么想想，好像确实老了[捂脸]， 熬个夜都要缓好多天。。。</p><p>最后再说个想法吧，也许可以去知乎提[手动偷笑]。如果是你可以回复的消息，尽量早点回复，尤其是对上级，他会记住你的。换位思考，你发出的消息，也是希望有反馈的。就像神经网络，前向传递和后向反馈都是需要的，这样网络才会越来越理解你。什么鬼比喻，一定是喝多了。。。</p><p>三俗一下， 十月，请对我好一点。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;九月的最后一天，趁着醉意写点东西吧。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="life" scheme="http://www.mazhixian.me/tags/life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为什么我们乐意对陌生人敞开心扉？</title>
+    <link href="http://www.mazhixian.me/2017/09/26/20170926/"/>
+    <id>http://www.mazhixian.me/2017/09/26/20170926/</id>
+    <published>2017-09-26T04:25:01.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --></p><p>好久没写blog了，最近处于秋眠的状态。。。</p><p>去吃午饭的路上，看到桂花开了，感叹了一句“好香”，这时旁边开着面包车路过的小哥说了同样的话，相视一笑。不知道为什么，我们常常会被路人感动。想到初三暑假，也是午后，在老爸的办公室扒着饭。窗外传来装修工人的口哨声，虽然忘了是什么歌，但当时被感染的快乐情绪，到现在还记得。后来还把感受写进了作文，第一次得了高分。</p><p>似乎越亲近的人，我们会顾及所言。大家有自己的生活，多数在为了生计而奔波，你的喜悦或者不快，他们无暇顾及。换位思考，你需要多么宽容，才会真心祝福他人的成就，耐心宽慰他人的悲伤？ 所以，当你在社交网络分享自己的喜悦时，点赞的人寥寥无几，即使是你只给在乎的人看。渐渐的，我们开始把心事说给陌生人，因为陌生人很多，总有人无聊了来和你聊两句，也因为陌生人与你没有利益纠葛，你不用担心自己的隐私泄露。</p><p>做个精致的利己主义者其实也挺好的，既然不能包容别人的开心，为何奢求别人对你的宽容。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没写blog了，最近处于秋眠的状态。。。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="life" scheme="http://www.mazhixian.me/tags/life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>20170917</title>
+    <link href="http://www.mazhixian.me/2017/09/17/20170917/"/>
+    <id>http://www.mazhixian.me/2017/09/17/20170917/</id>
+    <published>2017-09-17T08:47:48.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><br>没想好要起什么名字，姑且用日期来代替吧，记录一下此刻的感受。</p><p>在喧闹的咖啡馆里，周围有大一的孩子在玩三国杀; 有老外跟着中国妹子学中文; 有周末来聊工作的; 也有我这种逃离实验室来打酱油的。</p><p>有时候得承认，在喧闹的环境下工作效率并不一定低，好像还有相关的叫“白噪声”的理论。我的理解是，噪声一定程度上分散了我们的注意力，反而更容易关注工作本身了，诡异的理论，lol。</p><p>刚刚打印的路上路过东转，又遇到了那只白猫，晒着太阳，高冷而慵懒。这次她终于同意我拍照了，来看看异瞳的白猫(手动坏笑)。</p><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170917/fig1.jpg?raw=true" height="640" width="360"></center><p>最近试着恢复夜跑和走路上班，既然没有斗志工作，至少要把身体调整好吧。取悦别人很难，获得认可也很难，每个人有自己的生活，自己的圈子。为了证明自己而炫耀，反而成了小丑。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;没想好要起什么名字，姑且用日期来代替吧，记录一下此刻的感受。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="life" scheme="http://www.mazhixian.me/tags/life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Tensorflow namespace and network restoration</title>
+    <link href="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/"/>
+    <id>http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/</id>
+    <published>2017-09-14T08:20:37.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><br>昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。</p><p>概括为如下三个问题：</p><ol><li>变量的命名空间问题;</li><li>网络的恢复问题;</li><li>网络中tensor名称和数据的获取</li></ol><h4 id="变量命名空间"><a href="#变量命名空间" class="headerlink" title="变量命名空间"></a>变量命名空间</h4><p>首先，来说明命名空间的问题。通常我们利用<code>tf.Variable</code>或<code>tf.placeholder</code>等初始话一个变量，这两个类都有缺省的命名参数，例如<code>tf.Variable</code>的参数<code>name=Variable</code>。相应的，tf在我们新建变量的过程中按顺序在<code>Variable</code>后添加数字，例如<code>Variable_1</code>,<code>Variable_2</code>等。</p><p>这种缺省命名虽然方便，但对网络的存储和恢复会造成很大的影响，所以如果要保存我们的网络，最好的方法是给每个变量设置命名空间。这些变量包括<code>Variables</code>,<code>placeholder</code>以及<code>optimizer</code>。</p><h4 id="网络的恢复问题"><a href="#网络的恢复问题" class="headerlink" title="网络的恢复问题"></a>网络的恢复问题</h4><p>如上一篇<a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">博客</a>所述，tensorflow的<code>tf.train.Saver</code>类既可以存储网络，也可以恢复网络。其中Saver保存的<code>.ckpt</code>文件包含<strong>checkpoint</strong>和<strong>metadata</strong>，分别存储了graph的命名空间和元数据。恢复的时候便是基于他们读取数据到网络中。</p><p><strong>但是</strong>，单有checkpoint和metadata是没有用的，tensorflow的核心就是graph，所以我们需要在恢复网络前重新搭建graph，并且这个graph的命名空间要与checkpoint的相同。因此，一定要养成好习惯，在定义网络的时候，给每个变量都设置固定的名称。</p><p>除此之外，在一个ipython环境或者notebook下，如果要保存网络，建议只搭建一个graph。因为我发现，<code>tf.train.Saver</code>类在保存checkpoint的时候，会将目前存在的graph全部保存。</p><p>下面给一段代码，从这篇<a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">文章</a>复制来的。。。</p><h5 id="保存模型"><a href="#保存模型" class="headerlink" title="保存模型"></a>保存模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">init_op = tf.global_variables_initializer() </div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line">savepath = <span class="string">"./model.ckpt"</span></div><div class="line">saver.save(sess, savepath)</div></pre></td></tr></table></figure><h5 id="恢复模型"><a href="#恢复模型" class="headerlink" title="恢复模型"></a>恢复模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">modelpath = <span class="string">"./model.ckpt"</span></div><div class="line">sess = saver.restore(sess, modelpath)</div></pre></td></tr></table></figure><p>从上面可以看出，二者的区别在于<strong>是否需要初始化变量</strong>，这也是网络恢复的核心问题，因为我们的目的就是恢复参数。</p><h4 id="网络中tensor名称和数据的获取"><a href="#网络中tensor名称和数据的获取" class="headerlink" title="网络中tensor名称和数据的获取"></a>网络中tensor名称和数据的获取</h4><p>如何从存储的网络中提取变量的命名及其数据，可以参考下面的程序，也是<a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">抄来的</a>。。。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tensorflow.python <span class="keyword">import</span> pywrap_tensorflow  </div><div class="line">checkpoint_path = os.path.join(model_dir, <span class="string">"model.ckpt"</span>)  </div><div class="line">reader = pywrap_tensorflow.NewCheckpointReader(checkpoint_path)  </div><div class="line">var_to_shape_map = reader.get_variable_to_shape_map()  </div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> var_to_shape_map:  </div><div class="line">    print(<span class="string">"tensor_name: "</span>, key)  <span class="comment"># Ouput variables name</span></div><div class="line">    print(reader.get_tensor(key)) <span class="comment"># Output variables data</span></div></pre></td></tr></table></figure></p><p>输出结果类似这样，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">tensor_name:  Conv_En_b2/cae-optimizer</div><div class="line">tensor_name:  Conv_De_b1/cae-optimizer_1</div><div class="line">tensor_name:  Conv_En_W0</div><div class="line">tensor_name:  De_b/cae-optimizer</div></pre></td></tr></table></figure></p><h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul><li><a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">TensorFlow学习笔记（8）—网络模型的保存和读取</a></li><li><a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">查看TensorFlow checkpoint文件中的变量名和对应值</a></li><li><a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Transfer learning with TensorFlow</title>
+    <link href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/"/>
+    <id>http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/</id>
+    <published>2017-09-13T08:07:45.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><br>Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p><p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p><p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p><h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p><p>It should be noted that, the instancing of <code>saver</code> should be after defination of the network. I find that though the restored session <code>sess</code> saved the graph of the newtork, including tensors, variables, and operations, the variables still need to be initialized when training after restoration.</p><h4 id="2-How-to-realize-the-transfer-learning"><a href="#2-How-to-realize-the-transfer-learning" class="headerlink" title="2. How to realize the transfer learning?"></a>2. How to realize the transfer learning?</h4><p>Here we come to the transfer learning. A typical process is that we save the paramters of the convolutional layers (ConvLayer), and replace the fully connected and output layers with new weights and biases. This is because the ConvLayers are the part to <strong>extract features</strong> of those samples, while the fully connected layers composing the <strong>classifier</strong> itself. Our target is to save the feature represantation part and update the classifier according to our project.</p><p>Denote the last output of the ConvLayers is a tensor with name <code>ConvLayer_output</code>, and suppose a session namely <code>sess</code> has been restored, then we can build our own classifier, see as follows,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Get tensor 'ConvLayer_output' from sess</span></div><div class="line">l_conv_output = sess.graph.get_tensor_by_name(<span class="string">"ConvLayer_output"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add new fully connected layers and softmax layer</span></div><div class="line"><span class="comment"># Suppose we have 10 class to be classied</span></div><div class="line">numclass = <span class="number">10</span></div><div class="line">y_ = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, numclass], name=<span class="string">"cnn-softmax"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add a fully connected as an example</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape)</span>:</span></div><div class="line">initial = tf.truncated_normal(shape, stddev=<span class="number">0.1</span>)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line">last_conv_shape = l_conv_output.get_shape().as_list()</div><div class="line">input_shape = last_conv_shape[<span class="number">1</span>] * last_conv_shape[<span class="number">2</span>] * last_conv_shape[<span class="number">3</span>]</div><div class="line">output_shape = <span class="number">1024</span></div><div class="line">W_fc = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_fc = bias_variable(shape=[output_shape])</div><div class="line">l_fc = tf.nn.relu(tf.matmul(l_conv_output, W_fc) + b_fc)</div><div class="line"></div><div class="line"><span class="comment"># Fully connected to softmax</span></div><div class="line">input_shape = <span class="number">1024</span></div><div class="line">output_shape = numclass</div><div class="line">W_soft = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_soft = bias_variable(shape = [output_shape])</div><div class="line">l_y = tf.nn.softmax(tf.matmul(l_fc, W_soft) + b_soft)</div></pre></td></tr></table></figure></p><p>After that, our new network can be trained on our samples,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Initialize all the parameters, including the pretrained net and concated layers</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line"><span class="comment"># [Training lines goes here]</span></div></pre></td></tr></table></figure></p><p>Finally, we obtain the network, and evaluations can be conducted, enjoy yourselves.</p><h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul><li><a href="https://stackoverflow.com/questions/36281129/no-variable-to-save-error-in-tensorflow" target="_blank" rel="external">No variable to save error in Tensorflow</a></li><li><a href="https://www.tensorflow.org" target="_blank" rel="external">Tensorflow</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Today, let&amp;#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Fourier transform on 2D image</title>
+    <link href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/"/>
+    <id>http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/</id>
+    <published>2017-09-12T14:55:34.000Z</published>
+    <updated>2017-12-20T07:58:09.043Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><br>今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。</p><p>基本的傅立叶变换我就不介绍了。它的定义很简单，<strong>用正交的余弦函数作为base，对时域或空域的信号进行分解，并在频域描述信号.</strong> 这样做的好处很多，例如能够实现信号的滤波、能够压缩信号、能够将卷积转化为乘法等。</p><p>我准备先零散地抛几个“有(wu)趣(liao)”的点出来，第一个就是二维傅立叶变换的<code>时移问题</code>，这里我觉得用<code>bias</code>来描述更好，很无聊，但它的推导还是挺有价值的。设二维实数空间<script type="math/tex">f(x,y), x,y\in R</script>，其傅立叶变换为<script type="math/tex">F(m,n)</script>，则有，</p><script type="math/tex; mode=display">\begin{equation}F(m,n) = \iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx,\end{equation}</script><p>现假设在$x$和$y$方向的偏移(时移)分别为$b_x$和$b_y$，那么，Eq.(1)变为，</p><script type="math/tex; mode=display">\begin{align}F(m,n) &= \iint{f(x,y)e^{-j2\pi m(x-b_x)}e^{-j2\pi n(y-b_y)}}dydx \notag \\       &= e^{-j2\pi(mb_x + nb_y)}\iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx.\end{align}</script><p>而上式中的<script type="math/tex">e^{-j2\pi(mb_x + nb_y)}</script>利用欧拉公式展开，我们得到，</p><script type="math/tex; mode=display">\begin{align}e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).\end{align}</script><p>显然，<script type="math/tex">mb_x+nb_y</script>可以拆分成向量$(m,n)$与$(b_x,b_y)$的内积，代表频域空间的向量<script type="math/tex">(m,n)</script>在偏移方向<script type="math/tex">(b_x,b_y)</script>上的投影，而<script type="math/tex">(b_x,b_y)</script>又共同构成了该种投影的周期性，导致在傅立叶变换的图像上出现周期性变化的明暗条纹。</p><p>说完时移的问题，我们来提出图像傅立叶变换以后<strong>诡异十字</strong>问题的猜想，<strong>图像边界处有明显的灰度变化会导致傅立叶变换后的频域图像出现十字。</strong>可以理解为在图像边界处人为做了<code>truncated</code>，即给图像加了矩形窗，导致在频域的<strong>vertical</strong>和<strong>horizontal</strong>两个方向乘了一个<code>sinc</code>函数，而由于这个窗很大，所以<code>sinc</code>的影响集中在靠近中心(低频)的区域。</p><p>先留个坑，明天加图。。。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="signal-processing" scheme="http://www.mazhixian.me/tags/signal-processing/"/>
+    
+  </entry>
+  
+</feed>

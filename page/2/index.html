@@ -1,836 +1,677 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-  
-  <title>Astrogramer&#39;s blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Valar morghulis, valar dohaeris.">
-<meta property="og:type" content="website">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Astrogramer&#39;s blog">
+    <title>Astrogramer&#39;s blog</title>
+    <meta name="author" content="Jason Ma">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="Astrogramer&#39;s blog">
 <meta property="og:url" content="http://www.mazhixian.me/page/2/index.html">
 <meta property="og:site_name" content="Astrogramer&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Astrogramer&#39;s blog">
 <meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
-  
-    <link rel="alternate" href="/atom.xml" title="Astrogramer&#39;s blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-  
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://www.mazhixian.me/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-pz4cc6y13wt2trzqa8l3n9v0yykr0sstdaheem7qj628nhjmhp9pfawvqawz.min.css">
+    <!--STYLES END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
 
+    
 </head>
 
-<body>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Astrogramer&#39;s blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">We are in the same story.</a>
-        </h2>
-      
+    <body>
+        <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">Astrogramer&#39;s blog</a>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+    
         
-          <a class="main-nav-link" href="/">Home</a>
+            <a  class="header-right-picture "
+                href="#about">
         
-          <a class="main-nav-link" href="/archives">Archives</a>
         
-      </nav>
-      <nav id="sub-nav">
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.mazhixian.me"></form>
-      </div>
-    </div>
-  </div>
+        </a>
+    
 </header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-Data-visualization-with-t-SNE" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="article-date">
-  <time datetime="2017-09-11T06:21:55.000Z" itemprop="datePublished">2017-09-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+
+            <!-- Define author's picture -->
+
+
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/11/Data-visualization-with-t-SNE/">Data visualization with t-SNE</a>
-    </h1>
-  
-
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是<strong>映射高维数据向量到低维，并保留向量的相似性或者距离</strong>。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。</p>
-<p>SNE算法最早由 <a href="http://papers.nips.cc/paper/2276-stochastic-neighbor-embedding" target="_blank" rel="external">Hinton &amp; Roweis</a> 在2002年提出。他们定义高维空间两个点<script type="math/tex">\bf{x_i}</script>和<script type="math/tex">\bf{x_j}</script>相似度的联合概率分布<script type="math/tex">P = p_{ij}</script>，和要映射到的低维空间对应两点<script type="math/tex">\bf{y_i}</script>和<script type="math/tex">\bf{y_j}</script>的联合概率<script type="math/tex">Q = q_{ij}</script>. 利用<a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence" target="_blank" rel="external">Kullback-Leibler divergence</a>衡量分布$P$和$Q$的相似性，进而最小化这一距离来确定低维空间的映射点<script type="math/tex">\bf{y_i}</script>.</p>
-<p>考虑到SNE算法存在三个缺陷,</p>
-<ol>
-<li>KL-divergence 不是对称的;</li>
-<li>从高维空间映射到低维空间，距离会发生变化;</li>
-<li>高斯分布不是长尾的，对小概率的异常点描述能力较差;</li>
-</ol>
-<p>为了解决这一问题，<a href="http://jmlr.csail.mit.edu/papers/v9/vandermaaten08a.html" target="_blank" rel="external">Van der Maaten &amp; Hinton</a> 在2008年提出了改进算法，利用自由度为1的t分布替换高斯分布来定义低维空间的距离，避免异常点，保留高维空间两点的距离关系；设计了具有对称性的概率分布函数。最后，分布$P$和$Q$，KL-divergence $\mathrm{KL}$ 以及对应的梯度公式<script type="math/tex">\partial{\mathrm{KL}}/\partial{y_i}</script>如下，</p>
-<h5 id="高维空间分布-P"><a href="#高维空间分布-P" class="headerlink" title="高维空间分布$P$"></a>高维空间分布$P$</h5><script type="math/tex; mode=display">
-\begin{equation}
-p_{j|i} = \frac{\exp{(-\lVert{\bf{x_{i}} - \bf{x_{j}}}\rVert}^2 / 2\sigma^2_{i})}{\sum_{k\neq i }{\exp{(-\lVert{\bf{x_{i}} - \bf{x_{k}}}\rVert}^2 / 2\sigma^2_{i})}},
-\end{equation}</script><p>其中，<script type="math/tex">p_{j|i}</script>表示<script type="math/tex">\bf{x_i}</script>接受<script type="math/tex">\bf{x_j}</script>为其同类点的条件概率，相应的<script type="math/tex">p_{ij}</script>由下式给出，</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-p_{ij} = \frac{p_{j|i} + p_{i|j}} {2N}.
-\end{equation}</script><p>其中$N$表示样本点的个数。</p>
-<h5 id="低维空间分布-Q"><a href="#低维空间分布-Q" class="headerlink" title="低维空间分布$Q$"></a>低维空间分布$Q$</h5><script type="math/tex; mode=display">
-\begin{equation}
-q_{ij} = \frac{(1 + {\lVert {\bf{y_{i}} - \bf{y_{j}}} \rVert}^2)^{-1}}{\sum_{k\neq m}{(1 + {\lVert {\bf{y_{k}} - \bf{y_{m}}} \rVert}^2)^{-1}}}.
-\end{equation}</script><h5 id="KL-divergence"><a href="#KL-divergence" class="headerlink" title="KL-divergence"></a>KL-divergence</h5><script type="math/tex; mode=display">
-\begin{equation}
-\mathrm{KL}(P||Q) = \sum_{i\neq j}{p_{ij}\log{\frac{p_{ij}}{q_{ij}}}}.
-\end{equation}</script><h5 id="partial-difference-of-KL-over-bf-y-i"><a href="#partial-difference-of-KL-over-bf-y-i" class="headerlink" title="partial difference of KL over $\bf{y_i}$"></a>partial difference of KL over $\bf{y_i}$</h5><script type="math/tex; mode=display">
-\begin{equation}
-\frac{\partial{\mathrm{KL}}}{\partial{\bf{y_{i}}}} = 4\sum_{j}{(p_{ij}-q_{ij})(y_{i}-y_{j})(1+(\lVert{y_{i} - y_{j}})^{2})^{-1}},
-\end{equation}</script><p>基于以上公式，利用梯度进行优化，求解局部最优，即可对$\bf{y_i}$进行定位。</p>
-<h4 id="t-SNE的python实现"><a href="#t-SNE的python实现" class="headerlink" title="t-SNE的python实现"></a>t-SNE的python实现</h4><p>python的<a href="http://scikit-learn.org/" target="_blank" rel="external">Scikit-learn</a>提供了TSNE类，用于自动化实现数据可视化，代码样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">dimension_reduction_tSNE</span><span class="params">(code,params=None)</span>:</span></div><div class="line">	tsne = TSNE()</div><div class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> params.keys():</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            setattr(tsne, key, params[<span class="string">'key'</span>])</div><div class="line">        <span class="keyword">except</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">    code_dim = tsne.fit_transform(code)</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> code_dim</div><div class="line"></div><div class="line">code = xxx</div><div class="line">params=&#123;<span class="string">'n_components'</span>: <span class="number">2</span>, <span class="string">'learning_rate'</span>: <span class="number">100</span>&#125;</div><div class="line"></div><div class="line">code_dim = dimension_reduction_tSNE(code, params)</div></pre></td></tr></table></figure></p>
-<p>其中<code>code</code>表示高维空间的样本矩阵，每行对应一个样本。参数<code>params</code>里的<code>n_components</code>表示低维空间的维数。</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="http://bindog.github.io/blog/2016/06/04/from-sne-to-tsne-to-largevis/" target="_blank" rel="external">从SNE到t-SNE再到LargeVis</a></li>
-<li><a href="https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding" target="_blank" rel="external">t-distributed stochastic neighbor embedding</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution" target="_blank" rel="external">Student’s t-distrubiton</a> </li>
-</ul>
 
-      
+<nav id="sidebar" data-behavior="1">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">Jason Ma</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>We are in the same story.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/myinxd" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:zx@mazhixian.me" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
     </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/" data-id="cjbeotrex000q5h67qkb37mpp" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/11/Data-visualization-with-t-SNE/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Catch-data-with-provided-keys" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/09/Catch-data-with-provided-keys/" class="article-date">
-  <time datetime="2017-09-09T14:51:49.000Z" itemprop="datePublished">2017-09-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/09/Catch-data-with-provided-keys/">Catch data with provided keys</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了<a href="https://www.arxiv.org" target="_blank" rel="external">arXiv</a>的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式<code>re</code>.</p>
-<p>以arXiv为例，每篇文章都有一个确定的ID,形如<code>17MM.xxxxx</code>，其中MM表示月份，xxxxx表示五位数的编号。那么，其对应的正则表达式可以用如下字符串表示，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div></pre></td></tr></table></figure></p>
-<p>然后利用python的正则表达式包<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">re</a>，用如下的语句从邮件里抓取即可，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">key = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div><div class="line">filename = <span class="string">"cs-arxiv.txt"</span></div><div class="line"><span class="keyword">with</span> open(filename, <span class="string">'r'</span>) <span class="keyword">as</span> fp:</div><div class="line">	lines = fp.readlines()</div><div class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> lines:</div><div class="line">    	s = re.findall(key,l)</div><div class="line">        <span class="keyword">if</span> len(s):</div><div class="line">        	print(<span class="string">"Find id %s"</span> % s[<span class="number">0</span>])</div></pre></td></tr></table></figure></p>
-<p>其中最关键的语句是第7行，即在邮件中按行搜索key制定的关键词或者关键词格式。详细的下载程序可以参考我的程序<a href="https://github.com/myinxd/canal-tools/blob/master/python-based/download-arxiv-paper.py" target="_blank" rel="external">download-arxiv-paper.py</a>. 根据提供的关键词进行数据提取，可以参考这个程序<a href="https://github.com/myinxd/gastrack/blob/master/utils/catch-with-keys.py" target="_blank" rel="external">catch-with-keys.py</a>.</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li>[1] <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">https://docs.python.org/3/library/re.html</a></li>
-<li>[2] <a href="http://www.cnblogs.com/jiu0821/p/6275685.html" target="_blank" rel="external">http://www.cnblogs.com/jiu0821/p/6275685.html</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/" data-id="cjbeotret000h5h67t2qp6qxu" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-matplotlib-tips-I" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/08/matplotlib-tips-I/" class="article-date">
-  <time datetime="2017-09-08T15:00:34.000Z" itemprop="datePublished">2017-09-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/08/matplotlib-tips-I/">matplotlib tips I</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是<code>matplotlib.pyplot</code>做图的tips，准备写成一个系列，先开个头。积少成多吧。</p>
-<h5 id="1-matplotlib的默认字体"><a href="#1-matplotlib的默认字体" class="headerlink" title="1. matplotlib的默认字体"></a>1. matplotlib的默认字体</h5><p>首先，我们从字体开始。matplotlib的默认字体和MATLAB一样，是<strong>Helvetica</strong>，一种和<strong>Arial</strong>长得非常像的字体，<a href="https://www.zhihu.com/question/19562456" target="_blank" rel="external">知乎</a>上有类似的讨论，多数认为Helvetica比较好看，LOL. 我倒是两种都挺喜欢的，论文里也经常用。但这里要注意， 这两种字体在IEEE的pdf格式审查里会出问题，可能事因为Adobe并不会自动嵌入这两种字体。。。</p>
-<h5 id="2-colorbar、坐标轴标注的问题"><a href="#2-colorbar、坐标轴标注的问题" class="headerlink" title="2. colorbar、坐标轴标注的问题"></a>2. colorbar、坐标轴标注的问题</h5><p>我们知道，matplotlib和matlab中colorbar、坐标轴的标签(label)和刻度(tick)的参数名称和配置方法是类似的，通常都是<code>set_xxx</code>的格式。在matplotlib中tick的缺省值是根据数据自动添加的，而label默认没有，他们的设置样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line">plt.set_xticks([<span class="number">0.0</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,]) <span class="comment"># 修改刻度</span></div><div class="line">plt.set_xlabel(<span class="string">"X axis"</span>) <span class="comment"># 修改label</span></div></pre></td></tr></table></figure></p>
-<p>这里要注意，类似colorbar这种对象，它的设置等同于坐标轴，也有<code>set_label</code>方法。</p>
-<p>先写两点吧，前面写过一篇关于<a href="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/">AxesGrid</a>的，有兴趣也可以看看。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/" data-id="cjbeotrf2000y5h67k0wrn8kt" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/08/matplotlib-tips-I/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" class="article-date">
-  <time datetime="2017-09-06T15:52:22.000Z" itemprop="datePublished">2017-09-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">Install R on Ubuntu16.04 and configure jupyter-notebook</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。</p>
-<p>第二篇是“[R]Ubuntu-16.04 R 安装及Jupyter notebook 配置” （<a href="http://blog.sina.com.cn/s/blog_9b6253b10102xu8s.html" target="_blank" rel="external">原文链接</a>)。</p>
-<h4 id="问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel"><a href="#问题：-Ubuntu-16-04-及-16-10-配置R语言环境，-以及在Jupyter中添加R-kernel" class="headerlink" title="问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel."></a>问题： Ubuntu-16.04 及 16.10 配置R语言环境， 以及在Jupyter中添加R kernel.</h4><p>解决方法如下，</p>
-<h5 id="1-R-安装"><a href="#1-R-安装" class="headerlink" title="1. R 安装"></a>1. R 安装</h5><p>通常在Terminal下直接apt-get 即可，在16.10下可以get到R-3.3.1，目前最新好像是 R-3.4.2，可以去官方网站下载源码编译 (<a href="https://www.r-project.org)​" target="_blank" rel="external">https://www.r-project.org)​</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install r-base</div></pre></td></tr></table></figure></p>
-<h5 id="2-在jupyter-notebook中配置R的kernel"><a href="#2-在jupyter-notebook中配置R的kernel" class="headerlink" title="2. 在jupyter notebook中配置R的kernel"></a>2. 在jupyter notebook中配置R的kernel</h5><p>近期在Jupyter下跑python，方便边调试边记笔记。因为Jupyter也支持R语言，所以尝试添加R kernel到Jupyter中。 主要依赖 “IRkernel” 包。(有些包可能需要翻墙才能下载，具体的方法请DIY…) 配置方法如下：</p>
-<p>(1) 安装必要的lib</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install libzmq3-dev libssl-dev libcurl​4-openssl-dev</div><div class="line">$ sudo R <span class="comment"># 进入R环境</span></div></pre></td></tr></table></figure>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; install.packages(c(<span class="string">'repr'</span>, <span class="string">'IRdisplay'</span>, <span class="string">'evaluate'</span>, <span class="string">'crayon'</span>, <span class="string">'pbdZMQ'</span>, <span class="string">'devtools'</span>, <span class="string">'uuid'</span>, <span class="string">'digest'</span>))</div></pre></td></tr></table></figure>
-<p><strong>注意</strong>： 会提示选择mirrors， 建议选择 0-cloud<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; devtools::install_github(<span class="string">'IRkernel/IRkernel'</span>)</div><div class="line">&gt; IRkernel::installspec()</div></pre></td></tr></table></figure></p>
-<p>如果显示​如下结果，说明配置成功。<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[InstallKernelSpec] Installed kernelspec ir <span class="keyword">in</span> /home/xxx/.local/share/jupyter/kernels/ir​</div></pre></td></tr></table></figure></p>
-<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><p>[1] <a href="https://irkernel.github.io/installation/" target="_blank" rel="external">https://irkernel.github.io/installation/</a></p>
-<p>[2] <a href="http://blog.csdn.net/reallocing1/article/details/51396539" target="_blank" rel="external">http://blog.csdn.net/reallocing1/article/details/51396539</a></p>
-<p>[3] <a href="http://blog.csdn.net/songying2012/article/details/51123475" target="_blank" rel="external">http://blog.csdn.net/songying2012/article/details/51123475</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-id="cjbeotrez000s5h67rg8vdiig" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-BP神经网络sim函数的MATLAB和C实现" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" class="article-date">
-  <time datetime="2017-09-06T14:24:10.000Z" itemprop="datePublished">2017-09-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/06/BP神经网络sim函数的MATLAB和C实现/">BP神经网络sim函数的MATLAB和C实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。</p>
-<p>第一篇是“BP神经网络sim函数的MATLAB和C实现” （<a href="http://blog.sina.com.cn/s/blog_9b6253b10101fvyq.html" target="_blank" rel="external">原文链接</a>)，争取做一些改写，尤其在排版上规范一点。</p>
-<h5 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h5><p>BP神经网络属于ANN的一种，相对于DNN，CNN而言，是比较浅层的分类器。不过BPNN由于参数比较少，网络简单，还是有广泛的应用，尤其在传统的<strong>人工特征提取加分类器</strong>的算法中。因为这篇文章是在本科毕业设计的时候写的，当时还用了SVM，这里插一句我的观点，“SVM虽然调参比较复杂，网格法耗时，GA又存在局部最优的问题，但如果特征选择比较合理，它的表现还是非常有竞争力的”。</p>
-<p>言归正传，由于要使用C++写界面，很希望实现神经网络的MATLAB和C的混合编程，问了度娘以后，发现不可以，因为MATLAB的神经网络库有专利，具体的解释见<a href="http://www.ilovematlab.cn/thread-103075-1-1.html" target="_blank" rel="external">http://www.ilovematlab.cn/thread-103075-1-1.html</a></p>
-<p>经过多次尝试后，决定采用“曲线救国”的方式，即利用MATLAB进行训练，再手动编写C代码，实现用于预测结果的sim函数。本次网络，采用newff函数建立神经网络net，输入层的传递函数为tansig，隐含层的传递函数为purelin.(若输入层采用logsig函数，方法类似)。<strong>注意</strong>: newff在新的MATLAB版本中已经有更新，具体更新可以去官网看。推荐<a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00EEWKKM8/" target="_blank" rel="external">《MATLAB神经网络43个案例分析》</a></p>
-<p>下面以三层BP神经网络为例，sim函数的MATLAB实现如下：</p>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">out</span> = <span class="title">myBPSim</span><span class="params">(net, Test_data)</span></span></div><div class="line"><span class="comment">% out = myBPSim(net, Test_data)</span></div><div class="line"><span class="comment">% Test_data，待分类的数据，每行表示一个特征向量</span></div><div class="line">IW = net.IW&#123;<span class="number">1</span>,<span class="number">1</span>&#125;;  <span class="comment">% net是训练得到的网络，IW表示隐含层的权矩阵</span></div><div class="line">                   <span class="comment">% 维数 = 隐含层神经元个数 * 特征数</span></div><div class="line">LW = net.LW&#123;<span class="number">2</span>,<span class="number">1</span>&#125;;  <span class="comment">% LW表示隐含层权矩阵，维数 = 1 * 隐含层神经元个数</span></div><div class="line">b1 = net.b&#123;<span class="number">1</span>,<span class="number">1</span>&#125;    <span class="comment">% 输入层的阈值</span></div><div class="line">b2 = net.b&#123;<span class="number">2</span>,<span class="number">1</span>&#125;    <span class="comment">% 隐含层的阈值</span></div><div class="line">n1 = (IW * Test_data) + b1;</div><div class="line">out1 = <span class="number">2</span>/(<span class="number">1</span> + <span class="built_in">exp</span>(<span class="number">2</span> * n1)) - <span class="number">1</span>;    <span class="comment">% tansig函数的表达式，out1表示输入层的输出结果</span></div><div class="line">out2 = LW * out1 + b2;             <span class="comment">% purelin函数就是形如 y = x，所以直接可以得到out2</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>有一点需要注意的是，<a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B0142K5QM0/" target="_blank" rel="external">《MATLAB智能算法——30个案例分析》</a> 这本书的第25章P238存在错误，其中的式25-3和式25-4中的<strong>减号</strong>应改为<strong>加号</strong>，否则与实际结果有较大误差。</p>
-<p>C语言对sim的实现与以上程序类似，需要注意的是矩阵的乘法，由于matlab采用了优化，所以其计算矩阵乘法的速度相对于C要快很多，我没有找到很好的解决方法，采用的仍然是无脑的for循环, C++代码样例如下，<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> CClassify::DoClassify(IplImage *Src)</div><div class="line">&#123;	</div><div class="line">    xxx <span class="comment">// Some lines for feature generation</span></div><div class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">9</span>; i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; <span class="number">89</span>; j++)</div><div class="line">		&#123;</div><div class="line">			net1[i] += img_mat[j]*IW[j][i];</div><div class="line">		&#125;</div><div class="line">		net1[i] = <span class="number">2.00</span> /(<span class="number">1</span>+<span class="built_in">exp</span>(<span class="number">-2</span>*(net1[i] + b1[i]))) <span class="number">-1</span>;  <span class="comment">// tansig</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(i =<span class="number">0</span>; i &lt; <span class="number">9</span>; i++)</div><div class="line">	&#123;</div><div class="line">		result += net1[i]*LW[i];</div><div class="line">	&#125;</div><div class="line">	result = result + b2;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(result &gt; <span class="number">0</span>) Alm_flag = <span class="number">1</span>;</div><div class="line">	<span class="keyword">else</span> Alm_flag = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" data-id="cjbeotrej00045h67tsuhwuxh" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MATLAB/">MATLAB</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Two-typical-tensorflow-exceptions" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" class="article-date">
-  <time datetime="2017-09-04T12:32:22.000Z" itemprop="datePublished">2017-09-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/04/Two-typical-tensorflow-exceptions/">Two typical tensorflow exceptions</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。</p>
-<p>两个Bug的Exception如下，我会逐个解释，</p>
-<ol>
-<li>ValueError: No gradients provided for any variable</li>
-<li>FailedPreconditionError: Attempting to use uninitialized value xxx</li>
-</ol>
-<h4 id="ValueError-No-gradients-provided-for-any-variable"><a href="#ValueError-No-gradients-provided-for-any-variable" class="headerlink" title="ValueError: No gradients provided for any variable"></a>ValueError: No gradients provided for any variable</h4><p>首先交代一下出错的语境，这里我在用<code>tf.nn.softmax_cross_entropy_with_logits</code>定义网络的损失函数，我的写法如下, 其中<code>y</code>表示网络预测的(输出的)labels, <code>y_</code>表示真实的labels。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss = tf.nn.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_))</div></pre></td></tr></table></figure></p>
-<p>紧接着，实例化网络并进行测试，然后程序报错了，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ValueError: No gradients provided <span class="keyword">for</span> any variable</div></pre></td></tr></table></figure></p>
-<p>具体的内容我就不截图了，因为论文还没投稿。这个错误的含义是网络中存在不能进行<strong>梯度传递</strong>的变量或者说是tensor。而导致这一错误的问题是我将<code>labels</code>和<code>logits</code>两个参数理解反了，这里的正确写法是，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss = tf.nn.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))</div></pre></td></tr></table></figure></p>
-<p>也即<code>logits</code>代表网络的输出。除此之外，还要注意<code>y</code>和<code>y_</code>均为one hot 形式，下面提供了向量形式转one hot形式的代码，实现方法比较naive。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">vec2onehot</span><span class="params">(label,numclass)</span>:</span></div><div class="line">    label_onehot = np.zeros((len(label),numclass))</div><div class="line">    <span class="keyword">for</span> i,l <span class="keyword">in</span> enumerate(label):</div><div class="line">        label_onehot[i, int(l)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> label_onehot</div></pre></td></tr></table></figure></p>
-<h4 id="FailedPreconditionError-Attempting-to-use-uninitialized-value-xxx"><a href="#FailedPreconditionError-Attempting-to-use-uninitialized-value-xxx" class="headerlink" title="FailedPreconditionError: Attempting to use uninitialized value xxx"></a>FailedPreconditionError: Attempting to use uninitialized value xxx</h4><p>这个错误隐藏地比较深，诱发它的机制是我在做fine tuning时定义了新的需要训练的变量，但没有在<code>session</code>中进行初始化。报错的样例如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FailedPreconditionError: Attempting to use uninitialized value beta1_power_1</div><div class="line">	[[Node: beta1_power_1/<span class="built_in">read</span> = Identity[T=DT_FLOAT, _class=[]...]]]</div></pre></td></tr></table></figure></p>
-<p>我的解决方法比较暴力，在做预训练之前定义好fine-tuning要用到的变量，与其他的变量一起做初始化。这样后面在重新训练的时候，直接调用<code>sess.run</code>即可。</p>
-<h4 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h4><p>单独列一个tip, 如果要多次训练网络，或者运行tensorflow的graph,建议在实例化session的时候用<code>InteractiveSession</code>而不是<code>Session</code>。</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/nn/softmax_cross_entropy_with_logits" target="_blank" rel="external">tf.nn.softmax_cross_entropy_with_logits</a></li>
-<li>[2] <a href="https://stackoverflow.com/questions/38778760/tensorflow-no-gradients-provided-for-any-variable" target="_blank" rel="external">Tensorflow: No gradients provided for any variable</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/" data-id="cjbeotrfg001k5h67oxn4mnln" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/04/Two-typical-tensorflow-exceptions/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Deconvolution-or-Transpose-opposite-operation-of-CNN" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="article-date">
-  <time datetime="2017-09-01T07:26:45.000Z" itemprop="datePublished">2017-09-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">Deconvolution or Transpose: opposite operation of CNN</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊<strong>反向卷积神经网络</strong>。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。]</p>
-<p>最近用过的开源深度学习框架有<a href="http://www.deeplearning.net/software/theano/" target="_blank" rel="external">Theano</a>/<a href="https://lasagne.readthedocs.io/en/latest/index.html" target="_blank" rel="external">Lasagne</a>、<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>和<a href="http://caffe.berkeleyvision.org/" target="_blank" rel="external">caffe</a>。其中前两个框架主要基于Python实现，容易上手；第三个基于C++,也提供了python和MATLAB的接口，三者在Deep Learning中都有广泛的应用和实现。今天，我要讨论的<em>反向卷积 (Transposed convolution)</em> 参考了Theano的<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/" target="_blank" rel="external">tutorial</a>, 以及这个主题为”全卷积”的自动编码器的<a href="https://github.com/loliverhennigh/All-Convnet-Autoencoder-Example" target="_blank" rel="external">repo</a>. </p>
-<p><strong>Note:</strong> 我会尽量用中文写，但有些地方我可能会偷懒。。。</p>
-<h4 id="Auto-encoder"><a href="#Auto-encoder" class="headerlink" title="Auto-encoder"></a>Auto-encoder</h4><p>首先，我来简要说一下自动编码器 (<a href="https://en.wikipedia.org/wiki/Autoencoder" target="_blank" rel="external">AutoEncoder, AE</a>)。参考Wiki的定义，AE是一种人工神经网络 (ANN)，擅长无监督学习 (unsupervised learning) 以及特征表示 (feature representation) 和特征降维 (dimensionality reduction)。更通俗地理解，AE的目的是在没有任何标记的情况下从事物中提取出最能够表征他们的特点。我们来看看Wiki上训练AE网络的思路，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">For each input x,</div><div class="line">    Do a feed-forward pass to compute activations at all hidden layers, then at the output layer to obtain an output x&apos;.</div><div class="line">    Measure the deviation of x&apos; from the input x (typically using squared error).</div><div class="line">    Backpropagate the error through the net and perform weight updates.</div></pre></td></tr></table></figure></p>
-<p>为了实现这一结果，最naive的做法是建立镜像对称的网络。将网络拆分为编码 (encoder) 和解码 (decoder) 两个部分，后者和前者具有镜像对称的结构，并且共享对应层的权值参数矩阵(weight parameters)。这样，在训练的网络中，我们不仅可以利用编码器进行特征提取和降维的工作，还可以利用解码器生成新的样本，这也是生成对抗网络(Generative Adverserial Network, GAN)的主要思路。</p>
-<p>当然也有论文指出，共享权值和镜像网络并不是好的选择，尤其是在卷积神经网络中。虽然卷积是线性的，但卷积的逆运算通常是超定的，不可逆，所以镜像的网络并不一定有效 (需要再确认一下，总觉得怪怪的。。。)。 因此，对于卷积自动编码器(CAE)而言，其解码部分的反向卷积虽然称为Deconvolution,但不是真正意义上的逆向，而应该称为<strong>Transposed convolution</strong>. </p>
-<h4 id="Deconvolution-or-transposed-convolution"><a href="#Deconvolution-or-transposed-convolution" class="headerlink" title="Deconvolution or transposed convolution"></a>Deconvolution or transposed convolution</h4><p>下面，我们来讨论<strong>transposed convolution</strong>。首先从Theano的tutorial上摘了一些观点，里面对于卷积和矩阵乘法的理解非常棒！！！</p>
-<h5 id="Understanding-of-Transposed-convolution"><a href="#Understanding-of-Transposed-convolution" class="headerlink" title="Understanding of Transposed convolution"></a>Understanding of Transposed convolution</h5><ul>
-<li>Transposed convolution: map from output-vector space to the input-vector space, while keeping the connectivity pattern of the convolution depicted. <strong>Also called fractionally strided convolutions.</strong></li>
-<li>The need for transposed convolutions generally arises from the desire to use a transformation going in the opposite direction of a normal convolution. One might use such a transformation as the decoding layer of a convolutional autoencoder or to project feature maps to a higher-dimensional space. (转置卷积的意义)</li>
-<li>Every convolution boils down to an efficient implementation of a matrix operation, thus the insights gained from the fully-connected case are useful solving the convolutional case. (卷积运算的内凛属性依然是矩阵乘法)</li>
-<li>The dissertation about transposed convolution arithmetic is simplified by the fact that transposed convolution properties don’t interact across axes.</li>
-</ul>
-<h5 id="卷积和矩阵乘法的关系"><a href="#卷积和矩阵乘法的关系" class="headerlink" title="卷积和矩阵乘法的关系"></a>卷积和矩阵乘法的关系</h5><p>为了说明transposed convolution的可行性，首先得解释卷积运算和矩阵乘法的关系。我们定义输入矩阵为$\mathbf{I}$，卷积核为$\mathbf{K}$，以及输出矩阵为$\mathbf{O}$, 那么三者的关系如下，</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\mathbf{O} = \mathbf{I} * \mathbf{K}.
-\end{equation}</script><p>卷积神经网络中的卷积与传统的二维卷积是不一样的，CNN中的卷积只考虑某一区域与卷积核相乘的累计和，不会在计算初始对卷积核做镜像对称。这一点倒是更像correlation的运算。下图给了一个例子，摘自Theano tutorial,<br><img src="http://deeplearning.net/software/theano_versions/dev/_images/no_padding_no_strides.gif" alt="Convolution example, $i=4,k=3,s=1,p=0$"></p>
-<p>那么这种运算的本质是什么呢？ 我们可以将卷积运算转变成矩阵的乘法。我们将$\mathbf{I}$,$\mathbf{O}$按先列再行的顺序展开为vector, 定义为$\mathbf{I<em>{v}}$和$\mathbf{O</em>{v}}$, 以上图中对应的参数为例，则有，</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\mathbf{I_{v}} &= [I_{0,0},I_{0,1},I_{0,2},I_{0,3},\cdots,I_{3,0},I_{3,1},I_{3,2},I_{3,3}] \notag \\
-\mathbf{O_{v}} &= [O_{0,0},O_{0,1},O_{0,2},O_{0,3}].
-\end{align}</script><p>紧接着，我们用矩阵$\mathbf{C}$来定义卷积运算，其中$\mathbf{C}$的元素由核矩阵$\mathbf{K}$的元素定义，如下所示，</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\mathbf{C} = 
-\begin{bmatrix}
-w_{0,0} & 0 & 0 & 0 \\
-w_{0,1} & w_{0,0} & 0 & 0 \\
-w_{0,2} & w_{0,1} & 0 & 0 \\
-0 & w_{0,2} & w_{0,1} & 0 \\
-w_{1,0} & 0 & w_{0,0} & 0 \\
-w_{1,1} & w_{1,0} & w_{0,1} & w_{0,0} \\
-w_{1,2} & w_{1,1} & w_{0,2} & w_{0,1} \\
-0 & w_{1,2} & 0 & w_{0,2} \\
-w_{2,0} & 0 & w_{1,0} & 0 \\
-w_{2,1} & w_{2,0} & w_{1,1} & w_{1,0} \\
-w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
-0 & w_{2,2} & 0 & w_{1,2} \\
-0 & 0 & w_{2,0} & 0 \\
-0 & 0 & w_{2,1} & w_{2,0} \\
-0 & 0 & w_{2,2} & w_{2,1} \\
-0 & 0 & 0 & w_{2,2}\\
-\end{bmatrix}
-\end{equation}</script><p>最后，公式(1)的卷积运算便可由公式(4)转化为矩阵运算，</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\mathbf{O_{v}} = \mathbf{I_{v}} \cdot \mathbf{C}.
-\end{equation}</script><p>Toturial中也指出，矩阵$\mathbf{C}$正是CNN训练中前向 (forward) 和后向 (back propogation)的关键，对$\mathbf{C}$做转置换，便可以<br>通过网络的输出将梯度传递给输入，即 </p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\mathbf{I_{v}} = \mathbf{O_{v}} \cdot \mathbf{C^{T}}.
-\end{equation}</script><p>我们发现，公式(5)正是我们需要的“反向卷积”，我们来看看Theano tutorial的观点，</p>
-<ul>
-<li>Though the kernel defines a convolution, whether it’s a direct convolution or a transposed convolution is determined by how the forward and backward passes are computed.</li>
-<li>For instance, the kernel $w$ defines a convolution whose forward and backward passes are computed by multiplying with $C$ and $C^{T}$ respectively, but it is also defines a transposed convolution whose forward and backward passes are computed by multiplying with $C^{T}$ and $(C^{T})^{T} = C$ respectively.</li>
-</ul>
-<p>因此，利用网络训练中的Back propogation运算进行transposed convolution是可行的，只需要在运算时调换一下$\mathbf{C}$和$\mathbf{C^{T}}$的顺序。</p>
-<h5 id="Execute-transposed-convolution"><a href="#Execute-transposed-convolution" class="headerlink" title="Execute transposed convolution"></a>Execute transposed convolution</h5><p>最后，我们来说一下怎么实现“反向卷积”。通过前面的分析，transposed convolution的运算可以概括为convolution的逆运算，所以最简单的方式是用卷积，也即deconvolution。但tutorial中也指出，卷积运算通常需要做zero padding，引入不必要的运算，所以Theano内部定义了新的函数<a href="http://deeplearning.net/software/theano_versions/dev/library/tensor/nnet/conv.html" target="_blank" rel="external">theano.tensor.nnet.abstract_conv.conv2d_grad_wrt_inputs</a>来实现简化了的卷积运算。</p>
-<ul>
-<li>It is always possible to implement a trasnposed convolution with a direct convolution. The disadvantage is that it usually involves adding many columns and rows of zeros to the input, resulting in a much less efficient implementation.</li>
-<li>The simples way to think about a transposed convolution is by computing the output shape of the direct convolution for a given input shape first, and the inverting the input and output shapes for the transposed convolution.</li>
-<li>To maintain the same connectivity pattern in the equivalent convolution it is necessary to zero pad the input in such a way that the first (top-left) application of the kernel only touches the top-left pixel, i.e., the padding has to be equal to the size of the kernel minus one.</li>
-</ul>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">[1] Convolution arithmetic tutorial</a></li>
-<li><a href="https://github.com/loliverhennigh/All-Convnet-Autoencoder-Example" target="_blank" rel="external">[2] All-Convnet-Autoencoder-Example</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" data-id="cjbeotrer000e5h6720wutq1a" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/">deep-learning</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Applying-MathJax-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="article-date">
-  <time datetime="2017-08-30T14:24:53.000Z" itemprop="datePublished">2017-08-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/30/Applying-MathJax-to-hexo/">Applying MathJax to hexo</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下班前简单写一下怎么在Hexo中应用<a href="https://www.mathjax.org/" target="_blank" rel="external">MathJex</a>，参考了两篇博客，后面会列出。具体步骤如下，</p>
-<ul>
-<li>进入博客所在文件夹 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> username.github.io</div></pre></td></tr></table></figure>
-<ul>
-<li>安装hexo-math,并解决兼容问题 </li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-math</div><div class="line">$ npm uninstall hexo-renderer-marked --save</div><div class="line">$ npm install hexo-renderer-kramed --save</div></pre></td></tr></table></figure>
-<ul>
-<li>解决行内公式渲染问题</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/node_modules/kramed/lib/rules/inline.js</div><div class="line"></div><div class="line">change line 11 from `escape: /^\\([\\`*&#123;&#125;\[\]()<span class="comment">#$+\-.!_&gt;])/,` to `escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,`</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改配置文件<code>_config.yml</code></li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ vim _config.yml</div><div class="line">Add following lines</div><div class="line"><span class="comment"># MathJax Support</span></div><div class="line">mathjax:</div><div class="line">	<span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">    per_page: <span class="literal">true</span></div></pre></td></tr></table></figure>
-<ul>
-<li>重新编译Hexo</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>测试一下效果，比如一维Gauss分布，</p>
-<script type="math/tex; mode=display">
-f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a href="http://www.jianshu.com/p/7ab21c7f0674" target="_blank" rel="external">在Hexo中渲染MathJax数学公式</a></li>
-<li><a href="http://blog.csdn.net/sysushui/article/details/54585908" target="_blank" rel="external">在Hexo中使用mathjax来渲染latex</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/" data-id="cjbeotrek00055h67wgykga7e" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/30/Applying-MathJax-to-hexo/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-我们去拍飞机吧" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/29/我们去拍飞机吧/" class="article-date">
-  <time datetime="2017-08-29T04:11:35.000Z" itemprop="datePublished">2017-08-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/29/我们去拍飞机吧/">我们去拍飞机吧</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>刚吃完午饭，趁着困意写点好(wu)玩(liao)的事情吧，<strong>跟导师去虹桥机场看飞机</strong>。有一次和同学争论，什么样的兴趣爱好是正常的？他认为<strong>玩魔方</strong>属于正常的，但是<strong>痴迷飞机和汽车</strong>不太正常。论点是玩魔方是可实现并且能够提升自己能力的，但飞机和汽车属于奢侈品，只能看不能体验，不能算是有意义的兴趣爱好。我倒是挺同意这个观点的，然而还是喜欢，很纯粹。。。</p>
-<p>言归正传，这篇blog，我们来说说怎么在魔都看飞机起降吧。目前我只知道<strong>虹桥机场</strong>的追机路线，等忙完了，我会去浦东机场探探路，网上还是有不少攻略的。</p>
-<p>分三步展开，</p>
-<ol>
-<li>虹桥机场（SHA）最佳的拍机点，以及如何到达</li>
-<li>利用Flightradar24实时监控飞机航路和起降方向</li>
-<li>一些照片 (多图预警)</li>
-</ol>
-<h4 id="虹桥机场最佳拍机地点"><a href="#虹桥机场最佳拍机地点" class="headerlink" title="虹桥机场最佳拍机地点"></a>虹桥机场最佳拍机地点</h4><p>虹桥机场有两条跑道 (18R/36L 和 18L/36R)，其中18R/36L主要用于起飞，18L/36R用于降落，如下图所示。(这里插一句，跑道编号的数字表明跑道的方向角，18则表示为南北走向。如果数字后面有字母L和R，则表示有两条同一朝向的平行跑道。)</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic1.png?raw=true" alt="map of Hongqiao airport"></p>
-<p>由于SHA的南边有高架，阻挡视线，且安全性低，我们考虑去北边看飞机的起降。通常起降的方向是相反的，所以出发之前建议提前查看飞机的起降方向，我会在下一步来说。这里先说说怎么到<strong>最佳地点</strong>，即上图中的红色十字的位置(如下图右所示)。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic-map.jpg?raw=true" alt="Landing at 18L/36R from north"></p>
-<p>我们可以清楚地看到跑道灯，守在附近便可以近距离观察飞机的起降。而且附近是绿化带，安全性可以得到保障。那么，如何去呢？离这里最近的地铁站是2号线淞虹路站，下车以后沿着天山西路一直走便能找到。</p>
-<h4 id="利用Flightradar24实时监控飞机航路和起降方向"><a href="#利用Flightradar24实时监控飞机航路和起降方向" class="headerlink" title="利用Flightradar24实时监控飞机航路和起降方向"></a>利用Flightradar24实时监控飞机航路和起降方向</h4><p>为了提前获取飞机起降方向，以及进近的飞机的型号、航班号等信息，可以使用<a href="https://www.flightradar24.com" target="_blank" rel="external">Flightradar24</a>，免费版已经可以提供我们需要的所有信息。当然他们目前只提供iphone端的应用，所以我买iphone是因为要看飞机吗(手动滑稽)？ </p>
-<p>网页版的界面如下图所示，从图中可以看出SHA今天的进近方向是南边，即在36R跑道降落，36L跑道起飞。随便点击其中某架飞机，便可以查询其相关信息，非常方便。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic2.png?raw=true" alt="Check plane info with flightradar24"></p>
-<h4 id="一些照片"><a href="#一些照片" class="headerlink" title="一些照片"></a>一些照片</h4><p>最后，放几张我拍的照片，手机是魅族note，像素非常低。但能近距离看飞机已经很开心了，等下次去可以测试一下iphone的效果。如果能有台单反，那就再好不过了！！<br><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170829/pic-planes.jpg?raw=true" alt="Photos by Jason"></p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="http://www.vatprc.net/index.php/zh/introduction" target="_blank" rel="external">VATPRC-VATSIM</a></li>
-<li><a href="https://www.flightradar24.com/31.27,121.44/10" target="_blank" rel="external">Flightradar24</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/" data-id="cjbeotrf400125h67ll1eb73r" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/29/我们去拍飞机吧/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Change-your-iphone-s-ringtone" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/28/Change-your-iphone-s-ringtone/" class="article-date">
-  <time datetime="2017-08-28T15:30:41.000Z" itemprop="datePublished">2017-08-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/28/Change-your-iphone-s-ringtone/">Change your iphone&#39;s ringtone</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>回家休息了三天，迎来了博士的第四年，希望一切安妥，虽然很多事情会事与愿违。进入正题吧，今天讲一个很无聊的故事，给iphone换铃声。最近被师兄安利了一部迪士尼的动画片<a href="https://en.wikipedia.org/wiki/Gravity_Falls" target="_blank" rel="external">怪诞小镇 (Gravity Falls)</a>，目前有且只有两季，断断续续地看了几集，喜欢上了主题曲<a href="http://music.163.com/#/song?id=30706563" target="_blank" rel="external">make me realize</a>，也喜欢上了Dipper和Mabel这对兄妹。(B站有<a href="https://www.bilibili.com/video/av1990411/" target="_blank" rel="external">视频</a>集合了主题曲的23个版本，值得一听)。</p>
-<p>那么，如何给iphone换铃声呢？虽然Apple自己的铃声挺好(zhuang)听(bi)的。首先需要苹果的<a href="https://www.apple.cn/itunes" target="_blank" rel="external">iTunes</a>，说实话这是我见过最难用的音乐播放器和同步软件，步骤太多了！然而这也体现了苹果的安全性，毕竟安全性会牺牲用户体验。</p>
-<p>下面我会分三步来说明如何更换铃声，</p>
-<ol>
-<li>下载并安装iTunes</li>
-<li>下载音乐并添加到iTunes资料库中</li>
-<li>更换铃声</li>
-</ol>
-<h4 id="Step1-下载并安装iTunes"><a href="#Step1-下载并安装iTunes" class="headerlink" title="Step1: 下载并安装iTunes"></a>Step1: 下载并安装iTunes</h4><p>本条针对使用Windows的孩子们，建议直接去<a href="https://www.apple.com/cn/itunes/download/" target="_blank" rel="external">管网</a>下载，目前的版本是12.6.2. 下载完成后，双击安装。紧接着，用数据线将iphone和电脑连接，iTunes便可以自动识别手机，并提示你是否添加对本电脑的信任。最后，登录自己的icloud帐号即可建立连接，并同步数据了。</p>
-<h4 id="Step2-下载音乐并添加到iTunes资料库中"><a href="#Step2-下载音乐并添加到iTunes资料库中" class="headerlink" title="Step2: 下载音乐并添加到iTunes资料库中"></a>Step2: 下载音乐并添加到iTunes资料库中</h4><p>这里以<code>make me realize</code>为例，可以考虑去<a href="https://music.163.com" target="_blank" rel="external">网易云音乐</a>下载，虽然虾米也不错，毕竟前女友喜欢。。。下载完成以后便可以通过iTunes进行添加，具体的操作如下，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">文件 -&gt; 将文件添加到资料库 -&gt; 选取要添加的音乐</div></pre></td></tr></table></figure></p>
-<p>添加完成后，进入PC端的<code>音乐</code>，显示如下情形则表示添加成功，可以单击添加的音乐试试效果。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170828/pic1.jpg?raw=true" alt="iTunes add music"></p>
-<h4 id="Step3-更换铃声"><a href="#Step3-更换铃声" class="headerlink" title="Step3: 更换铃声"></a>Step3: 更换铃声</h4><p>最后一步，我们更换铃声，首先要注意两点，</p>
-<ol>
-<li>苹果的编码格式是<a href="https://en.wikipedia.org/wiki/Advanced_Audio_Coding" target="_blank" rel="external">AAC</a></li>
-<li>苹果的铃声时常不超过30秒</li>
-</ol>
-<p>因此，首先需要截取铃声音频文件的乐段，步骤如下，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">单击音乐文件 -&gt; 右键选择“显示简介” -&gt; 选项 -&gt; 修改音乐的起止时间</div></pre></td></tr></table></figure></p>
-<p>类似于下图所示，<br><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170828/pic2.jpg?raw=true" alt="Cutout music into required length"></p>
-<p>紧接着，我们转换文件的编码格式到AAC,具体的步骤如下。创建完成后会多一个<code>m4a</code>结尾的文件，此时右键该文件，选择<code>在Windows资源管理中显示</code>，进入文件夹以后，修改<code>.m4a</code>后缀为<code>.m4r</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">单击音乐文件 -&gt; 文件 -&gt; 转换 -&gt; 创建AAC版本</div></pre></td></tr></table></figure></p>
-<p>回到iTunes界面，双击修改过的AAC编码音乐文件，会提示该文件不存在，此时根据提示重新找到刚刚修改后缀名的文件即可。到这一步，已经成功将custom ringtone添加到iTunes中，检验方法如下，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">显示 -&gt; 媒体种类 -&gt; 铃声</div></pre></td></tr></table></figure></p>
-<p>如果出现类似于下图的显示，则说明添加成功，此时鼠标左键长按该条目，拖入iphone中即可。<br><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-170828/pic3.jpg?raw=true" alt="Add ringbell to your iphone"></p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="https://www.apple.com/cn/itunes/" target="_blank" rel="external">iTunes</a></li>
-<li><a href="https://jingyan.baidu.com/article/624e7459b609f034e8ba5a11.html" target="_blank" rel="external">新版iTunes 12怎样制作和同步铃声</a></li>
-<li><a href="https://jingyan.baidu.com/article/046a7b3ec2be44f9c27fa9bd.html" target="_blank" rel="external">修改音乐文件长度</a></li>
-</ul>
-<p>写得有些随意，如果有不清楚的，建议去看我贴的两条百度经验，写得非常详细！ 最后，祝七夕快乐吧，虽然已经是29号了，也不知道有没有会来看我的自娱自乐。。。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/" data-id="cjbeotrep00095h67w5po1sh0" class="article-share-link">Share</a>
-      
-        <a href="http://www.mazhixian.me/2017/08/28/Change-your-iphone-s-ringtone/#disqus_thread" class="article-comment-link">Kommentarer</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
-  </nav>
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MATLAB/">MATLAB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep-learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/signal-processing/">signal-processing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/strange-hobbies/">strange-hobbies</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/MATLAB/" style="font-size: 10px;">MATLAB</a> <a href="/tags/R/" style="font-size: 10px;">R</a> <a href="/tags/deep-learning/" style="font-size: 20px;">deep-learning</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/life/" style="font-size: 20px;">life</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/signal-processing/" style="font-size: 13.33px;">signal-processing</a> <a href="/tags/strange-hobbies/" style="font-size: 10px;">strange-hobbies</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Arkiv</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Siste innlegg</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/12/20/matplotlib-tips-II/">matplotlib tips II</a>
-          </li>
-        
-          <li>
-            <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/">Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/18/20171118/">Happy or sad?</a>
-          </li>
-        
-          <li>
-            <a href="/2017/10/10/20171010/">Convolution in signal processing VS. convolution in CNN</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/30/20170930/">喝醉了，说说故事</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Jason Ma<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
 </nav>
+
+            
+            <div id="main" data-behavior="1"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                <section class="postShorten-group main-content-wrap">
     
-<script>
-  var disqus_shortname = 'mazhixian';
-  
-  (function(){
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/11/Data-visualization-with-t-SNE/">
+                            Data visualization with t-SNE
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-11T14:21:55+08:00">
+	
+		    Sep 11, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是映射高维数据向量到低维，并保留向量的相似性或者距离。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。<br>
+                    
+                        <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/09/Catch-data-with-provided-keys/">
+                            Catch data with provided keys
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-09T22:51:49+08:00">
+	
+		    Sep 09, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式re.<br>
+                    
+                        <a href="/2017/09/09/Catch-data-with-provided-keys/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/08/matplotlib-tips-I/">
+                            matplotlib tips I
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-08T23:00:34+08:00">
+	
+		    Sep 08, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。<br>
+                    
+                        <a href="/2017/09/08/matplotlib-tips-I/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">
+                            Install R on Ubuntu16.04 and configure jupyter-notebook
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-06T23:52:22+08:00">
+	
+		    Sep 06, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。<br>
+                    
+                        <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/06/BP神经网络sim函数的MATLAB和C实现/">
+                            BP神经网络sim函数的MATLAB和C实现
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-06T22:24:10+08:00">
+	
+		    Sep 06, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。<br>
+                    
+                        <a href="/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/04/Two-typical-tensorflow-exceptions/">
+                            Two typical tensorflow exceptions
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-04T20:32:22+08:00">
+	
+		    Sep 04, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。<br>
+                    
+                        <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">
+                            Deconvolution or Transpose: opposite operation of CNN
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-09-01T15:26:45+08:00">
+	
+		    Sep 01, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。]<br>
+                    
+                        <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/08/30/Applying-MathJax-to-hexo/">
+                            Applying MathJax to hexo
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-08-30T22:24:53+08:00">
+	
+		    Aug 30, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，<br>
+                    
+                        <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/08/29/我们去拍飞机吧/">
+                            我们去拍飞机吧
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-08-29T12:11:35+08:00">
+	
+		    Aug 29, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>刚吃完午饭，趁着困意写点好(wu)玩(liao)的事情吧，跟导师去虹桥机场看飞机。有一次和同学争论，什么样的兴趣爱好是正常的？他认为玩魔方属于正常的，但是痴迷飞机和汽车不太正常。论点是玩魔方是可实现并且能够提升自己能力的，但飞机和汽车属于奢侈品，只能看不能体验，不能算是有意义的兴趣爱好。我倒是挺同意这个观点的，然而还是喜欢，很纯粹。。。<br>
+                    
+                        <a href="/2017/08/29/我们去拍飞机吧/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/08/28/Change-your-iphone-s-ringtone/">
+                            Change your iphone&#39;s ringtone
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-08-28T23:30:41+08:00">
+	
+		    Aug 28, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    <p>回家休息了三天，迎来了博士的第四年，希望一切安妥，虽然很多事情会事与愿违。进入正题吧，今天讲一个很无聊的故事，给iphone换铃声。最近被师兄安利了一部迪士尼的动画片怪诞小镇 (Gravity Falls)，目前有且只有两季，断断续续地看了几集，喜欢上了主题曲make me realize，也喜欢上了Dipper和Mabel这对兄妹。(B站有视频集合了主题曲的23个版本，值得一听)。<br>
+                    
+                        <a href="/2017/08/28/Change-your-iphone-s-ringtone/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    <div class="pagination-bar">
+    <ul class="pagination">
+        
+          <li class="pagination-prev">
+            <a class="btn btn--default btn--small" href="/">
+              <i class="fa fa-angle-left text-base icon-mr"></i>
+              <span>NEWER POSTS</span>
+            </a>
+          </li>
+        
+        
+          <li class="pagination-next">
+            <a class="btn btn--default btn--small" href="/page/3/">
+              <span>OLDER POSTS</span>
+              <i class="fa fa-angle-right text-base icon-ml"></i>
+            </a>
+          </li>
+        
+        <li class="pagination-number">page 2 of 3</li>
+    </ul>
+</div>
+
+</section>
 
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2017 Jason Ma. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+        </div>
+        
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">Jason Ma</h4>
+        
+            <div id="about-card-bio"><p>We are in the same story.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Astronomer? Software engineer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Shanghai
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script src="/js/script.js"></script>
 
-  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-</body>
+    </body>
 </html>
