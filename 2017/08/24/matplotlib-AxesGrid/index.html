@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Astrogramer&#39;s blog">
+    <title>matplotlib AxesGrid - Astrogramer&#39;s blog</title>
+    <meta name="author" content="Jason Ma">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。">
+<meta name="keywords" content="python">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="matplotlib AxesGrid">
+<meta property="og:url" content="http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/index.html">
+<meta property="og:site_name" content="Astrogramer&#39;s blog">
+<meta property="og:description" content="今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yt-project.org/doc/_images/multiplot_2x2_time_series__multiplot_2x2_time_series.png">
+<meta property="og:updated_time" content="2017-12-20T07:58:09.043Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="matplotlib AxesGrid">
+<meta name="twitter:description" content="今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。">
+<meta name="twitter:image" content="http://yt-project.org/doc/_images/multiplot_2x2_time_series__multiplot_2x2_time_series.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://www.mazhixian.me/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-pz4cc6y13wt2trzqa8l3n9v0yykr0sstdaheem7qj628nhjmhp9pfawvqawz.min.css">
+    <!--STYLES END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+    
+</head>
+
+    <body>
+        <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">Astrogramer&#39;s blog</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">Jason Ma</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>We are in the same story.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/myinxd" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:zx@mazhixian.me" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Naive"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-hourglass-start" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Naive</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            matplotlib AxesGrid
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time itemprop="datePublished" datetime="2017-08-24T17:31:16+08:00">
+	
+		    Aug 24, 2017
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br>今天花了一天的时间帮同学做图，又体验了一遍<code>matplotlib</code>的复杂！之所以用AxesGrid,是因为<a href="https://yt-project.org/" target="_blank" rel="external">yt</a>的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理<a href="http://wwwmpa.mpa-garching.mpg.de/gadget/" target="_blank" rel="external">Gadget</a>仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。</p>
+<p>主要分三个部分来说</p>
+<ol>
+<li>AxesGrid的参数及使用方法</li>
+<li>Axes类的参数调整，作出更好看的图</li>
+<li>遇到<strong>segmentation fault</strong>时的解决思路</li>
+</ol>
+<h4 id="AxesGrid的参数及使用方法"><a href="#AxesGrid的参数及使用方法" class="headerlink" title="AxesGrid的参数及使用方法"></a>AxesGrid的参数及使用方法</h4><p>AxesGrid是<a href="https://www.matplotlib.org" target="_blank" rel="external">matplotlib</a>的<a href="http://matplotlib.org/mpl_toolkits/" target="_blank" rel="external">mapping toolkits</a>的一个类，用于生成网格化的figure，类似于<a href="http://matplotlib.org/api/pyplot_api.html?highlight=subplot#matplotlib.pyplot.subplot" target="_blank" rel="external">subplot</a>, 但相对于后者处理起来更容易。</p>
+<p>AxesGrid的参数主要有<code>rect</code>,<code>nrows_ncols</code>,<code>axes_pad</code>,以及<strong>colorbar</strong>相关的<code>cbar*</code>参数，具体的参数定义可以参见它的官方文档，这里我想介绍一下<code>rect</code>，<code>axes_pad</code>和<code>cbar*</code>参数。</p>
+<ul>
+<li>rect: 定义了AxesGrid在fig中的位置，是一个四维的列表，对应[left,bottom,width,height]</li>
+<li>axes_pad: 控制相邻两个axes的间隔，单位是inch</li>
+<li>cbar_location: colorbar 的位置，可以放置在上、下、左和右这四个位置</li>
+<li>cbar_size: 提供的参数为百分制的字符串，用于设定colorbar的宽度</li>
+<li>cbar_mode: colorbar的模式，可以为“each”，“single”或”edge”，通常会选择“single”</li>
+</ul>
+<p>AxesGrid的实例化和使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> mpl_toolkits.axes_grid1 <span class="keyword">import</span> AxesGrid</div><div class="line">fig = plt.figure()</div><div class="line">grid = AxesGrid(fig=fig, rect=(<span class="number">0.075</span>,<span class="number">0.075</span>,<span class="number">0.85</span>,<span class="number">0.85</span>),</div><div class="line">                nrows_ncols = (<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">                axes_pad = <span class="number">0.05</span>,</div><div class="line">                label_mode = <span class="string">"L"</span>,</div><div class="line">                share_all = <span class="keyword">True</span>,</div><div class="line">                cbar_location=<span class="string">"right"</span>,</div><div class="line">                cbar_mode=<span class="string">"single"</span>,</div><div class="line">                cbar_size=<span class="string">"3%"</span>,</div><div class="line">                cbar_pad=<span class="string">"0%"</span>)</div></pre></td></tr></table></figure></p>
+<p>做图时采用<code>grid[idx].axes</code>的方式获得axes对象，并进行相应的参数设置。以2x2的网格为例，下图给出了效果图 (图片来自yt的<a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">官方文档</a>)<br><img src="http://yt-project.org/doc/_images/multiplot_2x2_time_series__multiplot_2x2_time_series.png" alt="yt Time Series Multiplanel"></p>
+<h4 id="Axes类的参数调整，作出更好看的图"><a href="#Axes类的参数调整，作出更好看的图" class="headerlink" title="Axes类的参数调整，作出更好看的图"></a>Axes类的参数调整，作出更好看的图</h4><p>这里的参数调整主要涉及<code>grid[idx].axes</code>对象的参数调整，包括调整字体、大小以及坐标轴等。下面给出一个简要的调整样例及注释，后面我会针对yt的样例代码中的<code>p._setup_plots()</code>方法以及它隐藏的坑进行说明。</p>
+<ul>
+<li>参数设定样例<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">grid[i].axes.text(x,y,s,fontdict) <span class="comment"># 在图中添加文字</span></div><div class="line">grid[i].scatter(x,y,s=<span class="number">100</span>, c=<span class="string">'b'</span>, marker=<span class="string">'x'</span>) <span class="comment"># 在图中添加标记</span></div><div class="line"><span class="comment"># 手动设定坐标轴的范围</span></div><div class="line">grid[i].set_xticks([<span class="number">-0.3</span>,<span class="number">-0.2</span>,<span class="number">-0.1</span>,<span class="number">0.0</span>,<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>])</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>通过<code>set_xticks</code>方法可以避免相邻网格图的坐标轴标记重叠，影响视觉效果，后面我会添加图例。</p>
+<ul>
+<li><code>p._setup_plots()</code>方法<br>这个方法在<code>yt.visualization.plot_window</code>类定义，主要作用是在指定的axes上做图。每次执行这个方法，就会重新做图。但该方法会导致一个问题，如果我们在做图过程中要添加文字(annotate_text)和标记，那么重新执行<code>p._setup_plot</code>后，这些additional staff会消失。所以后来我采用了直接在AxesGrid的axes对象中利用<code>axes.text</code>进行添加。具体的原因我还没有完全理解，后面争取补上。</li>
+</ul>
+<h4 id="遇到segmentation-fault问题的解决思路"><a href="#遇到segmentation-fault问题的解决思路" class="headerlink" title="遇到segmentation fault问题的解决思路"></a>遇到segmentation fault问题的解决思路</h4><p>网上对”python segmentation fault”错误的解答众说纷纭，有的说法是“<a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">因为python里的C扩展导致(访问了非法内存区域)</a>”,解决方法是<code>sys.setrecursionlimit(100000)</code>，避免内存的越界访问。</p>
+<p>但是在代码里加了这行语句以后并没有解决问题，后来发现报错出现在执行<code>fig=plot.figure()</code>语句，师兄采用了最简单粗暴的方法，更新matploblib,解决了问题。所以这里记录一下这个解决思路，还是值得借鉴的，虽然没什么科学含量。。。</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://yt-project.org/doc/cookbook/complex_plots.html#time-series-multipanel" target="_blank" rel="external">Time Series Multipanel of yt</a></li>
+<li><a href="http://matplotlib.org/mpl_toolkits/axes_grid/api/axes_grid_api.html" target="_blank" rel="external">mpl_toolkits.axes_grid.axes_grid help</a></li>
+<li><a href="http://blog.csdn.net/chijiaodaxie/article/details/57074828" target="_blank" rel="external">Python 脚本运行时Segmentation fault (core dumped)</a></li>
+</ul>
+<h4 id="Github-repo-gastrack"><a href="#Github-repo-gastrack" class="headerlink" title="Github repo. gastrack"></a>Github repo. gastrack</h4><p>这个项目的github repo. <a href="https://github.com/myinxd/gastrack" target="_blank" rel="external">gastrack</a>. 断断续续写了很久，每次有需求了会修改，但版本控制还是没有做得很好。</p>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/python/">python</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/08/27/Has-your-new-iphone-been-activated/" data-tooltip="Has your new iphone been activated?" aria-label="PREVIOUS: Has your new iphone been activated?">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/08/23/Build-your-blog/" data-tooltip="Build-your-blog" aria-label="NEXT: Build-your-blog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2017 Jason Ma. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/08/27/Has-your-new-iphone-been-activated/" data-tooltip="Has your new iphone been activated?" aria-label="PREVIOUS: Has your new iphone been activated?">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/08/23/Build-your-blog/" data-tooltip="Build-your-blog" aria-label="NEXT: Build-your-blog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">Jason Ma</h4>
+        
+            <div id="about-card-bio"><p>We are in the same story.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Astronomer? Software engineer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Shanghai
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2017/08/24/matplotlib-AxesGrid/';
+                 
+                    this.page.identifier = '2017/08/24/matplotlib-AxesGrid/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+
+
+    </body>
+</html>

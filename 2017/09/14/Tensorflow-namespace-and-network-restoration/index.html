@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Astrogramer&#39;s blog">
+    <title>Tensorflow namespace and network restoration - Astrogramer&#39;s blog</title>
+    <meta name="author" content="Jason Ma">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Tensorflow namespace and network restoration">
+<meta property="og:url" content="http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/index.html">
+<meta property="og:site_name" content="Astrogramer&#39;s blog">
+<meta property="og:description" content="昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-12-20T07:58:09.043Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow namespace and network restoration">
+<meta name="twitter:description" content="昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://www.mazhixian.me/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-pz4cc6y13wt2trzqa8l3n9v0yykr0sstdaheem7qj628nhjmhp9pfawvqawz.min.css">
+    <!--STYLES END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+    
+</head>
+
+    <body>
+        <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">Astrogramer&#39;s blog</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">Jason Ma</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>We are in the same story.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/myinxd" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:zx@mazhixian.me" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Naive"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-hourglass-start" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Naive</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Tensorflow namespace and network restoration
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time itemprop="datePublished" datetime="2017-09-14T16:20:37+08:00">
+	
+		    Sep 14, 2017
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br>昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。</p>
+<p>概括为如下三个问题：</p>
+<ol>
+<li>变量的命名空间问题;</li>
+<li>网络的恢复问题;</li>
+<li>网络中tensor名称和数据的获取</li>
+</ol>
+<h4 id="变量命名空间"><a href="#变量命名空间" class="headerlink" title="变量命名空间"></a>变量命名空间</h4><p>首先，来说明命名空间的问题。通常我们利用<code>tf.Variable</code>或<code>tf.placeholder</code>等初始话一个变量，这两个类都有缺省的命名参数，例如<code>tf.Variable</code>的参数<code>name=Variable</code>。相应的，tf在我们新建变量的过程中按顺序在<code>Variable</code>后添加数字，例如<code>Variable_1</code>,<code>Variable_2</code>等。</p>
+<p>这种缺省命名虽然方便，但对网络的存储和恢复会造成很大的影响，所以如果要保存我们的网络，最好的方法是给每个变量设置命名空间。这些变量包括<code>Variables</code>,<code>placeholder</code>以及<code>optimizer</code>。</p>
+<h4 id="网络的恢复问题"><a href="#网络的恢复问题" class="headerlink" title="网络的恢复问题"></a>网络的恢复问题</h4><p>如上一篇<a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">博客</a>所述，tensorflow的<code>tf.train.Saver</code>类既可以存储网络，也可以恢复网络。其中Saver保存的<code>.ckpt</code>文件包含<strong>checkpoint</strong>和<strong>metadata</strong>，分别存储了graph的命名空间和元数据。恢复的时候便是基于他们读取数据到网络中。</p>
+<p><strong>但是</strong>，单有checkpoint和metadata是没有用的，tensorflow的核心就是graph，所以我们需要在恢复网络前重新搭建graph，并且这个graph的命名空间要与checkpoint的相同。因此，一定要养成好习惯，在定义网络的时候，给每个变量都设置固定的名称。</p>
+<p>除此之外，在一个ipython环境或者notebook下，如果要保存网络，建议只搭建一个graph。因为我发现，<code>tf.train.Saver</code>类在保存checkpoint的时候，会将目前存在的graph全部保存。</p>
+<p>下面给一段代码，从这篇<a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">文章</a>复制来的。。。</p>
+<h5 id="保存模型"><a href="#保存模型" class="headerlink" title="保存模型"></a>保存模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">init_op = tf.global_variables_initializer() </div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line">savepath = <span class="string">"./model.ckpt"</span></div><div class="line">saver.save(sess, savepath)</div></pre></td></tr></table></figure>
+<h5 id="恢复模型"><a href="#恢复模型" class="headerlink" title="恢复模型"></a>恢复模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(tf.random_normal([<span class="number">1</span>, <span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>]), name=<span class="string">"v2"</span>)</div><div class="line">saver = tf.train.Saver()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">modelpath = <span class="string">"./model.ckpt"</span></div><div class="line">sess = saver.restore(sess, modelpath)</div></pre></td></tr></table></figure>
+<p>从上面可以看出，二者的区别在于<strong>是否需要初始化变量</strong>，这也是网络恢复的核心问题，因为我们的目的就是恢复参数。</p>
+<h4 id="网络中tensor名称和数据的获取"><a href="#网络中tensor名称和数据的获取" class="headerlink" title="网络中tensor名称和数据的获取"></a>网络中tensor名称和数据的获取</h4><p>如何从存储的网络中提取变量的命名及其数据，可以参考下面的程序，也是<a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">抄来的</a>。。。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tensorflow.python <span class="keyword">import</span> pywrap_tensorflow  </div><div class="line">checkpoint_path = os.path.join(model_dir, <span class="string">"model.ckpt"</span>)  </div><div class="line">reader = pywrap_tensorflow.NewCheckpointReader(checkpoint_path)  </div><div class="line">var_to_shape_map = reader.get_variable_to_shape_map()  </div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> var_to_shape_map:  </div><div class="line">    print(<span class="string">"tensor_name: "</span>, key)  <span class="comment"># Ouput variables name</span></div><div class="line">    print(reader.get_tensor(key)) <span class="comment"># Output variables data</span></div></pre></td></tr></table></figure></p>
+<p>输出结果类似这样，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">tensor_name:  Conv_En_b2/cae-optimizer</div><div class="line">tensor_name:  Conv_De_b1/cae-optimizer_1</div><div class="line">tensor_name:  Conv_En_W0</div><div class="line">tensor_name:  De_b/cae-optimizer</div></pre></td></tr></table></figure></p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://blog.csdn.net/lwplwf/article/details/62419087" target="_blank" rel="external">TensorFlow学习笔记（8）—网络模型的保存和读取</a></li>
+<li><a href="http://blog.csdn.net/helei001/article/details/56489658" target="_blank" rel="external">查看TensorFlow checkpoint文件中的变量名和对应值</a></li>
+<li><a href="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">Transfer learning with TensorFlow</a></li>
+</ul>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/deep-learning/">deep-learning</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/17/20170917/" data-tooltip="20170917" aria-label="PREVIOUS: 20170917">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/13/Transfer-learning-with-TensorFlow/" data-tooltip="Transfer learning with TensorFlow" aria-label="NEXT: Transfer learning with TensorFlow">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2017 Jason Ma. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/17/20170917/" data-tooltip="20170917" aria-label="PREVIOUS: 20170917">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/13/Transfer-learning-with-TensorFlow/" data-tooltip="Transfer learning with TensorFlow" aria-label="NEXT: Transfer learning with TensorFlow">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">Jason Ma</h4>
+        
+            <div id="about-card-bio"><p>We are in the same story.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Astronomer? Software engineer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Shanghai
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2017/09/14/Tensorflow-namespace-and-network-restoration/';
+                 
+                    this.page.identifier = '2017/09/14/Tensorflow-namespace-and-network-restoration/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+
+
+    </body>
+</html>

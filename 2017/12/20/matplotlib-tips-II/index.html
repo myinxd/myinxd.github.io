@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Astrogramer&#39;s blog">
+    <title>matplotlib tips II - Astrogramer&#39;s blog</title>
+    <meta name="author" content="Jason Ma">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="好久没写了，来填坑，matplotlib相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.">
+<meta name="keywords" content="python">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="matplotlib tips II">
+<meta property="og:url" content="http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/index.html">
+<meta property="og:site_name" content="Astrogramer&#39;s blog">
+<meta property="og:description" content="好久没写了，来填坑，matplotlib相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_invert.png">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_stackbar.png">
+<meta property="og:updated_time" content="2017-12-20T07:58:09.043Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="matplotlib tips II">
+<meta name="twitter:description" content="好久没写了，来填坑，matplotlib相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_invert.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://www.mazhixian.me/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-pz4cc6y13wt2trzqa8l3n9v0yykr0sstdaheem7qj628nhjmhp9pfawvqawz.min.css">
+    <!--STYLES END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+    
+</head>
+
+    <body>
+        <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">Astrogramer&#39;s blog</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">Jason Ma</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>We are in the same story.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/myinxd" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:zx@mazhixian.me" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Naive"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-hourglass-start" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Naive</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            matplotlib tips II
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time itemprop="datePublished" datetime="2017-12-20T13:16:34+08:00">
+	
+		    Dec 20, 2017
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <!-- excerpt --></p>
+<p>好久没写了，来填坑，<code>matplotlib</code>相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.</p>
+<h5 id="1-matplotlib-gridspec"><a href="#1-matplotlib-gridspec" class="headerlink" title="1. matplotlib.gridspec"></a>1. matplotlib.gridspec</h5><p>首先是子图网格化，比较简单但高效的一种方式，相对subplot更好用。样例如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> gridspec</div><div class="line"><span class="comment"># initial grid 2 x 2</span></div><div class="line">gs = gridspec.GridSpec(<span class="number">2</span>, <span class="number">2</span>, width_ratios=[<span class="number">1</span>,<span class="number">1</span>], height_ratios=[<span class="number">1</span>,<span class="number">1</span>])</div><div class="line"></div><div class="line">ax0 = plt.subplot(gs[<span class="number">0</span>])</div><div class="line">xxxxxx</div><div class="line"></div><div class="line">as1 = plt.subplot(gs[<span class="number">1</span>])</div><div class="line">xxxxxx</div></pre></td></tr></table></figure></p>
+<p>此处<code>width_ratios</code>和<code>height_ratios</code>参数用于调整横向和纵向的子图之间的比例关系，效果见Tip2.</p>
+<h5 id="2-matplotlib的坐标轴翻转-反向"><a href="#2-matplotlib的坐标轴翻转-反向" class="headerlink" title="2. matplotlib的坐标轴翻转 (反向)"></a>2. matplotlib的坐标轴翻转 (反向)</h5><p>坐标轴反向主要出现在image相关的问题中。image通常以(row,column,channel)的数据结构出现，其y轴方向 (Vertical)与我们习惯的纵坐标镜像对称。因此，在处理图像的过程中，需要对坐标进行镜像对称，或者更简单的，对坐标轴进行翻转 (invert)。</p>
+<ul>
+<li>图像矩阵翻转<br>numpy包中的<code>flipud</code>方法可以用于图像的翻转，是常用方法之一。</li>
+<li>坐标轴翻转<br>matplotlib.Axis类中提供了<code>invert_xaxis</code>和<code>invert_yaxis</code>两个方法，下面结合第一点的gridspec给出样例。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line"><span class="comment"># display and invert</span></div><div class="line">plt.rcParams[<span class="string">"figure.figsize"</span>] = [<span class="number">10.0</span>, <span class="number">24.0</span>]</div><div class="line"></div><div class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> gridspec</div><div class="line">gs = gridspec.GridSpec(<span class="number">1</span>,<span class="number">3</span>, width_ratios=[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</div><div class="line"></div><div class="line"><span class="comment"># raw direction</span></div><div class="line">ax0 = plt.subplot(gs[<span class="number">0</span>])</div><div class="line">ax0.imshow(img)</div><div class="line">ax0.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">ax0.set_ylabel(<span class="string">"Vertical"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"Raw direction"</span>,fontsize=<span class="number">12</span>)</div><div class="line"></div><div class="line"><span class="comment"># Y invert</span></div><div class="line">ax1 = plt.subplot(gs[<span class="number">1</span>])</div><div class="line">ax1.imshow(img)</div><div class="line">ax1.invert_yaxis()</div><div class="line">ax1.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"Y invert"</span>,fontsize=<span class="number">12</span>)</div><div class="line"></div><div class="line"><span class="comment"># X invert</span></div><div class="line">ax2 = plt.subplot(gs[<span class="number">2</span>])</div><div class="line">ax2.imshow(img)</div><div class="line">ax2.invert_xaxis()</div><div class="line">ax2.set_xlabel(<span class="string">"Horizontal"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.title(<span class="string">"X invert"</span>,fontsize=<span class="number">12</span>)</div></pre></td></tr></table></figure>
+<p>其输出的图像如下图所示</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_invert.png" height="170" width="480">
+</center>
+
+<h5 id="3-savefig问题"><a href="#3-savefig问题" class="headerlink" title="3. savefig问题"></a>3. savefig问题</h5><p>保存图像是最近遇到的问题，主要涉及分辨率和去白边的问题。当然，如果能得到矢量图，尽量做矢量图。。。savefig的形式如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">xxxxx <span class="comment"># 做图的相关程序...</span></div><div class="line"></div><div class="line"><span class="comment"># save</span></div><div class="line">plt.savefig(name,dpi=<span class="number">300</span>,bbox_inches=<span class="string">"tight"</span>)</div></pre></td></tr></table></figure></p>
+<p>此处的<code>dpi</code>表示“digits per inch”，数值越大分辨率越高;而<code>bbox_inches</code>用于控制输出的margin，如果实例化为”tight”可以去掉白边。</p>
+<h5 id="4-stacked-bar"><a href="#4-stacked-bar" class="headerlink" title="4. stacked bar"></a>4. stacked bar</h5><p>Stacked bar属于直方图的一种，考虑到每个bin内部的样本可能会细分为某些类或者某些区间，为了更好的描述bin内部样本的分布，可以采用stacked bar plot. 在matplotlib的pyplot类中提供了<code>bar</code>方法用于做直方图，该方法的<code>bottom</code>参数用于vertical方向的stacked bar,而<code>left</code>和<code>right</code>参数可以用于horitontal方向的stacked bar。样例代码如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">plt.rcParams[<span class="string">"figure.figsize"</span>] = [<span class="number">7.0</span>, <span class="number">5.0</span>]</div><div class="line"></div><div class="line">bins = np.arange(<span class="number">0.5</span>, <span class="number">2.5</span>+<span class="number">0.5</span>, <span class="number">0.5</span>)</div><div class="line">data = np.array([[<span class="number">2</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>],[<span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">2</span> ,<span class="number">3</span>, <span class="number">1</span>, <span class="number">3</span>]])</div><div class="line">data = data.T</div><div class="line">plt.bar(bins, data[:,<span class="number">0</span>], width=<span class="number">0.2</span>)</div><div class="line">plt.bar(bins, data[:,<span class="number">1</span>], width=<span class="number">0.2</span>, bottom=data[:,<span class="number">0</span>])</div><div class="line">plt.bar(bins, data[:,<span class="number">2</span>], width=<span class="number">0.2</span>, bottom=data[:,<span class="number">0</span>]+data[:,<span class="number">1</span>])</div><div class="line"></div><div class="line">plt.xlabel(<span class="string">"Bins"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.ylabel(<span class="string">"Bars"</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.legend([<span class="string">"data-1"</span>, <span class="string">"data-2"</span>, <span class="string">"data-3"</span>],loc=<span class="number">2</span>,fontsize=<span class="number">12</span>)</div><div class="line">plt.ylim([<span class="number">0</span>,<span class="number">12</span>])</div></pre></td></tr></table></figure></p>
+<p>其输出结果如下图</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/raw/master/images/blog-171220/exp_stackbar.png" height="240" width="360">
+</center>
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/python/">python</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" data-tooltip="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64" aria-label="NEXT: Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2017 Jason Ma. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" data-tooltip="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64" aria-label="NEXT: Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">Jason Ma</h4>
+        
+            <div id="about-card-bio"><p>We are in the same story.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Astronomer? Software engineer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Shanghai
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2017/12/20/matplotlib-tips-II/';
+                 
+                    this.page.identifier = '2017/12/20/matplotlib-tips-II/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+
+
+    </body>
+</html>
