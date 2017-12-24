@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Astrogramer&#39;s blog">
-    <title>Transfer learning with TensorFlow - Astrogramer&#39;s blog</title>
+    <title>Convolution in signal processing VS. convolution in CNN - Astrogramer&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Today, let&amp;#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained netwo">
-<meta name="keywords" content="deep-learning">
+    <meta name="description" content="萌节快乐，LOL!!">
+<meta name="keywords" content="signal-processing">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Transfer learning with TensorFlow">
-<meta property="og:url" content="http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/index.html">
+<meta property="og:title" content="Convolution in signal processing VS. convolution in CNN">
+<meta property="og:url" content="http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/index.html">
 <meta property="og:site_name" content="Astrogramer&#39;s blog">
-<meta property="og:description" content="Today, let&amp;#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained netwo">
+<meta property="og:description" content="萌节快乐，LOL!!">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2017-12-20T07:58:09.043Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Transfer learning with TensorFlow">
-<meta name="twitter:description" content="Today, let&amp;#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained netwo">
+<meta name="twitter:title" content="Convolution in signal processing VS. convolution in CNN">
+<meta name="twitter:description" content="萌节快乐，LOL!!">
     
     
         
@@ -242,14 +242,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Transfer learning with TensorFlow
+            Convolution in signal processing VS. convolution in CNN
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2017-09-13T16:07:45+08:00">
+    <time itemprop="datePublished" datetime="2017-10-10T12:59:54+08:00">
 	
-		    Sep 13, 2017
+		    Oct 10, 2017
     	
     </time>
     
@@ -260,19 +260,35 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <!-- excerpt --><br>Today, let’s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.</p>
-<p>In our work, we are trying to classify some astronomical images with convolutional neural networks (CNN). As we know, the CNN networks should be trained with billions of samples to achieve optimum the parameters of weights and biases. However, only thousands of labelled samples do we have, which can’t activate the performance of the network. Since that, we propose to train the network by transfer learning. </p>
-<p>Here we come to the main body, i.e. how to realize transfer learning with your computer? In this blog, I’m going to tell you some tricks to realize this staff with <a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>, a famous deeplearning framework based on Python.</p>
-<h4 id="1-How-to-save-and-restore-the-net"><a href="#1-How-to-save-and-restore-the-net" class="headerlink" title="1. How to save and restore the net?"></a>1. How to save and restore the net?</h4><p>In order to realize the transfer learning, your script should pocess the ability to save and restore the network. Bellow are the code example of this two processes.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># Save the session as a check point</span></div><div class="line">sess = tf.InteractiveSession() <span class="comment"># Instance a session</span></div><div class="line">saver = tf.train.Saver() <span class="comment"># Instance a saver</span></div><div class="line">saver.save(sess, savepath) <span class="comment"># save the session, i.e. the network</span></div><div class="line"></div><div class="line"><span class="comment"># Restore</span></div><div class="line"><span class="comment"># [Note] The saver should be initialized after the graph defined...</span></div><div class="line">graph = tf.Graph()</div><div class="line"><span class="keyword">with</span> graph.as_default():</div><div class="line">    <span class="comment"># [Variable and model creation goes here.]</span></div><div class="line">    saver = tf.train.Saver()</div><div class="line">sess = tf. InteractiveSession()</div><div class="line">saver.restore(sess, netpath)</div></pre></td></tr></table></figure></p>
-<p>It should be noted that, the instancing of <code>saver</code> should be after defination of the network. I find that though the restored session <code>sess</code> saved the graph of the newtork, including tensors, variables, and operations, the variables still need to be initialized when training after restoration.</p>
-<h4 id="2-How-to-realize-the-transfer-learning"><a href="#2-How-to-realize-the-transfer-learning" class="headerlink" title="2. How to realize the transfer learning?"></a>2. How to realize the transfer learning?</h4><p>Here we come to the transfer learning. A typical process is that we save the paramters of the convolutional layers (ConvLayer), and replace the fully connected and output layers with new weights and biases. This is because the ConvLayers are the part to <strong>extract features</strong> of those samples, while the fully connected layers composing the <strong>classifier</strong> itself. Our target is to save the feature represantation part and update the classifier according to our project.</p>
-<p>Denote the last output of the ConvLayers is a tensor with name <code>ConvLayer_output</code>, and suppose a session namely <code>sess</code> has been restored, then we can build our own classifier, see as follows,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Get tensor 'ConvLayer_output' from sess</span></div><div class="line">l_conv_output = sess.graph.get_tensor_by_name(<span class="string">"ConvLayer_output"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add new fully connected layers and softmax layer</span></div><div class="line"><span class="comment"># Suppose we have 10 class to be classied</span></div><div class="line">numclass = <span class="number">10</span></div><div class="line">y_ = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, numclass], name=<span class="string">"cnn-softmax"</span>)</div><div class="line"></div><div class="line"><span class="comment"># Add a fully connected as an example</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape)</span>:</span></div><div class="line">	initial = tf.truncated_normal(shape, stddev=<span class="number">0.1</span>)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line">last_conv_shape = l_conv_output.get_shape().as_list()</div><div class="line">input_shape = last_conv_shape[<span class="number">1</span>] * last_conv_shape[<span class="number">2</span>] * last_conv_shape[<span class="number">3</span>]</div><div class="line">output_shape = <span class="number">1024</span></div><div class="line">W_fc = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_fc = bias_variable(shape=[output_shape])</div><div class="line">l_fc = tf.nn.relu(tf.matmul(l_conv_output, W_fc) + b_fc)</div><div class="line"></div><div class="line"><span class="comment"># Fully connected to softmax</span></div><div class="line">input_shape = <span class="number">1024</span></div><div class="line">output_shape = numclass</div><div class="line">W_soft = weight_variable(shape = [input_shape, output_shape])</div><div class="line">b_soft = bias_variable(shape = [output_shape])</div><div class="line">l_y = tf.nn.softmax(tf.matmul(l_fc, W_soft) + b_soft)</div></pre></td></tr></table></figure></p>
-<p>After that, our new network can be trained on our samples,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Initialize all the parameters, including the pretrained net and concated layers</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line"><span class="comment"># [Training lines goes here]</span></div></pre></td></tr></table></figure></p>
-<p>Finally, we obtain the network, and evaluations can be conducted, enjoy yourselves.</p>
-<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
-<li><a href="https://stackoverflow.com/questions/36281129/no-variable-to-save-error-in-tensorflow" target="_blank" rel="external">No variable to save error in Tensorflow</a></li>
-<li><a href="https://www.tensorflow.org" target="_blank" rel="external">Tensorflow</a></li>
-</ul>
+            <!-- excerpt --></p>
+<p>萌节快乐，LOL!!</p>
+<p>中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。）</p>
+<h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong>信号通过系统以后的输出，是信号与系统相互作用的结果</strong>.</p>
+<p>定义<script type="math/tex">f(t)</script>表示信号，<script type="math/tex">h(t)</script>表示，输出信号为<script type="math/tex">g(t)</script>，则有</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+g(t) = f(t)*h(t) = \int^{\infty}_{-\infty}{f(t-\tau)h(\tau)d\tau}.
+\end{equation}</script><p>其中<script type="math/tex">\tau</script>是积分变量。</p>
+<p>这里的<script type="math/tex">t-\tau</script>理解为对信号做对称 (翻折) 变换，其物理意义是在<script type="math/tex">t_0</script>时刻通过系统并输出的信号<script type="math/tex">g(t_0)</script>除了受到<script type="math/tex">f(t_0)</script>的影响，还受到<script type="math/tex">t<t_0</script>的信号通过系统以后的累积作用的影响。通俗的说，某时刻的输出信号是该时刻之前的信号与此刻信号共同作用的结果。</p>
+<p>以上是卷积在信号处理中的理解。</p>
+<p>推广到高维空间也是如此，最典型的就是图像空间的滤波，用某个核函数与原图做卷积，进行图像处理。例如用拉普拉斯核与原图做图像锐化。下面给出二维空间滤波的连续和离散表达。</p>
+<h4 id="Continous"><a href="#Continous" class="headerlink" title="Continous"></a>Continous</h4><script type="math/tex; mode=display">
+\begin{align}
+g(u,v) &= f(u,v)*h(u,v) \notag \\
+&=\int^{\infty}_{-\infty}{\int^{\infty}_{-\infty}}{f(u-\mu,v-\nu)h(\mu,\nu)d{\mu}d{\nu}}.
+\end{align}</script><h4 id="Discrete"><a href="#Discrete" class="headerlink" title="Discrete"></a>Discrete</h4><script type="math/tex; mode=display">
+\begin{align}
+g(m,n) &= f(m,n)*h(n,n) \notag \\
+&=\sum_{i}{\sum_{j}{f(m-i,n-j)h(i,j)}}.
+\end{align}</script><h3 id="Convolution-in-CNN"><a href="#Convolution-in-CNN" class="headerlink" title="Convolution in CNN"></a>Convolution in CNN</h3><p>然后我们来说卷积神经网络 (Convolutional Neural Network, CNN) 中的卷积，这里卷积的目的除了提取图像的特征，更重要的是缩小网络的参数数量。其物理意义是<strong>利用共享的权值矩阵 (卷积核) 以小块的形式遍历图像矩阵，获取图像在该卷积核下的响应，作为图像的特征</strong>。这里获取的特征也被成为特征图 (feature map)。</p>
+<p>因为图像空间不考虑时序性，也即某点与卷积核作用的输出不会受到其他时刻的影响，所以直接做图像与卷积核的相关(correlation)即可。</p>
+<p>定义图像矩阵为<script type="math/tex">I(m,n), m=1,\dots,M, n=1,\dots,N</script>，卷积核<script type="math/tex">G(i,j), i,j = 1,\dots,K</script>, 输出的特征图<script type="math/tex">F(p,q), p=1,\dots,P, q=1,\dots,Q</script>,则有</p>
+<script type="math/tex; mode=display">
+\begin{align}
+F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\
+&=\sum^{K}_{i=1}{\sum^{K}_{j=1}{I(i,j)G(i,j)}}.
+\end{align}</script><p>通常，CNN卷积运算的输出矩阵与输入矩阵大小是不同的，这里涉及到”zero padding”的问题，在离散信号处理中也很常见。我在<a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">这篇文章</a>讨论过，感兴趣的可以去围观。</p>
+<p>最后，我认为CNN的卷积本质上就是相关运算，与信号处理的卷积不等价。只是因为相关运算的两个矩阵通常具有相同的大小，而CNN的卷积核通常远小于图像矩阵。</p>
             
 
         </div>
@@ -282,7 +298,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/signal-processing/">signal-processing</a>
 
             </div>
         
@@ -293,7 +309,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-tooltip="Tensorflow namespace and network restoration" aria-label="PREVIOUS: Tensorflow namespace and network restoration">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" data-tooltip="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64" aria-label="PREVIOUS: Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -302,7 +318,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/12/Fourier-transform-on-2D-image/" data-tooltip="Fourier transform on 2D image" aria-label="NEXT: Fourier transform on 2D image">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-tooltip="Tensorflow namespace and network restoration" aria-label="NEXT: Tensorflow namespace and network restoration">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -320,7 +336,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -373,7 +389,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-tooltip="Tensorflow namespace and network restoration" aria-label="PREVIOUS: Tensorflow namespace and network restoration">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" data-tooltip="Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64" aria-label="PREVIOUS: Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -382,7 +398,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/12/Fourier-transform-on-2D-image/" data-tooltip="Fourier transform on 2D image" aria-label="NEXT: Fourier transform on 2D image">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" data-tooltip="Tensorflow namespace and network restoration" aria-label="NEXT: Tensorflow namespace and network restoration">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -400,7 +416,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -433,7 +449,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -491,9 +507,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2017/09/13/Transfer-learning-with-TensorFlow/';
+                 this.page.url = 'http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/';
                  
-                    this.page.identifier = '2017/09/13/Transfer-learning-with-TensorFlow/';
+                    this.page.identifier = '2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/';
                  
              };
             (function() {

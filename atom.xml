@@ -35,7 +35,7 @@
     </summary>
     
     
-      <category term="html-css" scheme="http://www.mazhixian.me/tags/html-css/"/>
+      <category term="html-css" scheme="http://www.mazhixian.me/all-tags/html-css/"/>
     
   </entry>
   
@@ -58,7 +58,7 @@
     </summary>
     
     
-      <category term="html-css" scheme="http://www.mazhixian.me/tags/html-css/"/>
+      <category term="html-css" scheme="http://www.mazhixian.me/all-tags/html-css/"/>
     
   </entry>
   
@@ -78,7 +78,7 @@
     </summary>
     
     
-      <category term="python" scheme="http://www.mazhixian.me/tags/python/"/>
+      <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
     
   </entry>
   
@@ -98,14 +98,14 @@
     </summary>
     
     
-      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
   <entry>
     <title>Convolution in signal processing VS. convolution in CNN</title>
-    <link href="http://www.mazhixian.me/2017/10/10/20171010/"/>
-    <id>http://www.mazhixian.me/2017/10/10/20171010/</id>
+    <link href="http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/"/>
+    <id>http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/</id>
     <published>2017-10-10T04:59:54.000Z</published>
     <updated>2017-12-20T07:58:09.043Z</updated>
     
@@ -118,7 +118,7 @@
     </summary>
     
     
-      <category term="signal-processing" scheme="http://www.mazhixian.me/tags/signal-processing/"/>
+      <category term="signal-processing" scheme="http://www.mazhixian.me/all-tags/signal-processing/"/>
     
   </entry>
   
@@ -138,7 +138,7 @@
     </summary>
     
     
-      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
@@ -158,7 +158,7 @@
     </summary>
     
     
-      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
@@ -178,7 +178,7 @@
     </summary>
     
     
-      <category term="signal-processing" scheme="http://www.mazhixian.me/tags/signal-processing/"/>
+      <category term="signal-processing" scheme="http://www.mazhixian.me/all-tags/signal-processing/"/>
     
   </entry>
   
@@ -198,7 +198,7 @@
     </summary>
     
     
-      <category term="deep-learning" scheme="http://www.mazhixian.me/tags/deep-learning/"/>
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
@@ -218,7 +218,7 @@
     </summary>
     
     
-      <category term="python" scheme="http://www.mazhixian.me/tags/python/"/>
+      <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
     
   </entry>
   
