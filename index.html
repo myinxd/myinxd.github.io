@@ -4,7 +4,6 @@
     
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
-    <meta name="baidu-site-verification" content="QFHOB3LIsl" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Astrogramer&#39;s blog">
     <title>Astrogramer&#39;s blog</title>
@@ -197,7 +196,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
+                             href="/404.html"
                             
                             title="Naive"
                         >
@@ -235,6 +234,84 @@
                         hasCoverMetaIn
                         ">
                 <section class="postShorten-group main-content-wrap">
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML/">
+                            Learning HTML notebook
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-12-24T12:57:51+08:00">
+	
+		    Dec 24, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <h2 id="HTML-notebook-1-Compositions"><a href="#HTML-notebook-1-Compositions" class="headerlink" title="HTML notebook 1: Compositions"></a>HTML notebook 1: Compositions</h2><p>入了HTML和JavaScript的坑，趁着年末事情没那么多 (假装不多)，学习一下，不知道能坚持多久，LOL… 参考的书有如下三本，</p>
+<ol>
+<li>Castro, E. and Hyslop, B. HTML and CSS Visual QuickStart Guide 8th Ed.</li>
+<li>Keith, J. and Sambells, J. DOM Scripting Web Design with JavaScript and Document OBject Model</li>
+<li>Zakas, N. Professional JavaScript for Web Developers 3rd Ed.</li>
+</ol>
+<p>边看边手动记笔记，有空整理一下。</p>
+<p>HTML的一个很好的理解，<strong>为网页内容打上能够描述它们的标签</strong>，但HTML元素描述的是内容是什么，而不是内容本身的特征，更像一个盒子。CSS用来控制内容的外观(如字体、颜色和阴影等)。访问者看到的内容位于主体<code>body</code>部分，即<code>&lt;body&gt;</code>和<code>&lt;/body&gt;</code>之间的内容。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span> My page <span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>每个网页都包含<code>DOCTYPE</code>、<code>html</code>、<code>head</code>和<code>body</code>元素，它们是网页的基础。HTML使用<code>&lt;&gt;</code>包围标签，包含开始和结束标签，其中结束标签在<code>&lt;</code>后增加<code>/</code>符号。</p>
+<ul>
+<li><code>&lt;body&gt;</code>开始标签以上的内容为浏览器和搜索引擎准备;</li>
+<li><code>&lt;!DOCTYPE html&gt;</code>表示这是一个html5页面，<code>DOCTYPE</code>应该始终位于页面第一行;</li>
+<li><code>&lt;title&gt;</code>和<code>&lt;\title&gt;</code>之间用于显示页面的标题;</li>
+<li>h1是标题，a是链接，img是图像。</li>
+</ul>
+<h5 id="元素"><a href="#元素" class="headerlink" title="元素"></a>元素</h5><p>元素有一个或多个属性、属性用来进一步描述元素 (<strong>考虑画图</strong>)。 元素由开始标签、内容和结束标签组成。习惯上，标签采用小写字母。还有一些元素是空元素 (<strong>不包含文本内容</strong>)，形如<code>&lt;   \&gt;</code>，即开始标签和结束标签的结合，由左尖括号开头、元素的名称及包含的属性和右尖括号 (空格加”/“在HTML5中可选) 组成。</p>
+<h5 id="属性和值"><a href="#属性和值" class="headerlink" title="属性和值"></a>属性和值</h5><p>属性包含了元素的额外信息，每个属性有各自的值。在HTML5中属性值两边的引号可选，但建议保留，形如<code>attr=&quot;value&quot;</code>的形式。有的属性可以接受仍和值，有的则有限制，最常见的是仅接受预定义值 (枚举值) 的属性。例如，<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">media</span>=<span class="string">"screen"</span>(预定义值) <span class="attr">href</span>=<span class="string">"style.css"</span>(非预定义值) /&gt;</span></div></pre></td></tr></table></figure></p>
+<p>有许多属性的值设置为数字，主要为描述大小和长度的属性，其中图像和视频的宽度和高度是有单位的，默认为像素。有的属性 (如<code>href</code>和<code>src</code>) 用于引用其他文件，它们只能包含URL形式的值。还有一种属性为布尔型，本身出现就表示<em>真</em>。</p>
+<h5 id="父元素和子元素"><a href="#父元素和子元素" class="headerlink" title="父元素和子元素"></a>父元素和子元素</h5><p>如果一个元素包含另一个元素，该元素称为被包含元素的父元素，被包含元素称为子元素。这种结构是HTML的关键特性，有助于在元素上添加样式和应用JavaScript行为。例如，<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">article</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span> Blablabla...<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span> ... xxxxx <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">article</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h5 id="文本内容"><a href="#文本内容" class="headerlink" title="文本内容"></a>文本内容</h5><p>文本是元素的基本成分，<strong>在HTML中，文本中的多个空格或制表符会被压缩成单个空格，回车和换行符号会被转换为单个空格</strong>，旧版本的HTML只能只用ASCII字符，受限于此，特殊字符需要类似于<code>Latex</code>的语法来引用。<strong>目前，可以采用UTF-8编码来缓解这一问题。</strong>而要采用Unicode，需要在<head>之后进行定义，并指定`charset=”utf-8”，如下<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div></pre></td></tr></table></figure></head></p>
+<h5 id="链接、图像和其他文本内容"><a href="#链接、图像和其他文本内容" class="headerlink" title="链接、图像和其他文本内容"></a>链接、图像和其他文本内容</h5><p><strong>HTML5提供了audio和video元素，避免了无Flash等插件便无法播放音频和视频的问题。</strong>，当然目前的多数浏览器提供了内置的媒体播放器，仍然可以使用Flash播放器作为旧浏览器。</p>
+<h5 id="文件和文件名的规则"><a href="#文件和文件名的规则" class="headerlink" title="文件和文件名的规则"></a>文件和文件名的规则</h5><p>建议采用<strong>小写字母加短横线</strong>而不是<strong>首字母大写加下划线</strong>的形式，并用<code>.html</code>作为扩展名，有助于访问和搜索引擎的优化。注意，文件名称中也不要出现<strong>空格</strong>。</p>
+<h5 id="URL-Uniform-Resource-Locator"><a href="#URL-Uniform-Resource-Locator" class="headerlink" title="URL(Uniform Resource Locator)"></a>URL(Uniform Resource Locator)</h5><p>包含关于文件存储位置和浏览器应如何处理它的信息，互联网上的每个文件都有唯一的URL。若URL路径不以文件名结尾，则对应一个目录中的默认文件，通常为<code>index.html</code>。URL分为绝对路径和相对路径，其中相对路径尽量使用<strong>根相对路径</strong></p>
+<h5 id="语义？？"><a href="#语义？？" class="headerlink" title="语义？？"></a>语义？？</h5><p>语义化HTML指的是那些使用最恰当的HTML元素进行标记的内容，在标记的过程中并不关心内容显示。</p>
+<ul>
+<li>HTML提供六个标题级别，即<code>h1-h6</code>,用形如<code>&lt;h1&gt; xxx &lt;/h1&gt;</code>实现;</li>
+<li>图像使用<code>img</code>,无元素;</li>
+<li>段落使用<code>p</code>，段落用<code>&lt;p&gt;xxx&lt;/p&gt;</code>实现;</li>
+<li>段落中可以嵌套<code>em</code>和<code>a</code>元素，其中<code>em</code>表示强调，通常会用<em>斜体</em>体现，在CSS中也可以修改。</li>
+<li><code>a</code>表示anchor，用于定义链接，形如<code>&lt;a href=&quot;&quot; rel=&quot;&quot; title=&quot;&quot;&gt;&lt;xxx /a&gt;</code></li>
+</ul>
+<h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h3><ul>
+<li><code>&amp;copy</code>表示版权符号，<code>&lt;p&gt;&lt;small&gt;%copy; Jason &lt;/small&gt;</code>, small表示法律声明等条纹细则;</li>
+<li>发送电子邮件<code>mailto:xx@xxx.xxx</code></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2017/12/24/Learning-HTML/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
     
     
     <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
@@ -569,43 +646,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/">
-                            Install R on Ubuntu16.04 and configure jupyter-notebook
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-06T23:52:22+08:00">
-	
-		    Sep 06, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。<br>
-                    
-                        <a href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -678,9 +718,7 @@
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
 <!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<!-- Do the EXCITED thing! -->
-<script type="text/javascript" src="js/elder+1s.js"></script> 
+
 
     </body>
 </html>
