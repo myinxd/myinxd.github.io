@@ -242,6 +242,64 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2017/12/25/ubuntu1610-configure-your-new-server/">
+                            Ubuntu 16.10 Configure your new server
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-12-25T15:20:37+08:00">
+	
+		    Dec 25, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Ubuntu server的防火墙配置问题，包括新用户添加、防火墙规则设定以及ssh的简单设置,写得比较简单，慢慢理解以后来填坑。主要的references见文末，另外说一句 Merry Xmas!</p>
+<h4 id="Change-or-update-root-pwd"><a href="#Change-or-update-root-pwd" class="headerlink" title="Change or update root pwd"></a>Change or update root pwd</h4><p>修改或者初始化root的密码,如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo passwd root</div><div class="line">New password: xxxx</div><div class="line">Retype new password: xxxx</div></pre></td></tr></table></figure></p>
+<h4 id="Add-a-new-user"><a href="#Add-a-new-user" class="headerlink" title="Add a new user"></a>Add a new user</h4><p>Ubuntu server在安装好以后只有Root用户，为了方便管理，通常需要添加一个用户以方便管理，并且为了服务器的安全性，需要配置ssh的key only和防火墙。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sudo apt update <span class="comment"># optional </span></div><div class="line">sudo apt upgrade <span class="comment"># optional</span></div><div class="line">sudo apt install vim <span class="comment"># install vim, optional </span></div><div class="line">sudo adduser jason  <span class="comment"># Add a new user</span></div><div class="line">sudo usermod -G root jason <span class="comment"># Add user jason into Group root</span></div><div class="line"><span class="comment"># Add sudoer authority</span></div><div class="line">sudo chmod u+w /etc/sudoers <span class="comment"># Change sudoers from readonly to writtable</span></div><div class="line">sudo vim /etc/sudoers</div><div class="line"><span class="comment"># Add the line below root ALL=(ALL:ALL) ALL</span></div><div class="line">jason ALL=(ALL:ALL) ALL</div><div class="line">sudo chmod u-w /etc/sudoers <span class="comment"># Rechange mode of sudoers to readonly</span></div></pre></td></tr></table></figure></p>
+<h4 id="SSH-confiurations"><a href="#SSH-confiurations" class="headerlink" title="SSH confiurations"></a>SSH confiurations</h4><p>ssh配置方便远程访问server，主要的配置包括端口修改、<code>aurhorized_keys</code>以及一些有助于安全性的配置。</p>
+<h6 id="1-生成本机的Authentication-key-pair"><a href="#1-生成本机的Authentication-key-pair" class="headerlink" title="1. 生成本机的Authentication key-pair"></a>1. 生成本机的Authentication key-pair</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -b 4096</div></pre></td></tr></table></figure>
+<p>选择默认的<code>id_rsa</code>和<code>id_rsa.pub</code>存储密钥对，并且选择不设定密码。</p>
+<h6 id="2-添加该用户的public-key到server中"><a href="#2-添加该用户的public-key到server中" class="headerlink" title="2. 添加该用户的public key到server中"></a>2. 添加该用户的public key到server中</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mkdir ~/.ssh</div><div class="line"><span class="built_in">cd</span> ~/.ssh</div><div class="line">touch authorized_keys</div><div class="line">vim authorized_keys</div><div class="line"><span class="comment"># Add your public key into this file like</span></div><div class="line">ssh-rsa xxxxx user@xxx</div></pre></td></tr></table></figure>
+<h6 id="3-配置ssh端口及相应的安全选项"><a href="#3-配置ssh端口及相应的安全选项" class="headerlink" title="3. 配置ssh端口及相应的安全选项"></a>3. 配置ssh端口及相应的安全选项</h6><p><code>sshd</code>的配置文件存放在<code>/etc/ssh/sshd_config</code>中，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">vim /etc/ssh/sshd_config</div><div class="line"><span class="comment"># change port</span></div><div class="line">Port 2333 <span class="comment"># 默认的端口号为22，此处建议修改为其他值</span></div><div class="line"><span class="comment"># 禁止root登录</span></div><div class="line">PermitRootLogin no</div><div class="line"><span class="comment"># 禁止密码验证</span></div><div class="line">PasswordAuthentication no</div></pre></td></tr></table></figure></p>
+<h6 id="4-重启ssh服务"><a href="#4-重启ssh服务" class="headerlink" title="4. 重启ssh服务"></a>4. 重启ssh服务</h6><p>配置完成后，重启<code>sshd</code>服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl restart sshd</div></pre></td></tr></table></figure></p>
+<h4 id="UFW-configuration"><a href="#UFW-configuration" class="headerlink" title="UFW configuration"></a>UFW configuration</h4><p>详细的UFW配置参考<a href="https://www.linode.com/docs/security/firewalls/configure-firewall-with-ufw/" target="_blank" rel="external">这篇文章</a>，下面列出我的配置并对解释。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">sudo apt install ufw</div><div class="line"><span class="comment"># allow all outgoing and deny all incoming</span></div><div class="line">sudo ufw default allow outgoing</div><div class="line">sudo ufw default deny incoming</div><div class="line"><span class="comment"># allow ssh</span></div><div class="line">sudo ufw allow ssh</div><div class="line"><span class="comment"># allow tcp udp http</span></div><div class="line">sudo ufw allow 80/tcp</div><div class="line">sudo ufw allow http/tcp</div><div class="line">sudo ufw allow 1725/udp</div><div class="line"><span class="comment"># enable ufw</span></div><div class="line">sudo ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure></p>
+<p>用<code>sudo ufw status</code>查看ufw的运行状态和配置结果，若显示如下列表，则说明配置好了，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Status: active</div><div class="line"></div><div class="line">To                         Action      From</div><div class="line">--                         ------      ----</div><div class="line">80/tcp                     ALLOW       Anywhere                  </div><div class="line">1725/udp                   ALLOW       Anywhere                  </div><div class="line">2333                       ALLOW       Anywhere                  </div><div class="line">80/tcp (v6)                ALLOW       Anywhere (v6)             </div><div class="line">1725/udp (v6)              ALLOW       Anywhere (v6)             </div><div class="line">2333 (v6)                  ALLOW       Anywhere (v6)</div></pre></td></tr></table></figure></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="http://blog.csdn.net/zzllabcd/article/details/49992613" target="_blank" rel="external">ubuntu 添加 root用户权限和sudoer 权限</a></li>
+<li><a href="https://www.linode.com/docs/security/firewalls/configure-firewall-with-ufw/" target="_blank" rel="external">Configure Firewall with UFW</a></li>
+<li><a href="https://www.linode.com/docs/security/securing-your-server/" target="_blank" rel="external">How to Secure Your Server</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2017/12/25/ubuntu1610-configure-your-new-server/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/">
                             Ubuntu 16.10 launch user script when log in
                         </a>
@@ -618,43 +676,6 @@
                     <p>今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。<br>
                     
                         <a href="/2017/09/12/Fourier-transform-on-2D-image/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/11/Data-visualization-with-t-SNE/">
-                            Data visualization with t-SNE
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-11T14:21:55+08:00">
-	
-		    Sep 11, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是映射高维数据向量到低维，并保留向量的相似性或者距离。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。<br>
-                    
-                        <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
