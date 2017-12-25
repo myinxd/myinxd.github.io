@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Astrogramer&#39;s blog">
-    <title>Archives - Astrogramer&#39;s blog</title>
+    <title>Tag: linux - Astrogramer&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Astrogramer&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/page/3/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-tags/linux/index.html">
 <meta property="og:site_name" content="Astrogramer&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -237,21 +237,21 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
-                        <a class="link-unstyled" href="/2017/08/24/matplotlib-AxesGrid/">
-                            matplotlib AxesGrid
+                        <a class="link-unstyled" href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/">
+                            Ubuntu 16.10 launch user script when log in
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-24T17:31:16+08:00">
+    <time itemprop="datePublished" datetime="2017-12-25T10:44:11+08:00">
 	
-		    Aug 24, 2017
+		    Dec 25, 2017
     	
     </time>
     
@@ -259,50 +259,26 @@
 
             </div>
             
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。<br>
-                    
-                        <a href="/2017/08/24/matplotlib-AxesGrid/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/23/Build-your-blog/">
-                            Build-your-blog
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-23T22:25:17+08:00">
-	
-		    Aug 23, 2017
-    	
-    </time>
-    
-</div>
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。</p>
+<h5 id="Step1-prepare-your-script"><a href="#Step1-prepare-your-script" class="headerlink" title="Step1 prepare your script"></a>Step1 prepare your script</h5><p>准备待执行的脚本并修改权限为可执行，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/<span class="built_in">local</span>/</div><div class="line">$ touch myscript.sh</div><div class="line">$ vim myscript.sh <span class="comment"># Add the lines you want to execute...</span></div><div class="line">$ chmod +x myscript.sh <span class="comment"># Change mode to executable</span></div></pre></td></tr></table></figure></p>
+<h5 id="Step2-configure-the-conf-file"><a href="#Step2-configure-the-conf-file" class="headerlink" title="Step2 configure the .conf file"></a>Step2 configure the .conf file</h5><p>编写配置文件，放入<code>~/.config/upstart/</code>中，例如<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.config/upstart</div><div class="line">$ touch myscript.conf</div><div class="line">$ vim myscript.conf</div><div class="line"><span class="comment">#### configurations to be added.</span></div><div class="line">start on startup</div><div class="line">task</div><div class="line"><span class="built_in">exec</span> /home/usrname/<span class="built_in">local</span>/myscript.sh</div></pre></td></tr></table></figure></p>
+<h5 id="Step3-log-out-and-relogin"><a href="#Step3-log-out-and-relogin" class="headerlink" title="Step3 log out and relogin"></a>Step3 log out and relogin</h5><p>重新登录，检验是否实现<code>myscript.sh</code>的自启动</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="http://blog.csdn.net/upshi/article/details/53884770" target="_blank" rel="external">Ubuntu添加开机启动执行脚本</a></li>
+<li><a href="http://askubuntu.com/questions/814/how-to-run-scripts-on-start-up" target="_blank" rel="external">How to run scripts on start up</a></li>
+</ul>
 
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>Build your own blog with github and hexo (利用hexo搭建博客)<br>
                     
-                        <a href="/2017/08/23/Build-your-blog/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
                         
+
+                    
+                    
+                        <p>
+                            <a href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
                     
                 </div>
             
@@ -313,20 +289,12 @@
     <div class="pagination-bar">
     <ul class="pagination">
         
-          <li class="pagination-prev">
-            <a class="btn btn--default btn--small" href="/all-archives/page/2/">
-              <i class="fa fa-angle-left text-base icon-mr"></i>
-              <span>NEWER POSTS</span>
-            </a>
-          </li>
         
-        
-        <li class="pagination-number">page 3 of 3</li>
+        <li class="pagination-number">page 1 of 1</li>
     </ul>
 </div>
 
 </section>
-
 
 
                 <footer id="footer" class="main-content-wrap">
@@ -381,7 +349,24 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2017-12-24T13:58:50.218Z</updated>
+  <updated>2017-12-25T04:31:46.337Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Ubuntu 16.10 launch user script when log in</title>
+    <link href="http://www.mazhixian.me/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/"/>
+    <id>http://www.mazhixian.me/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/</id>
+    <published>2017-12-25T02:44:11.000Z</published>
+    <updated>2017-12-25T04:31:46.337Z</updated>
+    
+    <content type="html"><![CDATA[<p>Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。</p><h5 id="Step1-prepare-your-script"><a href="#Step1-prepare-your-script" class="headerlink" title="Step1 prepare your script"></a>Step1 prepare your script</h5><p>准备待执行的脚本并修改权限为可执行，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/<span class="built_in">local</span>/</div><div class="line">$ touch myscript.sh</div><div class="line">$ vim myscript.sh <span class="comment"># Add the lines you want to execute...</span></div><div class="line">$ chmod +x myscript.sh <span class="comment"># Change mode to executable</span></div></pre></td></tr></table></figure></p><h5 id="Step2-configure-the-conf-file"><a href="#Step2-configure-the-conf-file" class="headerlink" title="Step2 configure the .conf file"></a>Step2 configure the .conf file</h5><p>编写配置文件，放入<code>~/.config/upstart/</code>中，例如<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.config/upstart</div><div class="line">$ touch myscript.conf</div><div class="line">$ vim myscript.conf</div><div class="line"><span class="comment">#### configurations to be added.</span></div><div class="line">start on startup</div><div class="line">task</div><div class="line"><span class="built_in">exec</span> /home/usrname/<span class="built_in">local</span>/myscript.sh</div></pre></td></tr></table></figure></p><h5 id="Step3-log-out-and-relogin"><a href="#Step3-log-out-and-relogin" class="headerlink" title="Step3 log out and relogin"></a>Step3 log out and relogin</h5><p>重新登录，检验是否实现<code>myscript.sh</code>的自启动</p><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul><li><a href="http://blog.csdn.net/upshi/article/details/53884770" target="_blank" rel="external">Ubuntu添加开机启动执行脚本</a></li><li><a href="http://askubuntu.com/questions/814/how-to-run-scripts-on-start-up" target="_blank" rel="external">How to run scripts on start up</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。&lt;/p&gt;
+&lt;h5 id=&quot;Step1-prepare-your-script&quot;&gt;&lt;a href=&quot;#Step1-prepare-yo
+      
+    
+    </summary>
+    
+    
+      <category term="linux" scheme="http://www.mazhixian.me/all-tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Learning HTML 2</title>
@@ -199,26 +223,6 @@
     
     
       <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Catch data with provided keys</title>
-    <link href="http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/"/>
-    <id>http://www.mazhixian.me/2017/09/09/Catch-data-with-provided-keys/</id>
-    <published>2017-09-09T14:51:49.000Z</published>
-    <updated>2017-12-20T07:58:09.043Z</updated>
-    
-    <content type="html"><![CDATA[<!-- excerpt --><br>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了<a href="https://www.arxiv.org" target="_blank" rel="external">arXiv</a>的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式<code>re</code>.</p><p>以arXiv为例，每篇文章都有一个确定的ID,形如<code>17MM.xxxxx</code>，其中MM表示月份，xxxxx表示五位数的编号。那么，其对应的正则表达式可以用如下字符串表示，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div></pre></td></tr></table></figure></p><p>然后利用python的正则表达式包<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">re</a>，用如下的语句从邮件里抓取即可，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">key = <span class="string">r"[0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9]"</span></div><div class="line">filename = <span class="string">"cs-arxiv.txt"</span></div><div class="line"><span class="keyword">with</span> open(filename, <span class="string">'r'</span>) <span class="keyword">as</span> fp:</div><div class="line">lines = fp.readlines()</div><div class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> lines:</div><div class="line">    s = re.findall(key,l)</div><div class="line">        <span class="keyword">if</span> len(s):</div><div class="line">        print(<span class="string">"Find id %s"</span> % s[<span class="number">0</span>])</div></pre></td></tr></table></figure></p><p>其中最关键的语句是第7行，即在邮件中按行搜索key制定的关键词或者关键词格式。详细的下载程序可以参考我的程序<a href="https://github.com/myinxd/canal-tools/blob/master/python-based/download-arxiv-paper.py" target="_blank" rel="external">download-arxiv-paper.py</a>. 根据提供的关键词进行数据提取，可以参考这个程序<a href="https://github.com/myinxd/gastrack/blob/master/utils/catch-with-keys.py" target="_blank" rel="external">catch-with-keys.py</a>.</p><h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul><li>[1] <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="external">https://docs.python.org/3/library/re.html</a></li><li>[2] <a href="http://www.cnblogs.com/jiu0821/p/6275685.html" target="_blank" rel="external">http://www.cnblogs.com/jiu0821/p/6275685.html</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式re.&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
     
   </entry>
   
