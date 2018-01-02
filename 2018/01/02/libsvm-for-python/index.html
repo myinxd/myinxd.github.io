@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>BP神经网络sim函数的MATLAB和C实现 - Jason&#39;s blog</title>
+    <title>Libsvm for python - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。">
-<meta name="keywords" content="MATLAB">
+    <meta name="description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
+<meta name="keywords" content="python">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="BP神经网络sim函数的MATLAB和C实现">
-<meta property="og:url" content="http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/index.html">
+<meta property="og:title" content="Libsvm for python">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/02/libsvm-for-python/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。">
+<meta property="og:description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-20T07:58:09.043Z">
+<meta property="og:updated_time" content="2018-01-02T15:29:31.797Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BP神经网络sim函数的MATLAB和C实现">
-<meta name="twitter:description" content="这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。">
+<meta name="twitter:title" content="Libsvm for python">
+<meta name="twitter:description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
     
     
         
@@ -242,14 +242,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            BP神经网络sim函数的MATLAB和C实现
+            Libsvm for python
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2017-09-06T22:24:10+08:00">
+    <time itemprop="datePublished" datetime="2018-01-02T22:50:08+08:00">
 	
-		    Sep 06, 2017
+		    Jan 02, 2018
     	
     </time>
     
@@ -260,15 +260,26 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <!-- excerpt --><br>这两天在写论文，天天写程序，没什么新脑洞，而且最近也遇到不少事。手动转载一下几篇新浪博客的文章，有几篇的阅读量和转载还挺不错。。。只是当时的文风也是醉了。</p>
-<p>第一篇是“BP神经网络sim函数的MATLAB和C实现” （<a href="http://blog.sina.com.cn/s/blog_9b6253b10101fvyq.html" target="_blank" rel="external">原文链接</a>)，争取做一些改写，尤其在排版上规范一点。</p>
-<h5 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h5><p>BP神经网络属于ANN的一种，相对于DNN，CNN而言，是比较浅层的分类器。不过BPNN由于参数比较少，网络简单，还是有广泛的应用，尤其在传统的<strong>人工特征提取加分类器</strong>的算法中。因为这篇文章是在本科毕业设计的时候写的，当时还用了SVM，这里插一句我的观点，“SVM虽然调参比较复杂，网格法耗时，GA又存在局部最优的问题，但如果特征选择比较合理，它的表现还是非常有竞争力的”。</p>
-<p>言归正传，由于要使用C++写界面，很希望实现神经网络的MATLAB和C的混合编程，问了度娘以后，发现不可以，因为MATLAB的神经网络库有专利，具体的解释见<a href="http://www.ilovematlab.cn/thread-103075-1-1.html" target="_blank" rel="external">http://www.ilovematlab.cn/thread-103075-1-1.html</a></p>
-<p>经过多次尝试后，决定采用“曲线救国”的方式，即利用MATLAB进行训练，再手动编写C代码，实现用于预测结果的sim函数。本次网络，采用newff函数建立神经网络net，输入层的传递函数为tansig，隐含层的传递函数为purelin.(若输入层采用logsig函数，方法类似)。<strong>注意</strong>: newff在新的MATLAB版本中已经有更新，具体更新可以去官网看。推荐<a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00EEWKKM8/" target="_blank" rel="external">《MATLAB神经网络43个案例分析》</a></p>
-<p>下面以三层BP神经网络为例，sim函数的MATLAB实现如下：</p>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">out</span> = <span class="title">myBPSim</span><span class="params">(net, Test_data)</span></span></div><div class="line"><span class="comment">% out = myBPSim(net, Test_data)</span></div><div class="line"><span class="comment">% Test_data，待分类的数据，每行表示一个特征向量</span></div><div class="line">IW = net.IW&#123;<span class="number">1</span>,<span class="number">1</span>&#125;;  <span class="comment">% net是训练得到的网络，IW表示隐含层的权矩阵</span></div><div class="line">                   <span class="comment">% 维数 = 隐含层神经元个数 * 特征数</span></div><div class="line">LW = net.LW&#123;<span class="number">2</span>,<span class="number">1</span>&#125;;  <span class="comment">% LW表示隐含层权矩阵，维数 = 1 * 隐含层神经元个数</span></div><div class="line">b1 = net.b&#123;<span class="number">1</span>,<span class="number">1</span>&#125;    <span class="comment">% 输入层的阈值</span></div><div class="line">b2 = net.b&#123;<span class="number">2</span>,<span class="number">1</span>&#125;    <span class="comment">% 隐含层的阈值</span></div><div class="line">n1 = (IW * Test_data) + b1;</div><div class="line">out1 = <span class="number">2</span>/(<span class="number">1</span> + <span class="built_in">exp</span>(<span class="number">2</span> * n1)) - <span class="number">1</span>;    <span class="comment">% tansig函数的表达式，out1表示输入层的输出结果</span></div><div class="line">out2 = LW * out1 + b2;             <span class="comment">% purelin函数就是形如 y = x，所以直接可以得到out2</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>有一点需要注意的是，<a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B0142K5QM0/" target="_blank" rel="external">《MATLAB智能算法——30个案例分析》</a> 这本书的第25章P238存在错误，其中的式25-3和式25-4中的<strong>减号</strong>应改为<strong>加号</strong>，否则与实际结果有较大误差。</p>
-<p>C语言对sim的实现与以上程序类似，需要注意的是矩阵的乘法，由于matlab采用了优化，所以其计算矩阵乘法的速度相对于C要快很多，我没有找到很好的解决方法，采用的仍然是无脑的for循环, C++代码样例如下，<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> CClassify::DoClassify(IplImage *Src)</div><div class="line">&#123;	</div><div class="line">    xxx <span class="comment">// Some lines for feature generation</span></div><div class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">9</span>; i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; <span class="number">89</span>; j++)</div><div class="line">		&#123;</div><div class="line">			net1[i] += img_mat[j]*IW[j][i];</div><div class="line">		&#125;</div><div class="line">		net1[i] = <span class="number">2.00</span> /(<span class="number">1</span>+<span class="built_in">exp</span>(<span class="number">-2</span>*(net1[i] + b1[i]))) <span class="number">-1</span>;  <span class="comment">// tansig</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(i =<span class="number">0</span>; i &lt; <span class="number">9</span>; i++)</div><div class="line">	&#123;</div><div class="line">		result += net1[i]*LW[i];</div><div class="line">	&#125;</div><div class="line">	result = result + b2;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(result &gt; <span class="number">0</span>) Alm_flag = <span class="number">1</span>;</div><div class="line">	<span class="keyword">else</span> Alm_flag = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+            <p>Happy new year!! Feel blue but still have to work. </p>
+<p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p>
+<p>To use libsvm on python, you may follow the coming steps.</p>
+<ol>
+<li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure>
+</li>
+<li><p>unzip the package</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure>
+</li>
+<li><p>Installization</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p>
+<p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p>
+<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>READEME</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p>
+<p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p>
+<p>Now, time to do your machine learning work.</p>
+
             
 
         </div>
@@ -278,7 +289,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/MATLAB/">MATLAB</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/python/">python</a>
 
             </div>
         
@@ -288,8 +299,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-tooltip="Install R on Ubuntu16.04 and configure jupyter-notebook" aria-label="PREVIOUS: Install R on Ubuntu16.04 and configure jupyter-notebook">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -298,7 +308,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/04/Two-typical-tensorflow-exceptions/" data-tooltip="Two typical tensorflow exceptions" aria-label="NEXT: Two typical tensorflow exceptions">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/25/ubuntu1610-configure-your-new-server/" data-tooltip="Ubuntu 16.10 Configure your new server" aria-label="NEXT: Ubuntu 16.10 Configure your new server">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -316,7 +326,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -368,8 +378,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/06/Install-R-on-Ubuntu16-04-and-configure-jupyter-notebook/" data-tooltip="Install R on Ubuntu16.04 and configure jupyter-notebook" aria-label="PREVIOUS: Install R on Ubuntu16.04 and configure jupyter-notebook">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -378,7 +387,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/09/04/Two-typical-tensorflow-exceptions/" data-tooltip="Two typical tensorflow exceptions" aria-label="NEXT: Two typical tensorflow exceptions">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/25/ubuntu1610-configure-your-new-server/" data-tooltip="Ubuntu 16.10 Configure your new server" aria-label="NEXT: Ubuntu 16.10 Configure your new server">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -396,7 +405,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -429,7 +438,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -487,9 +496,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2017/09/06/BP神经网络sim函数的MATLAB和C实现/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/02/libsvm-for-python/';
                  
-                    this.page.identifier = '2017/09/06/BP神经网络sim函数的MATLAB和C实现/';
+                    this.page.identifier = '2018/01/02/libsvm-for-python/';
                  
              };
             (function() {
@@ -500,7 +509,24 @@
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
-        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
     
 
 

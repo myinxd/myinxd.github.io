@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Astrogramer&#39;s blog</title>
+  <title>Jason&#39;s blog</title>
   
   <subtitle>We are in the same story.</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2017-12-25T15:11:33.497Z</updated>
+  <updated>2018-01-02T15:29:31.797Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Libsvm for python</title>
+    <link href="http://www.mazhixian.me/2018/01/02/libsvm-for-python/"/>
+    <id>http://www.mazhixian.me/2018/01/02/libsvm-for-python/</id>
+    <published>2018-01-02T14:50:08.000Z</published>
+    <updated>2018-01-02T15:29:31.797Z</updated>
+    
+    <content type="html"><![CDATA[<p>Happy new year!! Feel blue but still have to work. </p><p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p><p>To use libsvm on python, you may follow the coming steps.</p><ol><li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure></li><li><p>unzip the package</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure></li><li><p>Installization</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure></li></ol><p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p><p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p><h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>READEME</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p><p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p><p>Now, time to do your machine learning work.</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Happy new year!! Feel blue but still have to work. &lt;/p&gt;
+&lt;p&gt;I am gonna introduce the application of a famous package namely &lt;a href=&quot;https
+      
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
+    
+  </entry>
   
   <entry>
     <title>Ubuntu 16.10 Configure your new server</title>
@@ -65,19 +89,19 @@
   </entry>
   
   <entry>
-    <title>Learning HTML 2</title>
+    <title>HTML notebook2</title>
     <link href="http://www.mazhixian.me/2017/12/24/Learning-HTML-2/"/>
     <id>http://www.mazhixian.me/2017/12/24/Learning-HTML-2/</id>
     <published>2017-12-24T13:47:18.000Z</published>
-    <updated>2017-12-24T13:58:50.218Z</updated>
+    <updated>2017-12-27T14:57:24.850Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="HTML-notebook-1-Preparation"><a href="#HTML-notebook-1-Preparation" class="headerlink" title="HTML notebook 1: Preparation"></a>HTML notebook 1: Preparation</h2><p>Merry Xmas!! 放一张应景的图，在肯塔基老爷爷拍的，LOL。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p><p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p><p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h2 id=&quot;HTML-notebook-1-Preparation&quot;&gt;&lt;a href=&quot;#HTML-notebook-1-Preparation&quot; class=&quot;headerlink&quot; title=&quot;HTML notebook 1: Preparation&quot;&gt;&lt;/a&gt;HTML
+        &lt;h2 id=&quot;HTML-notebook-2-Construction&quot;&gt;&lt;a href=&quot;#HTML-notebook-2-Construction&quot; class=&quot;headerlink&quot; title=&quot;HTML notebook 2: Construction&quot;&gt;&lt;/a&gt;H
       
     
     </summary>
@@ -207,26 +231,6 @@
     
     
       <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Fourier transform on 2D image</title>
-    <link href="http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/"/>
-    <id>http://www.mazhixian.me/2017/09/12/Fourier-transform-on-2D-image/</id>
-    <published>2017-09-12T14:55:34.000Z</published>
-    <updated>2017-12-20T07:58:09.043Z</updated>
-    
-    <content type="html"><![CDATA[<!-- excerpt --><br>今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。</p><p>基本的傅立叶变换我就不介绍了。它的定义很简单，<strong>用正交的余弦函数作为base，对时域或空域的信号进行分解，并在频域描述信号.</strong> 这样做的好处很多，例如能够实现信号的滤波、能够压缩信号、能够将卷积转化为乘法等。</p><p>我准备先零散地抛几个“有(wu)趣(liao)”的点出来，第一个就是二维傅立叶变换的<code>时移问题</code>，这里我觉得用<code>bias</code>来描述更好，很无聊，但它的推导还是挺有价值的。设二维实数空间<script type="math/tex">f(x,y), x,y\in R</script>，其傅立叶变换为<script type="math/tex">F(m,n)</script>，则有，</p><script type="math/tex; mode=display">\begin{equation}F(m,n) = \iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx,\end{equation}</script><p>现假设在$x$和$y$方向的偏移(时移)分别为$b_x$和$b_y$，那么，Eq.(1)变为，</p><script type="math/tex; mode=display">\begin{align}F(m,n) &= \iint{f(x,y)e^{-j2\pi m(x-b_x)}e^{-j2\pi n(y-b_y)}}dydx \notag \\       &= e^{-j2\pi(mb_x + nb_y)}\iint{f(x,y)e^{-j2\pi mx}e^{-j2\pi ny}}dydx.\end{align}</script><p>而上式中的<script type="math/tex">e^{-j2\pi(mb_x + nb_y)}</script>利用欧拉公式展开，我们得到，</p><script type="math/tex; mode=display">\begin{align}e^{-j2\pi(mb_x + nb_y)} &= cos(2\pi(mb_x+nb_y)) - jsin(2\pi(mb_x+nb_y)).\end{align}</script><p>显然，<script type="math/tex">mb_x+nb_y</script>可以拆分成向量$(m,n)$与$(b_x,b_y)$的内积，代表频域空间的向量<script type="math/tex">(m,n)</script>在偏移方向<script type="math/tex">(b_x,b_y)</script>上的投影，而<script type="math/tex">(b_x,b_y)</script>又共同构成了该种投影的周期性，导致在傅立叶变换的图像上出现周期性变化的明暗条纹。</p><p>说完时移的问题，我们来提出图像傅立叶变换以后<strong>诡异十字</strong>问题的猜想，<strong>图像边界处有明显的灰度变化会导致傅立叶变换后的频域图像出现十字。</strong>可以理解为在图像边界处人为做了<code>truncated</code>，即给图像加了矩形窗，导致在频域的<strong>vertical</strong>和<strong>horizontal</strong>两个方向乘了一个<code>sinc</code>函数，而由于这个窗很大，所以<code>sinc</code>的影响集中在靠近中心(低频)的区域。</p><p>先留个坑，明天加图。。。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="signal-processing" scheme="http://www.mazhixian.me/all-tags/signal-processing/"/>
     
   </entry>
   
