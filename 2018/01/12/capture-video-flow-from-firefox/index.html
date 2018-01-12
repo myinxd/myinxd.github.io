@@ -6,23 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives: 2018 - Jason&#39;s blog</title>
+    <title>Capture vidwo flow from firefox - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Valar morghulis, valar dohaeris.">
+    <meta name="description" content="今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。  直接从Firefox的缓存中获取; 利用flash流的进程号，在系统/proc下抓取缓存的数据流。  Firefox 缓存提取Firefox的缓存保存在如下的路径中，其中f176xa6s.default不同的用户会不同，其他路径成分基本相同。1~/.cache/mozilla/firefox/fl76xa6s.default/c">
+<meta name="keywords" content="linux">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/index.html">
+<meta property="og:title" content="Capture vidwo flow from firefox">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/12/capture-video-flow-from-firefox/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:description" content="今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。  直接从Firefox的缓存中获取; 利用flash流的进程号，在系统/proc下抓取缓存的数据流。  Firefox 缓存提取Firefox的缓存保存在如下的路径中，其中f176xa6s.default不同的用户会不同，其他路径成分基本相同。1~/.cache/mozilla/firefox/fl76xa6s.default/c">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-01-12T06:05:36.335Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jason&#39;s blog">
-<meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
+<meta name="twitter:title" content="Capture vidwo flow from firefox">
+<meta name="twitter:description" content="今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。  直接从Firefox的缓存中获取; 利用flash流的进程号，在系统/proc下抓取缓存的数据流。  Firefox 缓存提取Firefox的缓存保存在如下的路径中，其中f176xa6s.default不同的用户会不同，其他路径成分基本相同。1~/.cache/mozilla/firefox/fl76xa6s.default/c">
     
     
         
@@ -52,7 +54,7 @@
         
     
 
-<header id="header" data-behavior="1">
+<header id="header" data-behavior="4">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a class="header-title-link" href="/ ">Jason&#39;s blog</a>
@@ -76,7 +78,7 @@
         
     
 
-<nav id="sidebar" data-behavior="1">
+<nav id="sidebar" data-behavior="4">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -229,26 +231,22 @@
 </nav>
 
             
-            <div id="main" data-behavior="1"
+            <div id="main" data-behavior="4"
                  class="
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/12/capture-video-flow-from-firefox/">
-                            Capture vidwo flow from firefox
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Capture vidwo flow from firefox
+        </h1>
+    
+    
+        <div class="post-meta">
     <time itemprop="datePublished" datetime="2018-01-12T13:17:08+08:00">
 	
 		    Jan 12, 2018
@@ -257,10 +255,12 @@
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。</p>
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。</p>
 <ol>
 <li>直接从Firefox的缓存中获取;</li>
 <li>利用flash流的进程号，在系统/proc下抓取缓存的数据流。</li>
@@ -288,137 +288,87 @@
 </ul>
 <h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://www.cpplive.com/html/1424.html" target="_blank" rel="external">Linux下提取保存浏览器中的视频</a><br>[2] <a href="https://www.cnblogs.com/jdksummer/articles/2561461.html" target="_blank" rel="external">linux下视频格式转换工具</a></p>
 
-                    
-                        
+            
 
-                    
-                    
-                        <p>
-                            <a href="/2018/01/12/capture-video-flow-from-firefox/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
         </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/03/monte-carlo-simulation/">
-                            monte carlo simulation
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-03T20:24:28+08:00">
-	
-		    Jan 03, 2018
-    	
-    </time>
-    
-</div>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/linux/">linux</a>
 
             </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p>
-<h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/03/monte-carlo-simulation/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/02/libsvm-for-python/">
-                            Libsvm for python
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-02T22:50:08+08:00">
-	
-		    Jan 02, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Happy new year!! Feel blue but still have to work. </p>
-<p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p>
-<p>To use libsvm on python, you may follow the coming steps.</p>
-<ol>
-<li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>unzip the package</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>Installization</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p>
-<p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p>
-<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>README</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p>
-<p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p>
-<p>Now, time to do your machine learning work.</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/02/libsvm-for-python/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
         
         
-        <li class="pagination-number">page 1 of 1</li>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/03/monte-carlo-simulation/" data-tooltip="monte carlo simulation" aria-label="NEXT: monte carlo simulation">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/12/capture-video-flow-from-firefox/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
 
 
 
@@ -429,6 +379,81 @@
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/03/monte-carlo-simulation/" data-tooltip="monte carlo simulation" aria-label="NEXT: monte carlo simulation">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/12/capture-video-flow-from-firefox/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/12/capture-video-flow-from-firefox/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
             
         </div>
         
@@ -474,7 +499,25 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2018/01/12/capture-video-flow-from-firefox/';
+                 
+                    this.page.identifier = '2018/01/12/capture-video-flow-from-firefox/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -492,6 +535,7 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+    
 
 
 

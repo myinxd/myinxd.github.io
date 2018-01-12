@@ -243,6 +243,119 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/12/capture-video-flow-from-firefox/">
+                            Capture vidwo flow from firefox
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-12T13:17:08+08:00">
+	
+		    Jan 12, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。</p>
+<ol>
+<li>直接从Firefox的缓存中获取;</li>
+<li>利用flash流的进程号，在系统/proc下抓取缓存的数据流。</li>
+</ol>
+<h3 id="Firefox-缓存提取"><a href="#Firefox-缓存提取" class="headerlink" title="Firefox 缓存提取"></a>Firefox 缓存提取</h3><p>Firefox的缓存保存在如下的路径中，其中<code>f176xa6s.default</code>不同的用户会不同，其他路径成分基本相同。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~/.cache/mozilla/firefox/fl76xa6s.default/cache2/entries</div></pre></td></tr></table></figure></p>
+<p>进入缓存文件夹后，便可以根据时间和文件大小搜索缓存文件。因为文件名是16进制编码的，无法体现文件内容，所以不考虑。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ls -lSt</div></pre></td></tr></table></figure></p>
+<p>其中<code>-S</code>表示按文件大小排序，<code>-t</code>表示按时间先后排序。</p>
+<p>通常视频文件大小为<code>MB</code>量级，所以一般排序在前的几个文件会是缓存的视频。</p>
+<h3 id="Firefox-flash-flow-抓取"><a href="#Firefox-flash-flow-抓取" class="headerlink" title="Firefox flash flow 抓取"></a>Firefox flash flow 抓取</h3><p>从Firefox网页抓取flash插件播放的视频流的步骤分为三步，(1) 打开视频、(2) 获取flash播放进程ID、(3) 视频流转存。</p>
+<h4 id="Step1-打开视频"><a href="#Step1-打开视频" class="headerlink" title="Step1 打开视频"></a>Step1 打开视频</h4><p>在浏览器播放视频，此处需要firefox支持flash，或者安装adobe flash插件。</p>
+<h4 id="Step2-获取flash播放进程ID"><a href="#Step2-获取flash播放进程ID" class="headerlink" title="Step2 获取flash播放进程ID"></a>Step2 获取flash播放进程ID</h4><p>利用<code>lsof</code>抓取正在运行的<code>Flash</code>进程，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lsof | grep Flash</div></pre></td></tr></table></figure></p>
+<p>会输出如下类似的结果，其中<code>31346</code>即为目标ID.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">plugin-co 31346 user 26u REG 8,5  4561004  787806 /tmp/FlashXXJa3CWn (deleted)</div></pre></td></tr></table></figure></p>
+<h4 id="Step3-视频流转存"><a href="#Step3-视频流转存" class="headerlink" title="Step3 视频流转存"></a>Step3 视频流转存</h4><p>参考<a href="http://www.cpplive.com/html/1424.html" target="_blank" rel="external">博客</a>: Linux下的浏览器播放flv视频都是采用的Flash播放器，而Flash播放器在播放每个视频的时候都会在/tmp目录下创建以“Flash”字样开头做标识的缓存文件，但是如果我们进入到/tmp目录下察看所有文件，却找不到正在播放的缓存文件，因为这些视频缓存文件只有系统可见，对用户是隐藏的。因此，我们可以根据Flash进程的ID，进入系统进程文件<code>/proc</code>下，获取缓存的视频流。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ls /proc/31346/fd</div><div class="line"><span class="comment"># 找到类似如下的行，其中 26 便是视频流缓存</span></div><div class="line">lrwx------ 1 user user 64 Jan  12 12:07 26 -&gt; /tmp/FlashXXJa3CWn (deleted)</div></pre></td></tr></table></figure>
+<p>利用<code>cat</code>和<code>管道</code>,将数据流输入到<code>.flv</code>文件中。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat /proc/31346/fd/26 &gt; ~/Desktop/test1.flv</div></pre></td></tr></table></figure></p>
+<h3 id="视频格式转换"><a href="#视频格式转换" class="headerlink" title="视频格式转换"></a>视频格式转换</h3><p>利用<code>mencoder</code>可以对视频文件进行格式转换，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mencoder -ovc lavc -lavcopts vcodec=mpeg4 -oac mp3lame source.flv -o dest.mp4</div></pre></td></tr></table></figure></p>
+<p>其中参数含义如下，参考了<a href="https://www.cnblogs.com/jdksummer/articles/2561461.html" target="_blank" rel="external">此文</a></p>
+<ul>
+<li><p>-ovc lavc：（output video codec）指定输出视频文件的视频编码类型，此处选择的是 Libavcodec 的视频编码；</p>
+</li>
+<li><p>-lavcopts vcodec=mpeg4：（Libavcodec options）指定视频编码的设置，由于 Libavcodec 包含了多种视频编码，所以用 vcodec=mpeg4 来指定具体的使用 MPEG-4 编码；</p>
+</li>
+<li><p>-oac mp3lame：（output audio codec）指定输出媒体文件的音频编码类型，此处选择的是 mp3lame；</p>
+</li>
+</ul>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://www.cpplive.com/html/1424.html" target="_blank" rel="external">Linux下提取保存浏览器中的视频</a><br>[2] <a href="https://www.cnblogs.com/jdksummer/articles/2561461.html" target="_blank" rel="external">linux下视频格式转换工具</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/12/capture-video-flow-from-firefox/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/03/monte-carlo-simulation/">
+                            monte carlo simulation
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-03T20:24:28+08:00">
+	
+		    Jan 03, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p>
+<h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/03/monte-carlo-simulation/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/02/libsvm-for-python/">
                             Libsvm for python
                         </a>
