@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-01-12T06:15:08.849Z</updated>
+  <updated>2018-01-14T13:36:03.881Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>install and configure debian test</title>
+    <link href="http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/"/>
+    <id>http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/</id>
+    <published>2018-01-14T08:58:02.000Z</published>
+    <updated>2018-01-14T13:36:03.881Z</updated>
+    
+    <content type="html"><![CDATA[<p>美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了<code>sudo chown -R</code>，系统真的有提示我的。。。所以是我的锅。</p><p>近期使用的系统是Ubuntu-16.10，考虑到<a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown-Spectre</a>漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！</p><p>于是，一边填坑，一边记录一下步骤，有种预感最近还是会折腾系统。</p><h3 id="debian系统安装"><a href="#debian系统安装" class="headerlink" title="debian系统安装"></a>debian系统安装</h3><p>debian-testing的iso下载路径，可以在USTC的<a href="https://mirrors.ustc.edu.cn" target="_blank" rel="external">镜像站</a>找，我尝试安装debian-9，可能刻录的时候有问题，无法安装，所以改用了<code>network install</code>的版本。使用了<a href="https://cn.ultraiso.net/" target="_blank" rel="external">UltraISO</a>烧写到U盘里，他们的试用版功能已经足够了。烧写好以后开始安装，按流程走就行。这里要注意的地方是： <strong>挂载/目录的分区需要格式化，否则无法安装</strong>。主要原因是与原有的<code>ubuntu</code>系统文件存在冲突。</p><h4 id="多系统引导"><a href="#多系统引导" class="headerlink" title="多系统引导"></a>多系统引导</h4><p>Debian采用grub引导多系统，我是在<code>win10</code>基础上安装Linux系统的，并通过<code>debian</code>引导<code>windows</code>。在重装的过程中，碰到了windows分区没有被读出并列在引导列表中的情形，有一个简答的解决方法，更新一下grub配置, 即<code>update-grub</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo update-grub</div></pre></td></tr></table></figure></p><p>一般更新后的列表后会出现对应<code>windows</code>的分区和条目。当然这个是运气，如果碰到其他问题，建议问谷歌。。。</p><h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><p>我选择了<code>gnome</code>桌面环境，系统本身还是很好看的，但也有一些bug，比如<code>gnome-terminal</code>就很丑。。。除此之外，debian比ubuntu预装的软件少很多，例如常用<code>sudo</code>，<code>locate</code>等都需要自己安装，对新手来说比较坑。下面说一下我的配置过程，</p><h4 id="terminal-shortcuts"><a href="#terminal-shortcuts" class="headerlink" title="terminal shortcuts"></a>terminal shortcuts</h4><p>Ubuntu默认的<code>terminal</code>快捷键是<code>Ctrl+Alt+T</code>，debian是没有这个快捷键的，需要自己添加。具体的思路是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">system setting -&gt; devices -&gt; keyboard -&gt; &quot;+&quot; -&gt; add a new shortcut</div></pre></td></tr></table></figure></p><p>Terminal默认的shell通常为<code>bash</code>，如果要更换为其他的，例如<a href="http://ohmyz.sh/" target="_blank" rel="external">zsh</a>, 则执行如下指令即可<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ chsh -s /usr/bin/zsh</div></pre></td></tr></table></figure></p><p>此处会提示用户输入密码。</p><h4 id="sudoer-及-sudo安装"><a href="#sudoer-及-sudo安装" class="headerlink" title="sudoer 及 sudo安装"></a>sudoer 及 sudo安装</h4><p>打开terminal以后，便可以安装和配置软件，此时需要<code>sudo</code>来临时使用<code>root</code>权限，debian默认不将用户添加到<code>sudoer</code>列表里，因此需要手动添加，步骤如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">首先按Ctrl+Alt+F3，进入console，以root身份登录，在安装系统时会要求设置root的密码</div><div class="line">进入以后，执行如下步骤</div><div class="line">1. 添加user到root的group里</div><div class="line"><span class="comment"># usermod -G root user</span></div><div class="line">2. 修改sudoers文件为可写</div><div class="line"><span class="comment"># chmod +w /etc/sudoers</span></div><div class="line">3. 编辑sudoers文件，添加用户</div><div class="line"><span class="comment"># vim /etc/sudoers</span></div><div class="line"><span class="comment"># user ALL=(ALL:ALL) ALL</span></div><div class="line">4. 修改sudoers文件为只读</div><div class="line"><span class="comment"># chmod -w /etc/sudoers</span></div></pre></td></tr></table></figure></p><p>再按<code>Ctrl+Alt+F1</code>回到图形界面，此时便可以用root权限安装<code>sudo</code>，并进一步安装其他软件了。</p><h4 id="系统语言及locale配置"><a href="#系统语言及locale配置" class="headerlink" title="系统语言及locale配置"></a>系统语言及locale配置</h4><p>由于要使用中文，我通常会用中文安装系统，再修改系统为英文。在Ubuntu中，直接在设置中设置语言即可;在debian中会更纯粹一些，即设置系统语言并调整<code>locale</code>的配置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/locale.gen</div><div class="line"><span class="comment"># 将需要的语言反注释掉，如 en-US.UTF-8</span></div></pre></td></tr></table></figure></p><p>再在system setting中调整语言支持即可,或者执行如下指令进行设置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo dkpg-reconfigure locale</div></pre></td></tr></table></figure></p><h4 id="时区调整"><a href="#时区调整" class="headerlink" title="时区调整"></a>时区调整</h4><p>改变语言为英文后，系统会采用UTC时间，此时会出现即使时区选择为<code>Asia/Shanghai</code>，依然与北京时间相差八个小时的情况，这也说明系统与Network Time没有同步，解决方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt install ntpdate</div><div class="line">$ sudo ntpdate time.windows.com</div></pre></td></tr></table></figure></p><p>即将系统时间与<code>windows</code>提供的网络时间同步，这样便会根据系统时区找到对应的时间了。</p><h4 id="Genome-窗口调整问题"><a href="#Genome-窗口调整问题" class="headerlink" title="Genome 窗口调整问题"></a>Genome 窗口调整问题</h4><p>gnome默认的窗口控件没有最大化和最小化，刚转过来会不习惯，解决方法是在<code>genome-tweak-tool</code>的<code>windows</code>选项中进行设置。</p><h4 id="gnome-terminal-无法正常运行"><a href="#gnome-terminal-无法正常运行" class="headerlink" title="gnome-terminal 无法正常运行"></a>gnome-terminal 无法正常运行</h4><p>这个通常与调整了系统语言相关，即locale的语言设置与系统语言冲突，或未设置，导致genome-terminal无法初始化窗口，解决方法是，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># echo "LANG=zh-CN.UTF-8" &gt;&gt; /etc/locale.conf</span></div></pre></td></tr></table></figure></p><h4 id="系统切换以后block-size的问题"><a href="#系统切换以后block-size的问题" class="headerlink" title="系统切换以后block size的问题"></a>系统切换以后block size的问题</h4><p>这个情况比较特殊，实验室可能只有我碰到过。在一块SSD上安装了windows和linux双系统，并且上一次运行的系统是windows, 则开机后因为<code>ext4</code>分区的block错误，导致无法引导进入Linux，目前有两个指令可以解决这一问题，并且要求有<strong>livecd USB</strong>，即能独立引导的最小化系统。可用的指令分别为<code>fsck</code>和<code>e2fsck</code>，二者的区别，我争取专门写一篇，目前还不太理解。</p><p>首先用<code>sudo fdisk -l</code>查看文件格式为<code>ext3/ext4</code>的分区，着重关注包含有<code>Linux</code>系统的主分区，然后修复<code>block</code>的问题。</p><ol><li><p>fsck</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fsck -t ext4 /dev/sda1</span></div></pre></td></tr></table></figure></li><li><p>e2fsck</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># e2fsck -b 32768 /dev/sda1</span></div><div class="line">-b 表示 superblock，具体的解释&lt;TODO&gt;...</div></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了&lt;code&gt;sudo chown -R&lt;/code&gt;，系统真的有提示我的。。。所以是我的锅。&lt;/p&gt;
+&lt;p&gt;近期使用的系统是Ubuntu-16.10，考
+      
+    
+    </summary>
+    
+    
+      <category term="linux" scheme="http://www.mazhixian.me/all-tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Capture video flow from firefox</title>
@@ -49,16 +73,15 @@
     <link href="http://www.mazhixian.me/2018/01/03/monte-carlo-simulation/"/>
     <id>http://www.mazhixian.me/2018/01/03/monte-carlo-simulation/</id>
     <published>2018-01-03T12:24:28.000Z</published>
-    <updated>2018-01-04T01:44:15.464Z</updated>
+    <updated>2018-01-14T08:57:10.239Z</updated>
     
-    <content type="html"><![CDATA[<p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p><h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="To-be-continue…"><a href="#To-be-continue…" class="headerlink" title="To be continue…"></a>To be continue…</h2><p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p><h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。&lt;/p&gt;
-&lt;h3 id=&quot;Why-sampling-and-Monte-Carlo&quot;&gt;&lt;a h
+        &lt;h2 id=&quot;To-be-continue…&quot;&gt;&lt;a href=&quot;#To-be-continue…&quot; class=&quot;headerlink&quot; title=&quot;To be continue…&quot;&gt;&lt;/a&gt;To be continue…&lt;/h2&gt;&lt;p&gt;蒙特卡罗方法帮助产生服从样本分布的新
       
     
     </summary>
@@ -223,26 +246,6 @@
     
     
       <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Convolution in signal processing VS. convolution in CNN</title>
-    <link href="http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/"/>
-    <id>http://www.mazhixian.me/2017/10/10/Convolution-in-signal-processing-VS-convolution-in-CNN/</id>
-    <published>2017-10-10T04:59:54.000Z</published>
-    <updated>2017-12-20T07:58:09.043Z</updated>
-    
-    <content type="html"><![CDATA[<!-- excerpt --></p><p>萌节快乐，LOL!!</p><p>中午被老板召唤，讨论了论文的算法部分，其中有传统卷积和CNN中卷积的区别，以及他们和相关函数的关系，感觉可以讨论一下,装个B。（这里不涉及时频分析了，因为我忘记了。。。）</p><h3 id="Convolution-in-signal-processing"><a href="#Convolution-in-signal-processing" class="headerlink" title="Convolution in signal processing"></a>Convolution in signal processing</h3><p>首先说一下我对信号处理中的卷积的理解。信号处理的卷积表达的物理意义是<strong>信号通过系统以后的输出，是信号与系统相互作用的结果</strong>.</p><p>定义<script type="math/tex">f(t)</script>表示信号，<script type="math/tex">h(t)</script>表示，输出信号为<script type="math/tex">g(t)</script>，则有</p><script type="math/tex; mode=display">\begin{equation}g(t) = f(t)*h(t) = \int^{\infty}_{-\infty}{f(t-\tau)h(\tau)d\tau}.\end{equation}</script><p>其中<script type="math/tex">\tau</script>是积分变量。</p><p>这里的<script type="math/tex">t-\tau</script>理解为对信号做对称 (翻折) 变换，其物理意义是在<script type="math/tex">t_0</script>时刻通过系统并输出的信号<script type="math/tex">g(t_0)</script>除了受到<script type="math/tex">f(t_0)</script>的影响，还受到<script type="math/tex">t<t_0</script>的信号通过系统以后的累积作用的影响。通俗的说，某时刻的输出信号是该时刻之前的信号与此刻信号共同作用的结果。</p><p>以上是卷积在信号处理中的理解。</p><p>推广到高维空间也是如此，最典型的就是图像空间的滤波，用某个核函数与原图做卷积，进行图像处理。例如用拉普拉斯核与原图做图像锐化。下面给出二维空间滤波的连续和离散表达。</p><h4 id="Continous"><a href="#Continous" class="headerlink" title="Continous"></a>Continous</h4><script type="math/tex; mode=display">\begin{align}g(u,v) &= f(u,v)*h(u,v) \notag \\&=\int^{\infty}_{-\infty}{\int^{\infty}_{-\infty}}{f(u-\mu,v-\nu)h(\mu,\nu)d{\mu}d{\nu}}.\end{align}</script><h4 id="Discrete"><a href="#Discrete" class="headerlink" title="Discrete"></a>Discrete</h4><script type="math/tex; mode=display">\begin{align}g(m,n) &= f(m,n)*h(n,n) \notag \\&=\sum_{i}{\sum_{j}{f(m-i,n-j)h(i,j)}}.\end{align}</script><h3 id="Convolution-in-CNN"><a href="#Convolution-in-CNN" class="headerlink" title="Convolution in CNN"></a>Convolution in CNN</h3><p>然后我们来说卷积神经网络 (Convolutional Neural Network, CNN) 中的卷积，这里卷积的目的除了提取图像的特征，更重要的是缩小网络的参数数量。其物理意义是<strong>利用共享的权值矩阵 (卷积核) 以小块的形式遍历图像矩阵，获取图像在该卷积核下的响应，作为图像的特征</strong>。这里获取的特征也被成为特征图 (feature map)。</p><p>因为图像空间不考虑时序性，也即某点与卷积核作用的输出不会受到其他时刻的影响，所以直接做图像与卷积核的相关(correlation)即可。</p><p>定义图像矩阵为<script type="math/tex">I(m,n), m=1,\dots,M, n=1,\dots,N</script>，卷积核<script type="math/tex">G(i,j), i,j = 1,\dots,K</script>, 输出的特征图<script type="math/tex">F(p,q), p=1,\dots,P, q=1,\dots,Q</script>,则有</p><script type="math/tex; mode=display">\begin{align}F(p,q) &= I(m-K:m+K, n-K:n+K)*G \notag \\&=\sum^{K}_{i=1}{\sum^{K}_{j=1}{I(i,j)G(i,j)}}.\end{align}</script><p>通常，CNN卷积运算的输出矩阵与输入矩阵大小是不同的，这里涉及到”zero padding”的问题，在离散信号处理中也很常见。我在<a href="http://www.mazhixian.me/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">这篇文章</a>讨论过，感兴趣的可以去围观。</p><p>最后，我认为CNN的卷积本质上就是相关运算，与信号处理的卷积不等价。只是因为相关运算的两个矩阵通常具有相同的大小，而CNN的卷积核通常远小于图像矩阵。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;萌节快乐，LOL!!&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="signal-processing" scheme="http://www.mazhixian.me/all-tags/signal-processing/"/>
     
   </entry>
   
