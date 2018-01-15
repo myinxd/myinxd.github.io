@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-01-15T02:48:49.713Z</updated>
+  <updated>2018-01-15T02:46:52.000Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Configure rtl8168 wireless ethernet card on Ubuntu 16.10</title>
+    <link href="http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/"/>
+    <id>http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/</id>
+    <published>2018-01-15T02:33:02.000Z</published>
+    <updated>2018-01-15T02:46:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是<code>Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller</code>，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。</p><p><strong>Ubuntu自带的驱动为<code>r8169</code>，高于此类网卡，导致兼容性差，影响了网络连接效果。</strong> 解决方法如下，参考链接见文末。</p><h3 id="1-Check-driver-and-device-info"><a href="#1-Check-driver-and-device-info" class="headerlink" title="1. Check driver and device info"></a>1. Check driver and device info</h3><p>查看系统为网卡型号和对应的驱动，利用如下指令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lspci -vv &gt;&gt; device.txt</div></pre></td></tr></table></figure></p><p>打开<code>device.txt</code>，找到网卡设备，样例如下。其中驱动部分显示为<code>r8169</code>，与现有网卡不吻合<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8169</div><div class="line">Kernel modules: r8169</div></pre></td></tr></table></figure></p><h4 id="2-Download-driver-of-r8168"><a href="#2-Download-driver-of-r8168" class="headerlink" title="2. Download driver of r8168"></a>2. Download driver of r8168</h4><p>从<code>Realtek</code>官网下载<code>rtl8168</code>的<a href="http://www.realtek.com.tw/downloads/downloadsView.aspx?Langid=1&amp;PNid=13&amp;PFid=5&amp;Level=5&amp;Conn=4&amp;DownTypeID=3&amp;GetDown=false#2" target="_blank" rel="external">驱动</a>, 需要根据Linux的内核版本进行选择，例如我的内核是4.9.1,则选择<code>4.7</code>以上的驱动。</p><h4 id="3-Install-driver"><a href="#3-Install-driver" class="headerlink" title="3. Install driver"></a>3. Install driver</h4><p>安装驱动，用如下指令，安装完成后要重启系统。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf 0010-r8168-8.045.08.tar.bz2</div><div class="line">$ <span class="built_in">cd</span> r8168-8.045.08 </div><div class="line">$ sudo ./autorun.sh</div><div class="line">$ sudo reboot</div></pre></td></tr></table></figure></p><p>重启以后，理论上网络连接恢复正常。重新查看系统设备信息，有如下结果，驱动已经更新为<code>r8168</code>。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8168</div><div class="line">Kernel modules: r8168</div></pre></td></tr></table></figure></p><h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.cnblogs.com/duwanjiang/p/5907634.html" target="_blank" rel="external">Ubuntu 16.04 RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller” 不能上网</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是&lt;code&gt;Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller&lt;/code&gt;，表现为网络不稳定，经常掉线，且网
+      
+    
+    </summary>
+    
+    
+      <category term="linux" scheme="http://www.mazhixian.me/all-tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Install and configure debian test</title>
@@ -226,26 +249,6 @@
     
     
       <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64</title>
-    <link href="http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/"/>
-    <id>http://www.mazhixian.me/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/</id>
-    <published>2017-12-13T06:33:31.000Z</published>
-    <updated>2017-12-20T07:58:09.043Z</updated>
-    
-    <content type="html"><![CDATA[<!-- excerpt --></p><h3 id="System-and-Software-info"><a href="#System-and-Software-info" class="headerlink" title="System and Software info"></a>System and Software info</h3><ol><li>System: Ubuntu16.04</li><li>GPU card: Nvidia GeForce GT 620</li><li>tensoflow-gpu==1.2.1</li><li>CUDA: 8.0 <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">https://developer.nvidia.com/cuda-downloads</a> </li><li>cuDNN: v5.1 <a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="external">https://developer.nvidia.com/rdp/cudnn-download</a></li></ol><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol><li>TensofFlow <a href="http://www.tensorflow.org" target="_blank" rel="external">http://www.tensorflow.org</a></li><li>Chinese staffs<br>[1] <a href="http://blog.csdn.net/yichenmoyan/article/details/48679777" target="_blank" rel="external">http://blog.csdn.net/yichenmoyan/article/details/48679777</a><br>[2] <a href="http://blog.csdn.net/niuwei22007/article/details/50439478" target="_blank" rel="external">http://blog.csdn.net/niuwei22007/article/details/50439478</a></li></ol><h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><ul><li><p>Install cuda, and configure path and LD_LIBRARY_PATH</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo dpkg -i cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb</div><div class="line">$ sudo apt-get update</div><div class="line">$ sudo apt-get install cuda</div></pre></td></tr></table></figure></li><li><p>Configure path</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim ~/.bashrc</div><div class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/cuda-8.0/bin</div><div class="line">$ <span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/cuda-8.0/lib64:/lib</div></pre></td></tr></table></figure></li><li><p>Install cuDNN</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf cudnn-8.0-linux-x64-v5.1.tgz</div><div class="line">$ <span class="built_in">cd</span> cuda</div><div class="line">$ sudo cp ./lib64/* /usr/<span class="built_in">local</span>/cuda/lib64/</div><div class="line">$ sudo chmod 755 /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</div><div class="line">$ sudo cp ./include/cudnn.h /usr/<span class="built_in">local</span>/cuda/include/</div></pre></td></tr></table></figure></li><li><p>Install TensorFlow</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ &lt;sudo&gt; pip3 install &lt;--user&gt; &lt;--update&gt; tenforflow-gpu==1.2.1</div></pre></td></tr></table></figure></li></ul><h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>Note that cuda 8.0 doesn’t support the default g++ version. Install an supported version and make it the default.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install g++-4.9</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20</div><div class="line">$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> cc /usr/bin/gcc</div><div class="line"></div><div class="line">$ sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30</div><div class="line">$ sudo update-alternatives --<span class="built_in">set</span> c++ /usr/bin/g++</div></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;System and Software info&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   

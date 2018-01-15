@@ -243,6 +243,56 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/">
+                            Configure rtl8168 wireless ethernet card on Ubuntu 16.10
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-15T10:33:02+08:00">
+	
+		    Jan 15, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是<code>Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller</code>，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。</p>
+<p><strong>Ubuntu自带的驱动为<code>r8169</code>，高于此类网卡，导致兼容性差，影响了网络连接效果。</strong> 解决方法如下，参考链接见文末。</p>
+<h3 id="1-Check-driver-and-device-info"><a href="#1-Check-driver-and-device-info" class="headerlink" title="1. Check driver and device info"></a>1. Check driver and device info</h3><p>查看系统为网卡型号和对应的驱动，利用如下指令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lspci -vv &gt;&gt; device.txt</div></pre></td></tr></table></figure></p>
+<p>打开<code>device.txt</code>，找到网卡设备，样例如下。其中驱动部分显示为<code>r8169</code>，与现有网卡不吻合<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8169</div><div class="line">Kernel modules: r8169</div></pre></td></tr></table></figure></p>
+<h4 id="2-Download-driver-of-r8168"><a href="#2-Download-driver-of-r8168" class="headerlink" title="2. Download driver of r8168"></a>2. Download driver of r8168</h4><p>从<code>Realtek</code>官网下载<code>rtl8168</code>的<a href="http://www.realtek.com.tw/downloads/downloadsView.aspx?Langid=1&amp;PNid=13&amp;PFid=5&amp;Level=5&amp;Conn=4&amp;DownTypeID=3&amp;GetDown=false#2" target="_blank" rel="external">驱动</a>, 需要根据Linux的内核版本进行选择，例如我的内核是4.9.1,则选择<code>4.7</code>以上的驱动。</p>
+<h4 id="3-Install-driver"><a href="#3-Install-driver" class="headerlink" title="3. Install driver"></a>3. Install driver</h4><p>安装驱动，用如下指令，安装完成后要重启系统。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf 0010-r8168-8.045.08.tar.bz2</div><div class="line">$ <span class="built_in">cd</span> r8168-8.045.08 </div><div class="line">$ sudo ./autorun.sh</div><div class="line">$ sudo reboot</div></pre></td></tr></table></figure></p>
+<p>重启以后，理论上网络连接恢复正常。重新查看系统设备信息，有如下结果，驱动已经更新为<code>r8168</code>。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8168</div><div class="line">Kernel modules: r8168</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.cnblogs.com/duwanjiang/p/5907634.html" target="_blank" rel="external">Ubuntu 16.04 RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller” 不能上网</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/14/install-and-configure-debian-test/">
                             Install and configure debian test
                         </a>

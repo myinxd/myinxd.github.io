@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Install and configure debian test - Jason&#39;s blog</title>
+    <title>Configure rtl8168 wireless ethernet card on Ubuntu 16.10 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了sudo chown -R，系统真的有提示我的。。。所以是我的锅。 近期使用的系统是Ubuntu-16.10，考虑到Meltdown-Spectre漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！ 于是，一边填坑，一边记录一下步骤，有种预感">
+    <meta name="description" content="Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。 Ubuntu自带的驱动为r8169，高于此类网卡，导致兼容性差，影响了网络连接效果。 解决方法如下，参考链接见文末。">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Install and configure debian test">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/index.html">
+<meta property="og:title" content="Configure rtl8168 wireless ethernet card on Ubuntu 16.10">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了sudo chown -R，系统真的有提示我的。。。所以是我的锅。 近期使用的系统是Ubuntu-16.10，考虑到Meltdown-Spectre漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！ 于是，一边填坑，一边记录一下步骤，有种预感">
+<meta property="og:description" content="Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。 Ubuntu自带的驱动为r8169，高于此类网卡，导致兼容性差，影响了网络连接效果。 解决方法如下，参考链接见文末。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-01-15T02:48:49.713Z">
+<meta property="og:updated_time" content="2018-01-15T02:46:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Install and configure debian test">
-<meta name="twitter:description" content="美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了sudo chown -R，系统真的有提示我的。。。所以是我的锅。 近期使用的系统是Ubuntu-16.10，考虑到Meltdown-Spectre漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！ 于是，一边填坑，一边记录一下步骤，有种预感">
+<meta name="twitter:title" content="Configure rtl8168 wireless ethernet card on Ubuntu 16.10">
+<meta name="twitter:description" content="Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。 Ubuntu自带的驱动为r8169，高于此类网卡，导致兼容性差，影响了网络连接效果。 解决方法如下，参考链接见文末。">
     
     
         
@@ -242,14 +242,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Install and configure debian test
+            Configure rtl8168 wireless ethernet card on Ubuntu 16.10
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-14T16:58:02+08:00">
+    <time itemprop="datePublished" datetime="2018-01-15T10:33:02+08:00">
 	
-		    Jan 14, 2018
+		    Jan 15, 2018
     	
     </time>
     
@@ -260,34 +260,14 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了<code>sudo chown -R</code>，系统真的有提示我的。。。所以是我的锅。</p>
-<p>近期使用的系统是Ubuntu-16.10，考虑到<a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown-Spectre</a>漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！</p>
-<p>于是，一边填坑，一边记录一下步骤，有种预感最近还是会折腾系统。</p>
-<h3 id="debian系统安装"><a href="#debian系统安装" class="headerlink" title="debian系统安装"></a>debian系统安装</h3><p>debian-testing的iso下载路径，可以在USTC的<a href="https://mirrors.ustc.edu.cn" target="_blank" rel="external">镜像站</a>找，我尝试安装debian-9，可能刻录的时候有问题，无法安装，所以改用了<code>network install</code>的版本。使用了<a href="https://cn.ultraiso.net/" target="_blank" rel="external">UltraISO</a>烧写到U盘里，他们的试用版功能已经足够了。烧写好以后开始安装，按流程走就行。这里要注意的地方是： <strong>挂载/目录的分区需要格式化，否则无法安装</strong>。主要原因是与原有的<code>ubuntu</code>系统文件存在冲突。</p>
-<h4 id="多系统引导"><a href="#多系统引导" class="headerlink" title="多系统引导"></a>多系统引导</h4><p>Debian采用grub引导多系统，我是在<code>win10</code>基础上安装Linux系统的，并通过<code>debian</code>引导<code>windows</code>。在重装的过程中，碰到了windows分区没有被读出并列在引导列表中的情形，有一个简答的解决方法，更新一下grub配置, 即<code>update-grub</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo update-grub</div></pre></td></tr></table></figure></p>
-<p>一般更新后的列表后会出现对应<code>windows</code>的分区和条目。当然这个是运气，如果碰到其他问题，建议问谷歌。。。</p>
-<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><p>我选择了<code>gnome</code>桌面环境，系统本身还是很好看的，但也有一些bug，比如<code>gnome-terminal</code>就很丑。。。除此之外，debian比ubuntu预装的软件少很多，例如常用<code>sudo</code>，<code>locate</code>等都需要自己安装，对新手来说比较坑。下面说一下我的配置过程，</p>
-<h4 id="terminal-shortcuts"><a href="#terminal-shortcuts" class="headerlink" title="terminal shortcuts"></a>terminal shortcuts</h4><p>Ubuntu默认的<code>terminal</code>快捷键是<code>Ctrl+Alt+T</code>，debian是没有这个快捷键的，需要自己添加。具体的思路是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">system setting -&gt; devices -&gt; keyboard -&gt; &quot;+&quot; -&gt; add a new shortcut</div></pre></td></tr></table></figure></p>
-<p>Terminal默认的shell通常为<code>bash</code>，如果要更换为其他的，例如<a href="http://ohmyz.sh/" target="_blank" rel="external">zsh</a>, 则执行如下指令即可<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ chsh -s /usr/bin/zsh</div></pre></td></tr></table></figure></p>
-<p>此处会提示用户输入密码。</p>
-<h4 id="sudoer-及-sudo安装"><a href="#sudoer-及-sudo安装" class="headerlink" title="sudoer 及 sudo安装"></a>sudoer 及 sudo安装</h4><p>打开terminal以后，便可以安装和配置软件，此时需要<code>sudo</code>来临时使用<code>root</code>权限，debian默认不将用户添加到<code>sudoer</code>列表里，因此需要手动添加，步骤如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">首先按Ctrl+Alt+F3，进入console，以root身份登录，在安装系统时会要求设置root的密码</div><div class="line">进入以后，执行如下步骤</div><div class="line">1. 添加user到root的group里</div><div class="line"><span class="comment"># usermod -G root user</span></div><div class="line">2. 修改sudoers文件为可写</div><div class="line"><span class="comment"># chmod +w /etc/sudoers</span></div><div class="line">3. 编辑sudoers文件，添加用户</div><div class="line"><span class="comment"># vim /etc/sudoers</span></div><div class="line"><span class="comment"># user ALL=(ALL:ALL) ALL</span></div><div class="line">4. 修改sudoers文件为只读</div><div class="line"><span class="comment"># chmod -w /etc/sudoers</span></div></pre></td></tr></table></figure></p>
-<p>再按<code>Ctrl+Alt+F1</code>回到图形界面，此时便可以用root权限安装<code>sudo</code>，并进一步安装其他软件了。</p>
-<h4 id="系统语言及locale配置"><a href="#系统语言及locale配置" class="headerlink" title="系统语言及locale配置"></a>系统语言及locale配置</h4><p>由于要使用中文，我通常会用中文安装系统，再修改系统为英文。在Ubuntu中，直接在设置中设置语言即可;在debian中会更纯粹一些，即设置系统语言并调整<code>locale</code>的配置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/locale.gen</div><div class="line"><span class="comment"># 将需要的语言反注释掉，如 en-US.UTF-8</span></div></pre></td></tr></table></figure></p>
-<p>再在system setting中调整语言支持即可,或者执行如下指令进行设置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo dkpg-reconfigure locale</div></pre></td></tr></table></figure></p>
-<h4 id="时区调整"><a href="#时区调整" class="headerlink" title="时区调整"></a>时区调整</h4><p>改变语言为英文后，系统会采用UTC时间，此时会出现即使时区选择为<code>Asia/Shanghai</code>，依然与北京时间相差八个小时的情况，这也说明系统与Network Time没有同步，解决方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt install ntpdate</div><div class="line">$ sudo ntpdate time.windows.com</div></pre></td></tr></table></figure></p>
-<p>即将系统时间与<code>windows</code>提供的网络时间同步，这样便会根据系统时区找到对应的时间了。</p>
-<h4 id="Genome-窗口调整问题"><a href="#Genome-窗口调整问题" class="headerlink" title="Genome 窗口调整问题"></a>Genome 窗口调整问题</h4><p>gnome默认的窗口控件没有最大化和最小化，刚转过来会不习惯，解决方法是在<code>genome-tweak-tool</code>的<code>windows</code>选项中进行设置。</p>
-<h4 id="gnome-terminal-无法正常运行"><a href="#gnome-terminal-无法正常运行" class="headerlink" title="gnome-terminal 无法正常运行"></a>gnome-terminal 无法正常运行</h4><p>这个通常与调整了系统语言相关，即locale的语言设置与系统语言冲突，或未设置，导致genome-terminal无法初始化窗口，解决方法是，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># echo "LANG=zh-CN.UTF-8" &gt;&gt; /etc/locale.conf</span></div></pre></td></tr></table></figure></p>
-<h4 id="系统切换以后block-size的问题"><a href="#系统切换以后block-size的问题" class="headerlink" title="系统切换以后block size的问题"></a>系统切换以后block size的问题</h4><p>这个情况比较特殊，实验室可能只有我碰到过。在一块SSD上安装了windows和linux双系统，并且上一次运行的系统是windows, 则开机后因为<code>ext4</code>分区的block错误，导致无法引导进入Linux，目前有两个指令可以解决这一问题，并且要求有<strong>livecd USB</strong>，即能独立引导的最小化系统。可用的指令分别为<code>fsck</code>和<code>e2fsck</code>，二者的区别，我争取专门写一篇，目前还不太理解。</p>
-<p>首先用<code>sudo fdisk -l</code>查看文件格式为<code>ext3/ext4</code>的分区，着重关注包含有<code>Linux</code>系统的主分区，然后修复<code>block</code>的问题。</p>
-<ol>
-<li><p>fsck</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fsck -t ext4 /dev/sda1</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>e2fsck</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># e2fsck -b 32768 /dev/sda1</span></div><div class="line">-b 表示 superblock，具体的解释&lt;TODO&gt;...</div></pre></td></tr></table></figure>
-</li>
-</ol>
+            <p>Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是<code>Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller</code>，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。</p>
+<p><strong>Ubuntu自带的驱动为<code>r8169</code>，高于此类网卡，导致兼容性差，影响了网络连接效果。</strong> 解决方法如下，参考链接见文末。</p>
+<h3 id="1-Check-driver-and-device-info"><a href="#1-Check-driver-and-device-info" class="headerlink" title="1. Check driver and device info"></a>1. Check driver and device info</h3><p>查看系统为网卡型号和对应的驱动，利用如下指令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lspci -vv &gt;&gt; device.txt</div></pre></td></tr></table></figure></p>
+<p>打开<code>device.txt</code>，找到网卡设备，样例如下。其中驱动部分显示为<code>r8169</code>，与现有网卡不吻合<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8169</div><div class="line">Kernel modules: r8169</div></pre></td></tr></table></figure></p>
+<h4 id="2-Download-driver-of-r8168"><a href="#2-Download-driver-of-r8168" class="headerlink" title="2. Download driver of r8168"></a>2. Download driver of r8168</h4><p>从<code>Realtek</code>官网下载<code>rtl8168</code>的<a href="http://www.realtek.com.tw/downloads/downloadsView.aspx?Langid=1&amp;PNid=13&amp;PFid=5&amp;Level=5&amp;Conn=4&amp;DownTypeID=3&amp;GetDown=false#2" target="_blank" rel="external">驱动</a>, 需要根据Linux的内核版本进行选择，例如我的内核是4.9.1,则选择<code>4.7</code>以上的驱动。</p>
+<h4 id="3-Install-driver"><a href="#3-Install-driver" class="headerlink" title="3. Install driver"></a>3. Install driver</h4><p>安装驱动，用如下指令，安装完成后要重启系统。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf 0010-r8168-8.045.08.tar.bz2</div><div class="line">$ <span class="built_in">cd</span> r8168-8.045.08 </div><div class="line">$ sudo ./autorun.sh</div><div class="line">$ sudo reboot</div></pre></td></tr></table></figure></p>
+<p>重启以后，理论上网络连接恢复正常。重新查看系统设备信息，有如下结果，驱动已经更新为<code>r8168</code>。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8168</div><div class="line">Kernel modules: r8168</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.cnblogs.com/duwanjiang/p/5907634.html" target="_blank" rel="external">Ubuntu 16.04 RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller” 不能上网</a></p>
 
             
 
@@ -308,8 +288,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/" data-tooltip="Configure rtl8168 wireless ethernet card on Ubuntu 16.10" aria-label="PREVIOUS: Configure rtl8168 wireless ethernet card on Ubuntu 16.10">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -318,7 +297,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/12/capture-video-flow-from-firefox/" data-tooltip="Capture video flow from firefox" aria-label="NEXT: Capture video flow from firefox">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/14/install-and-configure-debian-test/" data-tooltip="Install and configure debian test" aria-label="NEXT: Install and configure debian test">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -336,7 +315,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -388,8 +367,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/" data-tooltip="Configure rtl8168 wireless ethernet card on Ubuntu 16.10" aria-label="PREVIOUS: Configure rtl8168 wireless ethernet card on Ubuntu 16.10">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -398,7 +376,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/12/capture-video-flow-from-firefox/" data-tooltip="Capture video flow from firefox" aria-label="NEXT: Capture video flow from firefox">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/14/install-and-configure-debian-test/" data-tooltip="Install and configure debian test" aria-label="NEXT: Install and configure debian test">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -416,7 +394,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -449,7 +427,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -507,9 +485,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/14/install-and-configure-debian-test/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/';
                  
-                    this.page.identifier = '2018/01/14/install-and-configure-debian-test/';
+                    this.page.identifier = '2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/';
                  
              };
             (function() {
