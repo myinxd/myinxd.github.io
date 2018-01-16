@@ -243,6 +243,71 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/">
+                            Install cuda on Debian test with apt-get
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-16T16:57:34+08:00">
+	
+		    Jan 16, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>继续<code>debian test</code>的坑，如何用<code>apt-get</code>,安装和配置<code>Nvidia CUDA</code>,并解决无法进入桌面的问题。</p>
+<h4 id="软件源的配置"><a href="#软件源的配置" class="headerlink" title="软件源的配置"></a>软件源的配置</h4><p><a href="https://developer.nvidia.com/cuda-zone" target="_blank" rel="external">CUDA</a> 属于第三方软件，debian的源中默认是没有的，需要手动添加。添加方法如下：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /etc/apt/sources.list.d</div><div class="line">$ sudo touch debian-testing.list</div><div class="line">$ sudo vim debian-testing.list</div><div class="line"><span class="comment"># 加入如下两个源</span></div><div class="line">deb http://mirrors.ustc.edu.cn/debian/ testing main contrib non-free</div><div class="line">deb-src http://mirrors.ustc.edu.cn/debian/ testing main contrib non-free</div><div class="line">$ sudo apt update</div></pre></td></tr></table></figure></p>
+<p>此时，利用<code>apt search cuda</code>，便能找到cuda的安装包了，类似如下的结果<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nvidia-cuda-toolkit/testing,now 8.0.61-3 amd64 [installed]</div><div class="line">  NVIDIA CUDA development toolkit</div></pre></td></tr></table></figure></p>
+<p>这里显示<code>installed</code>，是因为我已经安装好了。</p>
+<h4 id="安装-CUDA"><a href="#安装-CUDA" class="headerlink" title="安装 CUDA"></a>安装 CUDA</h4><p>添加好软件源后，利用<code>apt install</code>便可以安装，但这之前需要中止图形界面的程序，并禁止系统自带的显卡驱动，具体步骤如下。</p>
+<h5 id="禁止系统显卡驱动"><a href="#禁止系统显卡驱动" class="headerlink" title="禁止系统显卡驱动"></a>禁止系统显卡驱动</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /etc/modprobe.d</div><div class="line">$ sudo touch nvidia-blacklists-nouveau.conf</div><div class="line">$ sudo vim nvidia-blacklists-nouveau.conf</div><div class="line"><span class="comment"># Add</span></div><div class="line">blacklist nouveau</div><div class="line"><span class="comment"># 保存并退出，重启显卡服务</span></div><div class="line">$ sudo update-initramfs -u</div></pre></td></tr></table></figure>
+<p>此时，再执行<code>lsmod | grep nouveau</code>，若没有显示，则说明配置成功。</p>
+<h5 id="中止图形界面并安装CUDA"><a href="#中止图形界面并安装CUDA" class="headerlink" title="中止图形界面并安装CUDA"></a>中止图形界面并安装CUDA</h5><p>同时按<code>Ctrl+Alt+F2</code>进入Console界面，以用户或者root身份登录，执行如下如下指令，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ systemctl stop lightdm.service <span class="comment"># 若使用的是gdm3,则为gdm3.service</span></div><div class="line">$ sudo apt install nvidia-cuda-toolkit</div></pre></td></tr></table></figure></p>
+<p>此时，便开始安装CUDA，其中包含了CUDA的一些library和与显卡对应的<code>NVIDIA</code>驱动，例如我安装的驱动为<code>nvidia-384.111</code>。</p>
+<h4 id="安装Xserver-xorg-video-nvidia"><a href="#安装Xserver-xorg-video-nvidia" class="headerlink" title="安装Xserver-xorg-video-nvidia"></a>安装Xserver-xorg-video-nvidia</h4><p>这一点单独提出来，是因为我在这里卡了好久。。。因为每安装<code>Xorg</code>对应的驱动，导致开机以后无法进入桌面，这一点<code>Ubuntu</code>真的做得很好。。。<br>在师兄的指导下，找到了问题，下面先列出安装了<code>Xserver-xorg-video-nvidia</code>前后<code>Xorg.0.log</code>的区别，</p>
+<ol>
+<li>未安装<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">[  2891.835] (EE) Failed to load module <span class="string">"nv"</span> (module does not exist, 0)</div><div class="line">[  2891.835] (II) LoadModule: <span class="string">"modesetting"</span></div><div class="line">[  2891.835] (II) Loading /usr/lib/xorg/modules/drivers/modesetting_drv.so</div><div class="line">[  2891.835] (II) Module modesetting: vendor=<span class="string">"X.Org Foundation"</span></div><div class="line">[  2891.835] 	compiled <span class="keyword">for</span> 1.19.5, module version = 1.19.5</div><div class="line">[  2891.835] 	Module class: X.Org Video Driver</div><div class="line">[  2891.835] 	ABI class: X.Org Video Driver, version 23.0</div><div class="line">[  2891.835] (II) LoadModule: <span class="string">"fbdev"</span></div><div class="line">[  2891.835] (II) Loading /usr/lib/xorg/modules/drivers/fbdev_drv.so</div><div class="line">[  2891.835] (II) Module fbdev: vendor=<span class="string">"X.Org Foundation"</span></div><div class="line">[  2891.835] 	compiled <span class="keyword">for</span> 1.19.0, module version = 0.4.4</div><div class="line">[  2891.835] 	Module class: X.Org Video Driver</div><div class="line">[  2891.835] 	ABI class: X.Org Video Driver, version 23.0</div><div class="line">[  2891.835] (II) LoadModule: <span class="string">"vesa"</span></div><div class="line">[  2891.835] (II) Loading /usr/lib/xorg/modules/drivers/vesa_drv.so</div><div class="line">[  2891.835] (II) Module vesa: vendor=<span class="string">"X.Org Foundation"</span></div><div class="line">[  2891.835] 	compiled <span class="keyword">for</span> 1.19.0, module version = 2.3.4</div><div class="line">[  2891.835] 	Module class: X.Org Video Driver</div><div class="line">[  2891.835] 	ABI class: X.Org Video Driver, version 23.0</div><div class="line">[  2891.835] (II) NOUVEAU driver Date:   Fri Apr 21 14:41:17 2017 -0400</div><div class="line">[  2891.835] (II) NOUVEAU driver <span class="keyword">for</span> NVIDIA chipset families :</div><div class="line">[  2891.835] 	RIVA TNT        (NV04)</div><div class="line">[  2891.835] 	RIVA TNT2       (NV05)</div><div class="line">[  2891.835] 	GeForce 256     (NV10)</div><div class="line">[  2891.835] 	GeForce 2       (NV11, NV15)</div><div class="line">[  2891.835] 	GeForce 4MX     (NV17, NV18)</div><div class="line">[  2891.835] 	GeForce 3       (NV20)</div><div class="line">[  2891.835] 	GeForce 4Ti     (NV25, NV28)</div><div class="line">[  2891.835] 	GeForce FX      (NV3x)</div><div class="line">[  2891.835] 	GeForce 6       (NV4x)</div><div class="line">[  2891.835] 	GeForce 7       (G7x)</div><div class="line">[  2891.835] 	GeForce 8       (G8x)</div><div class="line">[  2891.836] 	GeForce GTX 200 (NVA0)</div><div class="line">[  2891.836] 	GeForce GTX 400 (NVC0)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>系统此刻找不到<code>nv</code>有关的驱动，而我又禁止了<code>nouveau</code>，所以无法进入图形界面。而在安装了相应的驱动以后，日志如下</p>
+<ol>
+<li>已安装<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">[    38.430] (II) Applying OutputClass <span class="string">"nvidia"</span> to /dev/dri/card0</div><div class="line">[    38.430] 	loading driver: nvidia</div><div class="line">[    38.430] (==) Matched nvidia as autoconfigured driver 0</div><div class="line">[    38.430] (==) Matched nv as autoconfigured driver 2</div><div class="line">[    38.430] (==) Matched nv as autoconfigured driver 4</div><div class="line">[    38.430] (II) LoadModule: <span class="string">"nvidia"</span></div><div class="line">[    38.431] (II) Loading /usr/lib/xorg/modules/drivers/nvidia_drv.so</div><div class="line">[    38.437] (II) Module nvidia: vendor=<span class="string">"NVIDIA Corporation"</span></div><div class="line">[    38.440] (II) LoadModule: <span class="string">"nv"</span></div><div class="line">[    38.440] (WW) Warning, couldn<span class="string">'t open module nv</span></div><div class="line"><span class="string">[    38.440] (II) UnloadModule: "nv"</span></div><div class="line"><span class="string">[    38.440] (II) Unloading nv</span></div><div class="line"><span class="string">[    38.440] (EE) Failed to load module "nv" (module does not exist, 0)</span></div><div class="line"><span class="string">[    38.997] (==) NVIDIA(0): No modes were requested; the default mode "nvidia-auto-select"</span></div><div class="line"><span class="string">[    38.998] (II) NVIDIA(0):     "DFP-0:nvidia-auto-select"</span></div><div class="line"><span class="string">[    39.015] (II) NVIDIA(0): Setting mode "DFP-0:nvidia-auto-select"</span></div><div class="line"><span class="string">[    39.072] (II) NVIDIA(0): [DRI2]   VDPAU driver: nvidia</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>此刻，虽然有<code>warning</code>,但<code>error</code>已经没有了，系统也可以正常进行到登录部分。此刻查看系统显卡驱动信息，会发现出现了<code>nvidia</code>,如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ lsmod | grep nvidia</div><div class="line">nvidia_drm             53248  1</div><div class="line">drm_kms_helper        192512  1 nvidia_drm</div><div class="line">drm                   438272  4 nvidia_drm,drm_kms_helper</div><div class="line">nvidia_modeset        860160  3 nvidia_drm</div><div class="line">nvidia              13168640  84 nvidia_modeset</div></pre></td></tr></table></figure></p>
+<p>安装方法，直接用<code>apt install</code>即可，不再赘述。</p>
+<p>最后，讲一下调整<code>Desktop Manager</code>的方法，留做一个tip。可供选择的DM有很多，如<code>lightdm</code>,<code>gdm3</code>,<code>kde</code>等，其中<code>lightdm</code>用得比较多，毕竟<code>ubuntu</code>的用户量很大。那么，如果想要在它们之间进行切换的话，用如下方法<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo dpkg-reconfigure lightdm</div></pre></td></tr></table></figure></p>
+<p>在弹出的窗口中选择想要采用的桌面管理器即可。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/">
                             Configure rtl8168 wireless ethernet card on Ubuntu 16.10
                         </a>
@@ -754,43 +819,6 @@
                                 Comment and share
                             </a>
                         </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/20/matplotlib-tips-II/">
-                            matplotlib tips II
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-20T13:16:34+08:00">
-	
-		    Dec 20, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>好久没写了，来填坑，matplotlib相关的tips第二篇。包括网格化子图、坐标轴反向、savefig以及stacked bar.<br>
-                    
-                        <a href="/2017/12/20/matplotlib-tips-II/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
                     
                 </div>
             
