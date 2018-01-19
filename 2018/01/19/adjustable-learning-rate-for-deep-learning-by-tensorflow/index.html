@@ -6,23 +6,28 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Tag: deep-learning - Jason&#39;s blog</title>
+    <title>Adjustable learning rate for deep learning by TensorFlow - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Valar morghulis, valar dohaeris.">
+    <meta name="description" content="趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。  参考TensorFlow: 实战Google深度学习框架这本书，利用指数衰减的">
+<meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-tags/deep-learning/index.html">
+<meta property="og:title" content="Adjustable learning rate for deep learning by TensorFlow">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:description" content="趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。  参考TensorFlow: 实战Google深度学习框架这本书，利用指数衰减的">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig2.png?raw=true">
+<meta property="og:updated_time" content="2018-01-19T03:38:06.522Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jason&#39;s blog">
-<meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
+<meta name="twitter:title" content="Adjustable learning rate for deep learning by TensorFlow">
+<meta name="twitter:description" content="趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。  参考TensorFlow: 实战Google深度学习框架这本书，利用指数衰减的">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true">
     
     
         
@@ -52,7 +57,7 @@
         
     
 
-<header id="header" data-behavior="1">
+<header id="header" data-behavior="4">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a class="header-title-link" href="/ ">Jason&#39;s blog</a>
@@ -76,7 +81,7 @@
         
     
 
-<nav id="sidebar" data-behavior="1">
+<nav id="sidebar" data-behavior="4">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -229,26 +234,22 @@
 </nav>
 
             
-            <div id="main" data-behavior="1"
+            <div id="main" data-behavior="4"
                  class="
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
-                            Adjustable learning rate for deep learning by TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Adjustable learning rate for deep learning by TensorFlow
+        </h1>
+    
+    
+        <div class="post-meta">
     <time itemprop="datePublished" datetime="2018-01-19T09:11:34+08:00">
 	
 		    Jan 19, 2018
@@ -257,10 +258,12 @@
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。</p>
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。</p>
 <p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true" alt="LR example"></p>
 <p>参考<a href="https://www.amazon.cn/dp/B06WGP12TV/ref=sr_1_1?ie=UTF8&amp;qid=1516326593&amp;sr=8-1&amp;keywords=Tensorflow" target="_blank" rel="external">TensorFlow: 实战Google深度学习框架</a>这本书，利用<strong>指数衰减</strong>的方法设置<a href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent" target="_blank" rel="external">梯度下降算法</a>的学习率，TensofFLow中集成了这一算法，即<code>tf.train.exponential_decay</code>。其实现了</p>
 <script type="math/tex; mode=display">
@@ -271,298 +274,88 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
 <p>而在训练网络，优化目标函数的过程中，可以参考官方手册，用如下语句进行梯度更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">global_step = tf.Variable(<span class="number">0</span>, trainable=<span class="keyword">False</span>)</div><div class="line">starter_learning_rate = <span class="number">0.1</span></div><div class="line">learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,</div><div class="line">                                           <span class="number">100000</span>, <span class="number">0.96</span>, staircase=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># Passing global_step to minimize() will increment it at each step.</span></div><div class="line">learning_step = (</div><div class="line">    tf.train.GradientDescentOptimizer(learning_rate)</div><div class="line">    .minimize(...my loss..., global_step=global_step)</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/train/exponential_decay" target="_blank" rel="external">exponential decay</a></p>
 
-                    
-                        
+            
 
-                    
-                    
-                        <p>
-                            <a href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
         </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/03/monte-carlo-simulation/">
-                            monte carlo simulation
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-03T20:24:28+08:00">
-	
-		    Jan 03, 2018
-    	
-    </time>
-    
-</div>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
 
             </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="To-be-continue…"><a href="#To-be-continue…" class="headerlink" title="To be continue…"></a>To be continue…</h2><p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p>
-<h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/03/monte-carlo-simulation/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/">
-                            Install tensorflow with gpu library CUDA on Ubuntu 16.04 x64
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-13T14:33:31+08:00">
-	
-		    Dec 13, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>System and Software info<br>
-                    
-                        <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">
-                            Tensorflow namespace and network restoration
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-14T16:20:37+08:00">
-	
-		    Sep 14, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。<br>
-                    
-                        <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/13/Transfer-learning-with-TensorFlow/">
-                            Transfer learning with TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-13T16:07:45+08:00">
-	
-		    Sep 13, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>Today, let&#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.<br>
-                    
-                        <a href="/2017/09/13/Transfer-learning-with-TensorFlow/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/11/Data-visualization-with-t-SNE/">
-                            Data visualization with t-SNE
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-11T14:21:55+08:00">
-	
-		    Sep 11, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是映射高维数据向量到低维，并保留向量的相似性或者距离。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。<br>
-                    
-                        <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/04/Two-typical-tensorflow-exceptions/">
-                            Two typical tensorflow exceptions
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-04T20:32:22+08:00">
-	
-		    Sep 04, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。<br>
-                    
-                        <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">
-                            Deconvolution or Transpose: opposite operation of CNN
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-01T15:26:45+08:00">
-	
-		    Sep 01, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。]<br>
-                    
-                        <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
         
         
-        <li class="pagination-number">page 1 of 1</li>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/" data-tooltip="Install cuda on Debian test with apt-get" aria-label="NEXT: Install cuda on Debian test with apt-get">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
 
 
                 <footer id="footer" class="main-content-wrap">
@@ -572,6 +365,81 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/" data-tooltip="Install cuda on Debian test with apt-get" aria-label="NEXT: Install cuda on Debian test with apt-get">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
             
         </div>
         
@@ -617,7 +485,25 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/';
+                 
+                    this.page.identifier = '2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -635,6 +521,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+    
 
 
 
