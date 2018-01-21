@@ -268,13 +268,86 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个Re
 <p>考虑到神经网络相当于对原始数据进行了压缩，存在信息损失的问题，而ResNet结构将部分输入信息直接传递到输出端，可以保留部分的信息。并且ResNet的训练误差会随着层数增加而逐渐减少，并且在测试集上也有很好的表现。</p>
 <p>引自TensorFlow实战，在ResNet的第二篇论文<em>Identity mapping in deep residual networks</em>中，提出了ResNet V2。想对于ResNet V1, 将激活函数<code>ReLU</code>改为了<code>Identity mapping</code>，即y=x。同时，ResNet V2在每一层都使用了Batch Normalization，提升网络的范化能力。</p>
 <h3 id="ResNet的block的理解"><a href="#ResNet的block的理解" class="headerlink" title="ResNet的block的理解"></a>ResNet的block的理解</h3><p>在ResNet的实现中，包含多个<code>block</code>，每个<code>block</code>又由多个<code>bottleneck</code>组成，称为<strong>残差学习单元</strong>，ResNet的残差运算即在每个bottleneck内实现。因为要获取输入<script type="math/tex">\mathrm{x}</script>与block输出的残差，每个<code>bottleneck</code>虽然做了多次卷积和激活运算，但其输出的<code>shape</code>应该保持不变，因此内部的卷积运算的<code>stride</code>和<code>padding</code>都有特殊的设置 (数学推导可以参考<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">此文</a>)。以ResNet-50的第二个block为例，假设该block内包含两个bottleneck单元，则有，</p>
-<ul>
-<li><p>Bottleneck One</p>
-<p>  | Layer | Input | Kernel | Stride |  Padding | Output |<br>  |:——:|:——-:|:———:|:———:|:————:|:———:|<br>  |Conv1,1| 56x56x64 | 1x1x64 | 1   |  SAME | 56x56x64 |<br>  |Conv1,2| 56x56x64 | 3x3x64 | 1   |  SAME | 56x56x64 |<br>  |Conv1,3| 56x56x64 | 1x1x256| 1   |  SAME | 56x56x256|</p>
-</li>
-<li><p>Bottleneck Two<br>  | Layer | Input | Kernel | Stride |  Padding | Output |<br>  |:—— :|:——-:|:———:|:———:|:————:|:———:|<br>  |Conv2,1| 56x56x256 | 1x1x64 | 1   |  SAME | 56x56x64 |<br>  |Conv2,2| 56x56x64  | 3x3x64 | 1   |  SAME | 56x56x64 |<br>  |Conv2,3| 56x56x64  | 1x1x256| <em>2</em>  |  SAME | <em>28x28x256</em>|</p>
-</li>
-</ul>
+<h5 id="Bottleneck-One"><a href="#Bottleneck-One" class="headerlink" title="Bottleneck One"></a>Bottleneck One</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Layer</th>
+<th style="text-align:center">Input</th>
+<th style="text-align:center">Kernel</th>
+<th style="text-align:center">Stride</th>
+<th style="text-align:center">Padding</th>
+<th style="text-align:center">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Conv1,1</td>
+<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">1x1x64</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center">56x56x64</td>
+</tr>
+<tr>
+<td style="text-align:center">Conv1,2</td>
+<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">3x3x64</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center">56x56x64</td>
+</tr>
+<tr>
+<td style="text-align:center">Conv1,3</td>
+<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">1x1x256</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center">56x56x256</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="Bottleneck-Two"><a href="#Bottleneck-Two" class="headerlink" title="Bottleneck Two"></a>Bottleneck Two</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th style="text-align:center">Input</th>
+<th style="text-align:center">Kernel</th>
+<th style="text-align:center">Stride</th>
+<th style="text-align:center">Padding</th>
+<th style="text-align:center">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conv2,1</td>
+<td style="text-align:center">56x56x256</td>
+<td style="text-align:center">1x1x64</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center">56x56x64</td>
+</tr>
+<tr>
+<td>Conv2,2</td>
+<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">3x3x64</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center">56x56x64</td>
+</tr>
+<tr>
+<td>Conv2,3</td>
+<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">1x1x256</td>
+<td style="text-align:center"><em>2</em></td>
+<td style="text-align:center">SAME</td>
+<td style="text-align:center"><em>28x28x256</em></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>注意<code>Bottleneck Two</code>的<code>Conv2,3</code>层的<code>stride</code>为2,因此输出的尺度大小相当于做了factor为2的降采样，因此该bottleneck不做残差的运算，其输出直接作为下一个block的输入。</p>
 <p>ResNet-V2相对于ResNet-V1增加了<code>Batch Normalization</code>和<code>L2</code>正则，如何在block中体现？ 且听下回分解。</p>
 
