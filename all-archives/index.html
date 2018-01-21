@@ -243,6 +243,115 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/21/resnet-with-tensorflow/">
+                            Residual network I -- block and bottleneck
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-21T14:15:00+08:00">
+	
+		    Jan 21, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了<a href="https://www.amazon.cn/dp/B06X8Z4BS9/" target="_blank" rel="external">TensorFlow 实战</a>的6.4节。ResNet的结构能加速超深射精网络的训练，能有效避免过拟合，而且推广性非常好。</p>
+<p>深度神经网络存在<code>Degradation</code>的问题，即随着网络层数的增加，其准确率会从逐渐提升到饱和，进而下降。这一问题在我们近期的工作也出现了，我们在增加了一层全连接后，网络的准确率反而下降了。为了解决这一问题，ResNet提出了一种新的网络思路，<strong>即允许原始输入信息直接传输到后面的层中</strong>。假定某段网络的输入是<script type="math/tex">\mathrm{x}</script>，期望输出是<script type="math/tex">H(\mathrm{x})</script>，如果直接将<script type="math/tex">\mathrm{x}</script>传到输出作为初始结果，那么目标函数变为</p>
+<script type="math/tex; mode=display">
+F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个ResNet的残差学习单元，即将学习目标从<script type="math/tex">H(\mathrm{x})</script>改为期望与输入的残差。这种结构也被称为<code>shortcut</code>或<code>skip connections</code>.</p>
+<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig3.png?raw=true" alt="Resnet example"></p>
+<p>考虑到神经网络相当于对原始数据进行了压缩，存在信息损失的问题，而ResNet结构将部分输入信息直接传递到输出端，可以保留部分的信息。并且ResNet的训练误差会随着层数增加而逐渐减少，并且在测试集上也有很好的表现。</p>
+<p>引自TensorFlow实战，在ResNet的第二篇论文<em>Identity mapping in deep residual networks</em>中，提出了ResNet V2。想对于ResNet V1, 将激活函数<code>ReLU</code>改为了<code>Identity mapping</code>，即y=x。同时，ResNet V2在每一层都使用了Batch Normalization，提升网络的范化能力。</p>
+<h3 id="ResNet的block的理解"><a href="#ResNet的block的理解" class="headerlink" title="ResNet的block的理解"></a>ResNet的block的理解</h3><p>在ResNet的实现中，包含多个<code>block</code>，每个<code>block</code>又由多个<code>bottleneck</code>组成，称为<strong>残差学习单元</strong>，ResNet的残差运算即在每个bottleneck内实现。因为要获取输入<script type="math/tex">\mathrm{x}</script>与block输出的残差，每个<code>bottleneck</code>虽然做了多次卷积和激活运算，但其输出的<code>shape</code>应该保持不变，因此内部的卷积运算的<code>stride</code>和<code>padding</code>都有特殊的设置 (数学推导可以参考<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">此文</a>)。以ResNet-50的第二个block为例，假设该block内包含两个bottleneck单元，则有，</p>
+<ul>
+<li><p>Bottleneck One</p>
+<p>  | Layer | Input | Kernel | Stride |  Padding | Output |<br>  |:——:|:——-:|:———:|:———:|:————:|:———:|<br>  |Conv1,1| 56x56x64 | 1x1x64 | 1   |  SAME | 56x56x64 |<br>  |Conv1,2| 56x56x64 | 3x3x64 | 1   |  SAME | 56x56x64 |<br>  |Conv1,3| 56x56x64 | 1x1x256| 1   |  SAME | 56x56x256|</p>
+</li>
+<li><p>Bottleneck Two<br>  | Layer | Input | Kernel | Stride |  Padding | Output |<br>  |:—— :|:——-:|:———:|:———:|:————:|:———:|<br>  |Conv2,1| 56x56x256 | 1x1x64 | 1   |  SAME | 56x56x64 |<br>  |Conv2,2| 56x56x64  | 3x3x64 | 1   |  SAME | 56x56x64 |<br>  |Conv2,3| 56x56x64  | 1x1x256| <em>2</em>  |  SAME | <em>28x28x256</em>|</p>
+</li>
+</ul>
+<p>注意<code>Bottleneck Two</code>的<code>Conv2,3</code>层的<code>stride</code>为2,因此输出的尺度大小相当于做了factor为2的降采样，因此该bottleneck不做残差的运算，其输出直接作为下一个block的输入。</p>
+<p>ResNet-V2相对于ResNet-V1增加了<code>Batch Normalization</code>和<code>L2</code>正则，如何在block中体现？ 且听下回分解。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/21/resnet-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/21/python-decorator/">
+                            python decorator
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
+	
+		    Jan 21, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
+<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
+<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
+<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
+<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
+<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/21/python-decorator/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
                             Adjustable learning rate for deep learning by TensorFlow
                         </a>
@@ -705,101 +814,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/">
-                            Ubuntu 16.10 launch user script when log in
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-25T10:44:11+08:00">
-	
-		    Dec 25, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。</p>
-<h5 id="Step1-prepare-your-script"><a href="#Step1-prepare-your-script" class="headerlink" title="Step1 prepare your script"></a>Step1 prepare your script</h5><p>准备待执行的脚本并修改权限为可执行，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/<span class="built_in">local</span>/</div><div class="line">$ touch myscript.sh</div><div class="line">$ vim myscript.sh <span class="comment"># Add the lines you want to execute...</span></div><div class="line">$ chmod +x myscript.sh <span class="comment"># Change mode to executable</span></div></pre></td></tr></table></figure></p>
-<h5 id="Step2-configure-the-conf-file"><a href="#Step2-configure-the-conf-file" class="headerlink" title="Step2 configure the .conf file"></a>Step2 configure the .conf file</h5><p>编写配置文件，放入<code>~/.config/upstart/</code>中，例如<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.config/upstart</div><div class="line">$ touch myscript.conf</div><div class="line">$ vim myscript.conf</div><div class="line"><span class="comment">#### configurations to be added.</span></div><div class="line">start on startup</div><div class="line">task</div><div class="line"><span class="built_in">exec</span> /home/usrname/<span class="built_in">local</span>/myscript.sh</div></pre></td></tr></table></figure></p>
-<h5 id="Step3-log-out-and-relogin"><a href="#Step3-log-out-and-relogin" class="headerlink" title="Step3 log out and relogin"></a>Step3 log out and relogin</h5><p>重新登录，检验是否实现<code>myscript.sh</code>的自启动</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
-<li><a href="http://blog.csdn.net/upshi/article/details/53884770" target="_blank" rel="external">Ubuntu添加开机启动执行脚本</a></li>
-<li><a href="http://askubuntu.com/questions/814/how-to-run-scripts-on-start-up" target="_blank" rel="external">How to run scripts on start up</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML-2/">
-                            HTML notebook2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-24T21:47:18+08:00">
-	
-		    Dec 24, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p>
-<p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p>
-<p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/24/Learning-HTML-2/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -811,7 +825,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 3</li>
+        <li class="pagination-number">page 1 of 4</li>
     </ul>
 </div>
 
