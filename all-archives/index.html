@@ -253,6 +253,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/">
+                            Hexo-- deploy google analytics to your website
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-22T14:17:32+08:00">
+	
+		    Jan 22, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>写之前吐槽一下百度的<a href="https://ziyuan.baidu.com/" target="_blank" rel="external">站长平台</a>，添加新站搜索必须要备案，然后就放弃了。。。转到谷歌的<a href="https://analytics.google.com/" target="_blank" rel="external">Google Analytics, GA</a>，可以统计网站的访问数据。搜索了一下，多数<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>模板都嵌入了google analytics相关的ejs，添加起来还是比较方便的。</p>
+<p>下面以我用的模板<a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">tranquilpeak</a>为例，介绍一下添加的步骤，</p>
+<h4 id="1-注册GA账户并添加网站"><a href="#1-注册GA账户并添加网站" class="headerlink" title="1. 注册GA账户并添加网站"></a>1. 注册GA账户并添加网站</h4><p>首先利用谷歌帐号登录Google Analytics，设置关联，而后添加网站信息，如下图所示，</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180122/fig1.png?raw=true" height="600" width="600">
+</center>
+
+<h4 id="2-获取UA"><a href="#2-获取UA" class="headerlink" title="2. 获取UA"></a>2. 获取UA</h4><p>添加好网站信息以后，GA会提供一个名为<code>UA</code>的ID (例如 UA-xxxxxx-x) 以及用于添加进网站页面的<code>gtga.js</code>段代码，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;!-- Global site tag (gtag.js) - Google Analytics --&gt;</div><div class="line">&lt;script async src=<span class="string">"https://www.googletagmanager.com/gtag/js?id=UA-xxxxx-x"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;script&gt;</div><div class="line">  window.dataLayer = window.dataLayer || [];</div><div class="line">  <span class="keyword">function</span> <span class="function"><span class="title">gtag</span></span>()&#123;dataLayer.push(arguments);&#125;</div><div class="line">  gtag(<span class="string">'js'</span>, new Date());</div><div class="line"></div><div class="line">  gtag(<span class="string">'config'</span>, <span class="string">'UA-xxxxx-x'</span>);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="3-在模板中添加GA支持"><a href="#3-在模板中添加GA支持" class="headerlink" title="3. 在模板中添加GA支持"></a>3. 在模板中添加GA支持</h4><p>对于<code>tranquilpeak</code>模板，配置<code>google-analytics</code>是比较简单的，只需要修改<code>theme/tranquilpeal/_config.yml</code>文件中的<code>google-analytics-id</code>部分，如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Your Google analystics web property ID : UA-XXXXX-X</span></div><div class="line">google_analytics_id: UA-xxxx-x</div></pre></td></tr></table></figure></p>
+<p>同样的，相应的<code>google-analytics.ejs</code>文件可以在<code>theme/tranquilpeak/layout/_partial</code>中找到, 其代码如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;% <span class="keyword">if</span> (theme.google_analytics_id) &#123; %&gt;</div><div class="line">    &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">        (<span class="keyword">function</span>(i,s,o,g,r,a,m)&#123;i[<span class="string">'GoogleAnalyticsObject'</span>]=r;i[r]=i[r]||<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        (i[r].q=i[r].q||[]).push(arguments)&#125;,i[r].l=1*new Date();a=s.createElement(o),</div><div class="line">        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)</div><div class="line">        &#125;)(window,document,<span class="string">'script'</span>,<span class="string">'//www.google-analytics.com/analytics.js'</span>,<span class="string">'ga'</span>);</div><div class="line"></div><div class="line">        ga(<span class="string">'create'</span>, <span class="string">'&lt;%= theme.google_analytics_id %&gt;'</span>, <span class="string">'auto'</span>);</div><div class="line">        ga(<span class="string">'send'</span>, <span class="string">'pageview'</span>);</div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;% &#125; %&gt;</div></pre></td></tr></table></figure></p>
+<p>其中的<code>theme.google_analytics_id</code>便对应刚刚我们添加的<code>UA-xxxx-x，该文件不需要修改。当然也可以尝试将GA提供的基于</code>gtag.js<code>代码替换到</code>google-analysis.ejs`中，感兴趣可以试试看。</p>
+<h4 id="4-编译并部署"><a href="#4-编译并部署" class="headerlink" title="4. 编译并部署"></a>4. 编译并部署</h4><p>最后，利用<code>hexo g</code>重新编译相关文件，在每一个<code>.html</code>页面中加入<code>GA</code>相关的内容，谷歌的分析服务便可以发挥作用。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">hexo-theme-tranquilpeak</a><br>[2] <a href="https://www.cnblogs.com/zhcncn/p/4097881.html" target="_blank" rel="external">Hexo搭建Github静态博客</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/21/resnet-with-tensorflow/">
                             Residual network I -- block and bottleneck
                         </a>
@@ -274,7 +329,10 @@
 <p>深度神经网络存在<code>Degradation</code>的问题，即随着网络层数的增加，其准确率会从逐渐提升到饱和，进而下降。这一问题在我们近期的工作也出现了，我们在增加了一层全连接后，网络的准确率反而下降了。为了解决这一问题，ResNet提出了一种新的网络思路，<strong>即允许原始输入信息直接传输到后面的层中</strong>。假定某段网络的输入是<script type="math/tex">\mathrm{x}</script>，期望输出是<script type="math/tex">H(\mathrm{x})</script>，如果直接将<script type="math/tex">\mathrm{x}</script>传到输出作为初始结果，那么目标函数变为</p>
 <script type="math/tex; mode=display">
 F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个ResNet的残差学习单元，即将学习目标从<script type="math/tex">H(\mathrm{x})</script>改为期望与输入的残差。这种结构也被称为<code>shortcut</code>或<code>skip connections</code>.</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig3.png?raw=true" alt="Resnet example"></p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig3.png?raw=true" height="200" width="300">
+</center>
+
 <p>考虑到神经网络相当于对原始数据进行了压缩，存在信息损失的问题，而ResNet结构将部分输入信息直接传递到输出端，可以保留部分的信息。并且ResNet的训练误差会随着层数增加而逐渐减少，并且在测试集上也有很好的表现。</p>
 <p>引自TensorFlow实战，在ResNet的第二篇论文<em>Identity mapping in deep residual networks</em>中，提出了ResNet V2。想对于ResNet V1, 将激活函数<code>ReLU</code>改为了<code>Identity mapping</code>，即y=x。同时，ResNet V2在每一层都使用了Batch Normalization，提升网络的范化能力。</p>
 <h3 id="ResNet的block的理解"><a href="#ResNet的block的理解" class="headerlink" title="ResNet的block的理解"></a>ResNet的block的理解</h3><p>在ResNet的实现中，包含多个<code>block</code>，每个<code>block</code>又由多个<code>bottleneck</code>组成，称为<strong>残差学习单元</strong>，ResNet的残差运算即在每个bottleneck内实现。因为要获取输入<script type="math/tex">\mathrm{x}</script>与block输出的残差，每个<code>bottleneck</code>虽然做了多次卷积和激活运算，但其输出的<code>shape</code>应该保持不变，因此内部的卷积运算的<code>stride</code>和<code>padding</code>都有特殊的设置 (数学推导可以参考<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">此文</a>)。以ResNet-50的第二个block为例，假设该block内包含两个bottleneck单元，则有，</p>
@@ -453,13 +511,19 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个Re
             
                 <div class="postShorten-content" itemprop="articleBody">
                     <p>趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true" alt="LR example"></p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true" height="200" width="360">
+</center>
+
 <p>参考<a href="https://www.amazon.cn/dp/B06WGP12TV/ref=sr_1_1?ie=UTF8&amp;qid=1516326593&amp;sr=8-1&amp;keywords=Tensorflow" target="_blank" rel="external">TensorFlow: 实战Google深度学习框架</a>这本书，利用<strong>指数衰减</strong>的方法设置<a href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent" target="_blank" rel="external">梯度下降算法</a>的学习率，TensofFLow中集成了这一算法，即<code>tf.train.exponential_decay</code>。其实现了</p>
 <script type="math/tex; mode=display">
 L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学习率，$R_d$表示衰减率，$S_g$和$S_d$分别表示总Epochs和每个Epochs中的Batches。从而没迭代一轮，学习率便更新一次。</p>
 <p>在TensorFlow中可以用如下代码实现指数衰减的学习率更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">init_lr = tf.Variable(<span class="number">0.</span>, name=<span class="string">"LR"</span>)</div><div class="line">global_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"global_step"</span>)</div><div class="line">decay_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_step"</span>)</div><div class="line">decay_rate = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_rate"</span>)</div><div class="line">learning_rate = tf.train.exponential_decay(</div><div class="line">    learning_rate = init_lr ,</div><div class="line">    global_step = global_step,</div><div class="line">    decay_steps = decay_step,</div><div class="line">    decay_rate = decay_rate,</div><div class="line">    staircase=<span class="keyword">False</span>,</div><div class="line">    name=<span class="keyword">None</span></div><div class="line">	)</div><div class="line"><span class="comment"># Test</span></div><div class="line">lr_init = <span class="number">0.1</span></div><div class="line">epochs = <span class="number">200</span></div><div class="line">batches = <span class="number">100.</span></div><div class="line">d_rate = <span class="number">0.9</span></div><div class="line">epoch = np.arange(<span class="number">0</span>,epochs,<span class="number">1</span>)</div><div class="line">lr = np.zeros(epoch.shape)</div><div class="line"><span class="comment"># Init a session</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> epoch.astype(int):</div><div class="line">	lr[i] = sess.run(learning_rate, </div><div class="line">                     feed_dict=&#123;init_lr: lr_init,</div><div class="line">                                global_step: i,</div><div class="line">                                decay_step: batches,</div><div class="line">                                decay_rate: d_rate</div><div class="line">                                &#125;)</div></pre></td></tr></table></figure></p>
 <p><a href="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/Learning_rate_adjust_demo.ipynb" target="_blank" rel="external">这里</a>提供了一个样例，其输出结果如下图，通过设置<code>tf.exponential_decay</code>的参数<code>staircase</code>可以控制learning rate是否为阶梯型或者平滑的。</p>
-<p><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig2.png?raw=true" alt="Learning rate result"></p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig2.png?raw=true" height="360" width="480">
+</center>
+
 <p>而在训练网络，优化目标函数的过程中，可以参考官方手册，用如下语句进行梯度更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">global_step = tf.Variable(<span class="number">0</span>, trainable=<span class="keyword">False</span>)</div><div class="line">starter_learning_rate = <span class="number">0.1</span></div><div class="line">learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,</div><div class="line">                                           <span class="number">100000</span>, <span class="number">0.96</span>, staircase=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># Passing global_step to minimize() will increment it at each step.</span></div><div class="line">learning_step = (</div><div class="line">    tf.train.GradientDescentOptimizer(learning_rate)</div><div class="line">    .minimize(...my loss..., global_step=global_step)</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/train/exponential_decay" target="_blank" rel="external">exponential decay</a></p>
 
@@ -829,64 +893,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     
                         <p>
                             <a href="/2018/01/02/libsvm-for-python/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/25/ubuntu1610-configure-your-new-server/">
-                            Ubuntu 16.10 Configure your new server
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-25T15:20:37+08:00">
-	
-		    Dec 25, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Ubuntu server的防火墙配置问题，包括新用户添加、防火墙规则设定以及ssh的简单设置,写得比较简单，慢慢理解以后来填坑。主要的references见文末，另外说一句 Merry Xmas!</p>
-<h4 id="Change-or-update-root-pwd"><a href="#Change-or-update-root-pwd" class="headerlink" title="Change or update root pwd"></a>Change or update root pwd</h4><p>修改或者初始化root的密码,如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo passwd root</div><div class="line">New password: xxxx</div><div class="line">Retype new password: xxxx</div></pre></td></tr></table></figure></p>
-<h4 id="Add-a-new-user"><a href="#Add-a-new-user" class="headerlink" title="Add a new user"></a>Add a new user</h4><p>Ubuntu server在安装好以后只有Root用户，为了方便管理，通常需要添加一个用户以方便管理，并且为了服务器的安全性，需要配置ssh的key only和防火墙。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sudo apt update <span class="comment"># optional </span></div><div class="line">sudo apt upgrade <span class="comment"># optional</span></div><div class="line">sudo apt install vim <span class="comment"># install vim, optional </span></div><div class="line">sudo adduser jason  <span class="comment"># Add a new user</span></div><div class="line">sudo usermod -G root jason <span class="comment"># Add user jason into Group root</span></div><div class="line"><span class="comment"># Add sudoer authority</span></div><div class="line">sudo chmod u+w /etc/sudoers <span class="comment"># Change sudoers from readonly to writtable</span></div><div class="line">sudo vim /etc/sudoers</div><div class="line"><span class="comment"># Add the line below root ALL=(ALL:ALL) ALL</span></div><div class="line">jason ALL=(ALL:ALL) ALL</div><div class="line">sudo chmod u-w /etc/sudoers <span class="comment"># Rechange mode of sudoers to readonly</span></div></pre></td></tr></table></figure></p>
-<h4 id="SSH-confiurations"><a href="#SSH-confiurations" class="headerlink" title="SSH confiurations"></a>SSH confiurations</h4><p>ssh配置方便远程访问server，主要的配置包括端口修改、<code>aurhorized_keys</code>以及一些有助于安全性的配置。</p>
-<h6 id="1-生成本机的Authentication-key-pair"><a href="#1-生成本机的Authentication-key-pair" class="headerlink" title="1. 生成本机的Authentication key-pair"></a>1. 生成本机的Authentication key-pair</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -b 4096</div></pre></td></tr></table></figure>
-<p>选择默认的<code>id_rsa</code>和<code>id_rsa.pub</code>存储密钥对，并且选择不设定密码。</p>
-<h6 id="2-添加该用户的public-key到server中"><a href="#2-添加该用户的public-key到server中" class="headerlink" title="2. 添加该用户的public key到server中"></a>2. 添加该用户的public key到server中</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mkdir ~/.ssh</div><div class="line"><span class="built_in">cd</span> ~/.ssh</div><div class="line">touch authorized_keys</div><div class="line">vim authorized_keys</div><div class="line"><span class="comment"># Add your public key into this file like</span></div><div class="line">ssh-rsa xxxxx user@xxx</div></pre></td></tr></table></figure>
-<h6 id="3-配置ssh端口及相应的安全选项"><a href="#3-配置ssh端口及相应的安全选项" class="headerlink" title="3. 配置ssh端口及相应的安全选项"></a>3. 配置ssh端口及相应的安全选项</h6><p><code>sshd</code>的配置文件存放在<code>/etc/ssh/sshd_config</code>中，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">vim /etc/ssh/sshd_config</div><div class="line"><span class="comment"># change port</span></div><div class="line">Port 2333 <span class="comment"># 默认的端口号为22，此处建议修改为其他值</span></div><div class="line"><span class="comment"># 禁止root登录</span></div><div class="line">PermitRootLogin no</div><div class="line"><span class="comment"># 禁止密码验证</span></div><div class="line">PasswordAuthentication no</div></pre></td></tr></table></figure></p>
-<h6 id="4-重启ssh服务"><a href="#4-重启ssh服务" class="headerlink" title="4. 重启ssh服务"></a>4. 重启ssh服务</h6><p>配置完成后，重启<code>sshd</code>服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl restart sshd</div></pre></td></tr></table></figure></p>
-<h4 id="UFW-configuration"><a href="#UFW-configuration" class="headerlink" title="UFW configuration"></a>UFW configuration</h4><p>详细的UFW配置参考<a href="https://www.linode.com/docs/security/firewalls/configure-firewall-with-ufw/" target="_blank" rel="external">这篇文章</a>，下面列出我的配置并对解释。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">sudo apt install ufw</div><div class="line"><span class="comment"># allow all outgoing and deny all incoming</span></div><div class="line">sudo ufw default allow outgoing</div><div class="line">sudo ufw default deny incoming</div><div class="line"><span class="comment"># allow ssh</span></div><div class="line">sudo ufw allow ssh</div><div class="line"><span class="comment"># allow tcp udp http</span></div><div class="line">sudo ufw allow 80/tcp</div><div class="line">sudo ufw allow http/tcp</div><div class="line">sudo ufw allow 1725/udp</div><div class="line"><span class="comment"># enable ufw</span></div><div class="line">sudo ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure></p>
-<p>用<code>sudo ufw status</code>查看ufw的运行状态和配置结果，若显示如下列表，则说明配置好了，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Status: active</div><div class="line"></div><div class="line">To                         Action      From</div><div class="line">--                         ------      ----</div><div class="line">80/tcp                     ALLOW       Anywhere                  </div><div class="line">1725/udp                   ALLOW       Anywhere                  </div><div class="line">2333                       ALLOW       Anywhere                  </div><div class="line">80/tcp (v6)                ALLOW       Anywhere (v6)             </div><div class="line">1725/udp (v6)              ALLOW       Anywhere (v6)             </div><div class="line">2333 (v6)                  ALLOW       Anywhere (v6)</div></pre></td></tr></table></figure></p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
-<li><a href="http://blog.csdn.net/zzllabcd/article/details/49992613" target="_blank" rel="external">ubuntu 添加 root用户权限和sudoer 权限</a></li>
-<li><a href="https://www.linode.com/docs/security/firewalls/configure-firewall-with-ufw/" target="_blank" rel="external">Configure Firewall with UFW</a></li>
-<li><a href="https://www.linode.com/docs/security/securing-your-server/" target="_blank" rel="external">How to Secure Your Server</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/25/ubuntu1610-configure-your-new-server/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
