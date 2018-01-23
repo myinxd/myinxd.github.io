@@ -253,6 +253,67 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/02/libsvm-for-python/">
+                            Libsvm for python
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-02T22:50:08+08:00">
+	
+		    Jan 02, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Happy new year!! Feel blue but still have to work. </p>
+<p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p>
+<p>To use libsvm on python, you may follow the coming steps.</p>
+<ol>
+<li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure>
+</li>
+<li><p>unzip the package</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure>
+</li>
+<li><p>Installization</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p>
+<p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p>
+<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>README</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p>
+<p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p>
+<p>Now, time to do your machine learning work.</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/02/libsvm-for-python/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2017/12/25/ubuntu1610-configure-your-new-server/">
                             Ubuntu 16.10 Configure your new server
                         </a>
@@ -652,43 +713,6 @@
                     <p>Today, let&#39;s talk about transfer learning based on TensorFlow. Firstly, what is transfer learning? It is a strategy of building your own deeplearning based project with existing well-trained networks, so as to avoid some risks like overfitting, time-consuming and etc.<br>
                     
                         <a href="/2017/09/13/Transfer-learning-with-TensorFlow/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/12/Fourier-transform-on-2D-image/">
-                            Fourier transform on 2D image
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-12T22:55:34+08:00">
-	
-		    Sep 12, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天讨论二维矩阵 (图像) 的Fourier transoform，这个问题缘起师兄的工作，“当图像的灰度波动较小，或者说只有大尺度结构时，它的傅立叶变换的图像会在中间(低频)区域出现一个十字。”而这个诡异的十字严重影响了后续的工作。为什么会有这个十字？我们有一个猜想，也试着证明了一下，但不确定是不是这个原因，先挖个坑再说。。。<br>
-                    
-                        <a href="/2017/09/12/Fourier-transform-on-2D-image/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
