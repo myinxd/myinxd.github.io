@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives - Jason&#39;s blog</title>
+    <title>Tag: excel - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/page/4/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-tags/excel/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -247,21 +247,21 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
-                        <a class="link-unstyled" href="/2017/08/30/Applying-MathJax-to-hexo/">
-                            Applying MathJax to hexo
+                        <a class="link-unstyled" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/">
+                            an interesting usage of excel sumif function
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-30T22:24:53+08:00">
+    <time itemprop="datePublished" datetime="2018-01-24T20:25:52+08:00">
 	
-		    Aug 30, 2017
+		    Jan 24, 2018
     	
     </time>
     
@@ -269,198 +269,27 @@
 
             </div>
             
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>下班前简单写一下怎么在Hexo中应用MathJex，参考了两篇博客，后面会列出。具体步骤如下，<br>
-                    
-                        <a href="/2017/08/30/Applying-MathJax-to-hexo/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/29/我们去拍飞机吧/">
-                            我们去拍飞机吧
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-29T12:11:35+08:00">
-	
-		    Aug 29, 2017
-    	
-    </time>
-    
-</div>
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>新开一个Tag,关于Excel的，突然有去学VBA的想法了。。。然而作为码农，有了python和pandas，为什么还要用VBA。。。言归正传，描述一下问题，如图所示，</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_excel.png?raw=true" height="200" width="300">
+</center>
 
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>刚吃完午饭，趁着困意写点好(wu)玩(liao)的事情吧，跟导师去虹桥机场看飞机。有一次和同学争论，什么样的兴趣爱好是正常的？他认为玩魔方属于正常的，但是痴迷飞机和汽车不太正常。论点是玩魔方是可实现并且能够提升自己能力的，但飞机和汽车属于奢侈品，只能看不能体验，不能算是有意义的兴趣爱好。我倒是挺同意这个观点的，然而还是喜欢，很纯粹。。。<br>
-                    
-                        <a href="/2017/08/29/我们去拍飞机吧/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/28/Change-your-iphone-s-ringtone/">
-                            Change your iphone&#39;s ringtone
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-28T23:30:41+08:00">
-	
-		    Aug 28, 2017
-    	
-    </time>
-    
-</div>
+<p>已知A列和B列，其中A列对应ID,B列对应该ID的数值。设C列某一行为<strong>R</strong>,统计A列A2:AR中出现ID=AR的元素的行号，将B列中相应行的值相加，输出到CR单元格中。用如下算法表示，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">R &lt;-- ROW(CR)</div><div class="line">Rows &lt;-- FIND(A2:AR, AR) </div><div class="line">CR &lt;-- SUM(B(Rows))</div></pre></td></tr></table></figure></p>
+<p>利用Excel自带的公式<code>SUMIF</code>可以实现以上算法，其核心是固定A2,用<code>A$2</code>表示，相应的公式则为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">=SUMIF(A$2:A2, A2, B$2:B2)</div></pre></td></tr></table></figure></p>
+<p>最后，再利用excel单元格的自动填充功能，获取CR对应的运算结果。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://baike.baidu.com/item/SUMIF%E5%87%BD%E6%95%B0/6894362" target="_blank" rel="external">SUMIF函数</a></p>
 
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>回家休息了三天，迎来了博士的第四年，希望一切安妥，虽然很多事情会事与愿违。进入正题吧，今天讲一个很无聊的故事，给iphone换铃声。最近被师兄安利了一部迪士尼的动画片怪诞小镇 (Gravity Falls)，目前有且只有两季，断断续续地看了几集，喜欢上了主题曲make me realize，也喜欢上了Dipper和Mabel这对兄妹。(B站有视频集合了主题曲的23个版本，值得一听)。<br>
                     
-                        <a href="/2017/08/28/Change-your-iphone-s-ringtone/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
                         
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/27/Has-your-new-iphone-been-activated/">
-                            Has your new iphone been activated?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-27T08:26:22+08:00">
-	
-		    Aug 27, 2017
-    	
-    </time>
-    
-</div>
 
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>两天没写了，我又来叨叨了，今天的主题是“如何查询你新买的iphone是否是翻新机？”<br>
                     
-                        <a href="/2017/08/27/Has-your-new-iphone-been-activated/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
                     
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/24/matplotlib-AxesGrid/">
-                            matplotlib AxesGrid
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-24T17:31:16+08:00">
-	
-		    Aug 24, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。<br>
-                    
-                        <a href="/2017/08/24/matplotlib-AxesGrid/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/23/Build-your-blog/">
-                            Build-your-blog
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-23T22:25:17+08:00">
-	
-		    Aug 23, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>Build your own blog with github and hexo (利用hexo搭建博客)<br>
-                    
-                        <a href="/2017/08/23/Build-your-blog/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
+                        <p>
+                            <a href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
                     
                 </div>
             
@@ -471,20 +300,12 @@
     <div class="pagination-bar">
     <ul class="pagination">
         
-          <li class="pagination-prev">
-            <a class="btn btn--default btn--small" href="/all-archives/page/3/">
-              <i class="fa fa-angle-left text-base icon-mr"></i>
-              <span>NEWER POSTS</span>
-            </a>
-          </li>
         
-        
-        <li class="pagination-number">page 4 of 4</li>
+        <li class="pagination-number">page 1 of 1</li>
     </ul>
 </div>
 
 </section>
-
 
 
                 <footer id="footer" class="main-content-wrap">
@@ -539,7 +360,24 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
