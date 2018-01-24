@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-01-23T15:21:48.739Z</updated>
+  <updated>2018-01-24T12:24:13.429Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TensorFlow graph and TensorBoard</title>
+    <link href="http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/"/>
+    <id>http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/</id>
+    <published>2018-01-24T06:55:13.000Z</published>
+    <updated>2018-01-24T12:24:13.429Z</updated>
+    
+    <content type="html"><![CDATA[<p>继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考<a href="https://www.tensorflow.org/api_docs/python/tf/layers/BatchNormalization" target="_blank" rel="external">tf.layer.BatchNormalization</a>的思路，需要利用<code>is_training</code>来选择feed给BN的<code>mean</code>和<code>variance</code>。因此，需要理解TensorFlow的<strong>graph</strong>概念。除此之外，TF提供了<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard</a>作为计算图可视化的工具，也是值得借鉴的。</p><h3 id="计算图—Graph"><a href="#计算图—Graph" class="headerlink" title="计算图—Graph"></a>计算图—Graph</h3><p>TensorFlow是一个通过计算图的形式来表达张量之间通过计算相互转化的过程[1]。作为TensoFlow的基本概念，TF中的所有计算都会转化为计算图上的节点，节点之间的边用于描述计算之间的依赖关系。TF中不同的计算图之间维护的节点和边是独立的。通过tf.GraphKeys可以对图进行维护，稍后会介绍。</p><p>利用<code>tf.Graph</code>类实例化计算图，有如下的样例，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">g1 = tf.Graph()</div><div class="line"><span class="keyword">with</span> g1.as_default():</div><div class="line">v = tf.get_variable&#123;<span class="string">"v"</span>, initializer=tf.zeros_initializer(shape=[<span class="number">1</span>])&#125;</div></pre></td></tr></table></figure></p><h3 id="TensorBoard-可视化"><a href="#TensorBoard-可视化" class="headerlink" title="TensorBoard 可视化"></a>TensorBoard 可视化</h3><p>TensorBoard可以有效地展示TF在运行过程中的计算图、各种指标随时间的变化趋势以及训练中使用的图像等信息，其利用TF运行过程中输出的<strong>日志文件</strong>可视化程序的运行状态。TensorBoard和TensorFlow运行在不同的进程中，TB会自动读取TF的日志文件，并呈现当前的运行状态。根据TensorBoard的<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">官方文档</a>，其实现过程有如下步骤，</p><h4 id="1-搭建网络"><a href="#1-搭建网络" class="headerlink" title="1. 搭建网络"></a>1. 搭建网络</h4><p><em>First, create the TensorFlow graph that you’d like to collect summary data from, and decide which nodes you would like to annotate with summary operations.</em></p><p>利用TensorFlow搭建网络，例如基于MLP的手写体识别网络，提供一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_deep_mnist_for_experts_tf.ipynb" target="_blank" rel="external">样例</a>，可以参考。</p><h4 id="2-Select-variables-to-be-summarized"><a href="#2-Select-variables-to-be-summarized" class="headerlink" title="2. Select variables to be summarized"></a>2. Select variables to be summarized</h4><p>通常我们关注训练过程中待学习的参数 (如weights, biases等) 的变化和收敛情况，通过<code>tf.summary.scalar</code>和<code>tf.summary.histogram</code>可以很方便地收集这些数据。下面给出一个样例，参考了[3]，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">variable_summaries</span><span class="params">(var)</span>:</span></div><div class="line">  <span class="string">"""Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""</span></div><div class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">    mean = tf.reduce_mean(var)</div><div class="line">    tf.summary.scalar(<span class="string">'mean'</span>, mean)</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'stddev'</span>):</div><div class="line">      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))</div><div class="line">    tf.summary.scalar(<span class="string">'stddev'</span>, stddev)</div><div class="line">    tf.summary.scalar(<span class="string">'max'</span>, tf.reduce_max(var))</div><div class="line">    tf.summary.scalar(<span class="string">'min'</span>, tf.reduce_min(var))</div><div class="line">    tf.summary.histogram(<span class="string">'histogram'</span>, var)</div></pre></td></tr></table></figure></p><p>而对于单个<code>Variable</code>，可以用<code>tf.summary.scalar(name,variable)</code>的形式进行收集。</p><h4 id="3-Merge-summary-data"><a href="#3-Merge-summary-data" class="headerlink" title="3. Merge summary data"></a>3. Merge summary data</h4><p>定义好要收集的信息，需要对他们进行汇总，此时用<code>tf.summary.merge_all</code>进行汇总，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">merged = tf.summary.merge_all()</div></pre></td></tr></table></figure></p><h4 id="4-FileWriter-for-saving-the-log"><a href="#4-FileWriter-for-saving-the-log" class="headerlink" title="4. FileWriter for saving the log"></a>4. FileWriter for saving the log</h4><p>为了将训练中收集的数据保存到日志中，可以用<code>tf.summary.FileWriter</code>来实现，此时需要提供存放日志的文件夹位置，即<code>logdir</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">logdir = <span class="string">'./log'</span></div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(logdir):</div><div class="line">    os.mkdir(logdir)</div><div class="line">train_writer = tf.summary.FileWriter(logdir + <span class="string">'/train'</span>,</div><div class="line">                                      sess.graph)</div><div class="line">test_writer = tf.summary.FileWriter(logdir + <span class="string">'/test'</span>)</div></pre></td></tr></table></figure></p><p>此时，利用<code>sess.run(tf.global_variables_initializer())</code>初始化所有Tensor和Variable,便可以开始训练网络。</p><h4 id="5-Running"><a href="#5-Running" class="headerlink" title="5. Running"></a>5. Running</h4><p><code>merged</code>的类型为<code>tensorflow.python.framework.ops.Tensor</code>，属于tf.Graph的一部分。因此也需要在<code>session</code>中运行，并且要提供<code>feed_dict</code>。相应的python实现如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">summary, _ = sess.run(</div><div class="line">                [merged, train_step], </div><div class="line">                feed_dict=feed_dict)</div><div class="line">train_writer.add_summary(summary)</div></pre></td></tr></table></figure></p><h4 id="6-利用TensorBoard可视化"><a href="#6-利用TensorBoard可视化" class="headerlink" title="6. 利用TensorBoard可视化"></a>6. 利用TensorBoard可视化</h4><p>TensorFlow提供了<code>tensorboard.py</code>脚本用于可视化。利用如下指令启动并运行TensorBoard, 其默认端口为6006，这里利用<code>--port</code>显式表达</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tensorboard --logdir=<span class="string">'./log --port=6006'</span></div></pre></td></tr></table></figure><p>注：在执行此条指令的时候，可能会报错<em>command not found: tensorboard</em>，解决方法参考<a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">本文</a></p><p>以下给出运行的样例，我写了一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-tensorboard-mlp.ipynb" target="_blank" rel="external">notebook</a>，欢迎来PR :)</p><ul><li>Graph及FC1和train节点</li></ul><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_graph.png?raw=true" height="360" width="450"></center><ul><li>Scalars and histograms</li></ul><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_scalars.png?raw=true" height="450" width="800"></center><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.amazon.cn/dp/B06WGP12TV/" target="_blank" rel="external">TensorFlow实战Google深度学习框架</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/summary/FileWriter" target="_blank" rel="external">tf.summary.FileWriter</a><br>[3] <a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard: Visualizing Learning</a><br>[3] <a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">tensorboard在linux下的启动问题</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考&lt;a href=&quot;https://www.tensorflow.org/api_docs/python/tf/layers/BatchNorma
+      
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
+    
+  </entry>
   
   <entry>
     <title>Batch normalization with TensorFlow</title>
@@ -225,29 +248,6 @@
     
     
       <category term="linux" scheme="http://www.mazhixian.me/all-tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>monte carlo simulation</title>
-    <link href="http://www.mazhixian.me/2018/01/03/monte-carlo-simulation/"/>
-    <id>http://www.mazhixian.me/2018/01/03/monte-carlo-simulation/</id>
-    <published>2018-01-03T12:24:28.000Z</published>
-    <updated>2018-01-14T08:57:10.239Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="To-be-continue…"><a href="#To-be-continue…" class="headerlink" title="To be continue…"></a>To be continue…</h2><p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p><h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;To-be-continue…&quot;&gt;&lt;a href=&quot;#To-be-continue…&quot; class=&quot;headerlink&quot; title=&quot;To be continue…&quot;&gt;&lt;/a&gt;To be continue…&lt;/h2&gt;&lt;p&gt;蒙特卡罗方法帮助产生服从样本分布的新
-      
-    
-    </summary>
-    
-    
-      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
