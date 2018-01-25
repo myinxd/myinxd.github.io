@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Tag: deep-learning - Jason&#39;s blog</title>
+    <title>Tag: nginx - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-tags/deep-learning/page/2/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-tags/nginx/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -257,21 +257,21 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
-                        <a class="link-unstyled" href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/">
-                            Deconvolution or Transpose: opposite operation of CNN
+                        <a class="link-unstyled" href="/2018/01/23/multiple-websites-with-nginx/">
+                            multiple websites with nginx
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-01T15:26:45+08:00">
+    <time itemprop="datePublished" datetime="2018-01-23T22:31:05+08:00">
 	
-		    Sep 01, 2017
+		    Jan 23, 2018
     	
     </time>
     
@@ -279,13 +279,34 @@
 
             </div>
             
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>写之前吐个槽，因为昨晚(2017-08-29)开着阳台门睡觉，今天妥妥感冒了。也因为好久没生病，估计要触底反弹了(手动捂脸)。言归正传，最近在用AutoEncoder (AE) 做样本的预训练和特征表示学习，有一些体会, 今天想聊聊反向卷积神经网络。先挖个坑，等明天把程序写出来可能会写得更有调理一些。[Update: 烧了两天，回来填坑。。。]<br>
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>前面写过<a href="http://www.mazhixian.me/2018/01/22/hexo-deploy-google-analytics-to-your-website/">文章</a>讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，</p>
+<ol>
+<li>利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上</li>
+<li>自己利用vps搭服务器，同样用dnspod进行解析。</li>
+</ol>
+<p>我准备尝试后者。</p>
+<p>考虑到已经在vps上挂了一个网站，此刻如果镜像github的网站，就得让nginx部署两个网站，即虚拟服务器，参考了几篇博客，记录一下配置的过程。</p>
+<h4 id="1-定位nginx的配置文件"><a href="#1-定位nginx的配置文件" class="headerlink" title="1. 定位nginx的配置文件"></a>1. 定位nginx的配置文件</h4><p>如果是用<a href="https://lnmp.org" target="_blank" rel="external">lnmp</a>安装的nginx,其配置文件在<code>/usr/local/nginx/conf/nginx.conf</code>中，可以通过cat查看，应该是默认配置了一个default服务器。</p>
+<h4 id="2-修改-vhost-conf，添加多个网站配置"><a href="#2-修改-vhost-conf，添加多个网站配置" class="headerlink" title="2. 修改./vhost/*.conf，添加多个网站配置"></a>2. 修改./vhost/*.conf，添加多个网站配置</h4><p>参考[2]，按照如下过程配置，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx/cong/vhost</div><div class="line">$ sudo vim vhost_myweb.conf</div></pre></td></tr></table></figure></p>
+<p>添加如下行，以网站路径为/home/wwwroot/myweb为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">server</div><div class="line">    &#123;</div><div class="line">	listen 80;</div><div class="line">	server_name xxx.xxx.xxx;</div><div class="line">	index index.html;</div><div class="line">	root /home/wwwroot/myweb;</div><div class="line">	<span class="comment">#php</span></div><div class="line">	location ~ /.php$ &#123;</div><div class="line">		include fastcgi_params;</div><div class="line">		fastcgi_pass 127.0.0.1:9000;</div><div class="line">		fastcgi_index index.php;</div><div class="line">		fastcgi_param SCRIPT_FILENAME /home/wwwroot/myweb<span class="variable">$fastcgi_script_name</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着，修改<code>/usr/local/php/etc/php-fpm.conf</code>为<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[www]</div><div class="line"><span class="comment"># listen = /tmp/php-cgi.sock</span></div><div class="line">listen = 127.0.0.1:9000</div></pre></td></tr></table></figure></p>
+<p>最后重启php和nginx服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo killall php-fpm</div><div class="line">$ sudo systemctl start php-fpm.service</div><div class="line">$ sudo /etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>到此便配置完毕。</p>
+<h4 id="502-bad-gateway-问题"><a href="#502-bad-gateway-问题" class="headerlink" title="502 bad gateway 问题"></a>502 bad gateway 问题</h4><p>在配置过程中碰到了<strong>502 bad gateway</strong>的问题，引起502的可能因素很多，其中对于lnmp常见的就是nginx和php通信的问题。常用的通信方法有两种，分别是socket和ip:port。这里我采用的是ip:port。详细的解释可以参考<a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.zhihu.com/question/30898326" target="_blank" rel="external">如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题？</a><br>[2] <a href="https://www.cnblogs.com/Erick-L/p/7066564.html" target="_blank" rel="external">在Nginx上配置多个站点</a><br>[3] <a href="http://blog.csdn.net/wzqzhq/article/details/53320533" target="_blank" rel="external">nginx502错误和错误日志级别</a><br>[4] <a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">LNMP 常见502 Bad Gateway问题汇总</a></p>
+
                     
-                        <a href="/2017/09/01/Deconvolution-or-Transpose-opposite-operation-of-CNN/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
                         
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/23/multiple-websites-with-nginx/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
                     
                 </div>
             
@@ -296,15 +317,8 @@
     <div class="pagination-bar">
     <ul class="pagination">
         
-          <li class="pagination-prev">
-            <a class="btn btn--default btn--small" href="/all-tags/deep-learning/">
-              <i class="fa fa-angle-left text-base icon-mr"></i>
-              <span>NEWER POSTS</span>
-            </a>
-          </li>
         
-        
-        <li class="pagination-number">page 2 of 2</li>
+        <li class="pagination-number">page 1 of 1</li>
     </ul>
 </div>
 
@@ -363,7 +377,24 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

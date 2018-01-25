@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Libsvm for python - Jason&#39;s blog</title>
+    <title>multiple websites with nginx - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
-<meta name="keywords" content="python">
+    <meta name="description" content="前面写过文章讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，  利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上 自己利用vps搭服务器，同样用dnspod进行">
+<meta name="keywords" content="nginx">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Libsvm for python">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/02/libsvm-for-python/index.html">
+<meta property="og:title" content="multiple websites with nginx">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
+<meta property="og:description" content="前面写过文章讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，  利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上 自己利用vps搭服务器，同样用dnspod进行">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-01-02T15:35:48.155Z">
+<meta property="og:updated_time" content="2018-01-25T18:25:02.574Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Libsvm for python">
-<meta name="twitter:description" content="Happy new year!! Feel blue but still have to work.  I am gonna introduce the application of a famous package namely libsvm, which realizes the support vector machin (SVM) based algorithms and supports">
+<meta name="twitter:title" content="multiple websites with nginx">
+<meta name="twitter:description" content="前面写过文章讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，  利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上 自己利用vps搭服务器，同样用dnspod进行">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Libsvm for python
+            multiple websites with nginx
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-02T22:50:08+08:00">
+    <time itemprop="datePublished" datetime="2018-01-23T22:31:05+08:00">
 	
-		    Jan 02, 2018
+		    Jan 23, 2018
     	
     </time>
     
@@ -280,25 +280,22 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>Happy new year!! Feel blue but still have to work. </p>
-<p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p>
-<p>To use libsvm on python, you may follow the coming steps.</p>
+            <p>前面写过<a href="http://www.mazhixian.me/2018/01/22/hexo-deploy-google-analytics-to-your-website/">文章</a>讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，</p>
 <ol>
-<li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>unzip the package</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>Installization</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure>
-</li>
+<li>利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上</li>
+<li>自己利用vps搭服务器，同样用dnspod进行解析。</li>
 </ol>
-<p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p>
-<p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p>
-<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>README</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p>
-<p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p>
-<p>Now, time to do your machine learning work.</p>
+<p>我准备尝试后者。</p>
+<p>考虑到已经在vps上挂了一个网站，此刻如果镜像github的网站，就得让nginx部署两个网站，即虚拟服务器，参考了几篇博客，记录一下配置的过程。</p>
+<h4 id="1-定位nginx的配置文件"><a href="#1-定位nginx的配置文件" class="headerlink" title="1. 定位nginx的配置文件"></a>1. 定位nginx的配置文件</h4><p>如果是用<a href="https://lnmp.org" target="_blank" rel="external">lnmp</a>安装的nginx,其配置文件在<code>/usr/local/nginx/conf/nginx.conf</code>中，可以通过cat查看，应该是默认配置了一个default服务器。</p>
+<h4 id="2-修改-vhost-conf，添加多个网站配置"><a href="#2-修改-vhost-conf，添加多个网站配置" class="headerlink" title="2. 修改./vhost/*.conf，添加多个网站配置"></a>2. 修改./vhost/*.conf，添加多个网站配置</h4><p>参考[2]，按照如下过程配置，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx/cong/vhost</div><div class="line">$ sudo vim vhost_myweb.conf</div></pre></td></tr></table></figure></p>
+<p>添加如下行，以网站路径为/home/wwwroot/myweb为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">server</div><div class="line">    &#123;</div><div class="line">	listen 80;</div><div class="line">	server_name xxx.xxx.xxx;</div><div class="line">	index index.html;</div><div class="line">	root /home/wwwroot/myweb;</div><div class="line">	<span class="comment">#php</span></div><div class="line">	location ~ /.php$ &#123;</div><div class="line">		include fastcgi_params;</div><div class="line">		fastcgi_pass 127.0.0.1:9000;</div><div class="line">		fastcgi_index index.php;</div><div class="line">		fastcgi_param SCRIPT_FILENAME /home/wwwroot/myweb<span class="variable">$fastcgi_script_name</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着，修改<code>/usr/local/php/etc/php-fpm.conf</code>为<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[www]</div><div class="line"><span class="comment"># listen = /tmp/php-cgi.sock</span></div><div class="line">listen = 127.0.0.1:9000</div></pre></td></tr></table></figure></p>
+<p>最后重启php和nginx服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo killall php-fpm</div><div class="line">$ sudo systemctl start php-fpm.service</div><div class="line">$ sudo /etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>到此便配置完毕。</p>
+<h4 id="502-bad-gateway-问题"><a href="#502-bad-gateway-问题" class="headerlink" title="502 bad gateway 问题"></a>502 bad gateway 问题</h4><p>在配置过程中碰到了<strong>502 bad gateway</strong>的问题，引起502的可能因素很多，其中对于lnmp常见的就是nginx和php通信的问题。常用的通信方法有两种，分别是socket和ip:port。这里我采用的是ip:port。详细的解释可以参考<a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.zhihu.com/question/30898326" target="_blank" rel="external">如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题？</a><br>[2] <a href="https://www.cnblogs.com/Erick-L/p/7066564.html" target="_blank" rel="external">在Nginx上配置多个站点</a><br>[3] <a href="http://blog.csdn.net/wzqzhq/article/details/53320533" target="_blank" rel="external">nginx502错误和错误日志级别</a><br>[4] <a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">LNMP 常见502 Bad Gateway问题汇总</a></p>
 
             
 
@@ -309,7 +306,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/python/">python</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/nginx/">nginx</a>
 
             </div>
         
@@ -320,7 +317,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/03/monte-carlo-simulation/" data-tooltip="monte carlo simulation" aria-label="PREVIOUS: monte carlo simulation">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/tensorflow-graph-and-tensorboard/" data-tooltip="TensorFlow graph and TensorBoard" aria-label="PREVIOUS: TensorFlow graph and TensorBoard">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -329,7 +326,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/25/ubuntu1610-configure-your-new-server/" data-tooltip="Ubuntu 16.10 Configure your new server" aria-label="NEXT: Ubuntu 16.10 Configure your new server">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/23/batch-normalization-with-tensorflow/" data-tooltip="Batch normalization with TensorFlow" aria-label="NEXT: Batch normalization with TensorFlow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -347,7 +344,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -400,7 +397,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/03/monte-carlo-simulation/" data-tooltip="monte carlo simulation" aria-label="PREVIOUS: monte carlo simulation">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/tensorflow-graph-and-tensorboard/" data-tooltip="TensorFlow graph and TensorBoard" aria-label="PREVIOUS: TensorFlow graph and TensorBoard">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -409,7 +406,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2017/12/25/ubuntu1610-configure-your-new-server/" data-tooltip="Ubuntu 16.10 Configure your new server" aria-label="NEXT: Ubuntu 16.10 Configure your new server">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/23/batch-normalization-with-tensorflow/" data-tooltip="Batch normalization with TensorFlow" aria-label="NEXT: Batch normalization with TensorFlow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -427,7 +424,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -460,7 +457,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/02/libsvm-for-python/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -518,9 +515,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/02/libsvm-for-python/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/';
                  
-                    this.page.identifier = '2018/01/02/libsvm-for-python/';
+                    this.page.identifier = '2018/01/23/multiple-websites-with-nginx/';
                  
              };
             (function() {

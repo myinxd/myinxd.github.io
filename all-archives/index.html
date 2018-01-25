@@ -53,7 +53,7 @@
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?cad03073cb674d3df611861f02ca4dfd";
+      hm.src = "//hm.baidu.com/hm.js?20f3bcc8683b066ff79f4e36134e3982";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
@@ -442,6 +442,64 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
                     
                         <p>
                             <a href="/2018/01/24/tensorflow-graph-and-tensorboard/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/23/multiple-websites-with-nginx/">
+                            multiple websites with nginx
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-23T22:31:05+08:00">
+	
+		    Jan 23, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>前面写过<a href="http://www.mazhixian.me/2018/01/22/hexo-deploy-google-analytics-to-your-website/">文章</a>讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，</p>
+<ol>
+<li>利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上</li>
+<li>自己利用vps搭服务器，同样用dnspod进行解析。</li>
+</ol>
+<p>我准备尝试后者。</p>
+<p>考虑到已经在vps上挂了一个网站，此刻如果镜像github的网站，就得让nginx部署两个网站，即虚拟服务器，参考了几篇博客，记录一下配置的过程。</p>
+<h4 id="1-定位nginx的配置文件"><a href="#1-定位nginx的配置文件" class="headerlink" title="1. 定位nginx的配置文件"></a>1. 定位nginx的配置文件</h4><p>如果是用<a href="https://lnmp.org" target="_blank" rel="external">lnmp</a>安装的nginx,其配置文件在<code>/usr/local/nginx/conf/nginx.conf</code>中，可以通过cat查看，应该是默认配置了一个default服务器。</p>
+<h4 id="2-修改-vhost-conf，添加多个网站配置"><a href="#2-修改-vhost-conf，添加多个网站配置" class="headerlink" title="2. 修改./vhost/*.conf，添加多个网站配置"></a>2. 修改./vhost/*.conf，添加多个网站配置</h4><p>参考[2]，按照如下过程配置，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx/cong/vhost</div><div class="line">$ sudo vim vhost_myweb.conf</div></pre></td></tr></table></figure></p>
+<p>添加如下行，以网站路径为/home/wwwroot/myweb为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">server</div><div class="line">    &#123;</div><div class="line">	listen 80;</div><div class="line">	server_name xxx.xxx.xxx;</div><div class="line">	index index.html;</div><div class="line">	root /home/wwwroot/myweb;</div><div class="line">	<span class="comment">#php</span></div><div class="line">	location ~ /.php$ &#123;</div><div class="line">		include fastcgi_params;</div><div class="line">		fastcgi_pass 127.0.0.1:9000;</div><div class="line">		fastcgi_index index.php;</div><div class="line">		fastcgi_param SCRIPT_FILENAME /home/wwwroot/myweb<span class="variable">$fastcgi_script_name</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着，修改<code>/usr/local/php/etc/php-fpm.conf</code>为<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[www]</div><div class="line"><span class="comment"># listen = /tmp/php-cgi.sock</span></div><div class="line">listen = 127.0.0.1:9000</div></pre></td></tr></table></figure></p>
+<p>最后重启php和nginx服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo killall php-fpm</div><div class="line">$ sudo systemctl start php-fpm.service</div><div class="line">$ sudo /etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>到此便配置完毕。</p>
+<h4 id="502-bad-gateway-问题"><a href="#502-bad-gateway-问题" class="headerlink" title="502 bad gateway 问题"></a>502 bad gateway 问题</h4><p>在配置过程中碰到了<strong>502 bad gateway</strong>的问题，引起502的可能因素很多，其中对于lnmp常见的就是nginx和php通信的问题。常用的通信方法有两种，分别是socket和ip:port。这里我采用的是ip:port。详细的解释可以参考<a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.zhihu.com/question/30898326" target="_blank" rel="external">如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题？</a><br>[2] <a href="https://www.cnblogs.com/Erick-L/p/7066564.html" target="_blank" rel="external">在Nginx上配置多个站点</a><br>[3] <a href="http://blog.csdn.net/wzqzhq/article/details/53320533" target="_blank" rel="external">nginx502错误和错误日志级别</a><br>[4] <a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">LNMP 常见502 Bad Gateway问题汇总</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/23/multiple-websites-with-nginx/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
@@ -891,56 +949,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     
                         <p>
                             <a href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/">
-                            Configure rtl8168 wireless ethernet card on Ubuntu 16.10
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-15T10:33:02+08:00">
-	
-		    Jan 15, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Ubuntu 16.10 配置无线网卡驱动的问题，同样适用14.04和16.04。针对的设备是<code>Realtek RTL8111/8168 PCI Express Gigabit Ethernet Controller</code>，表现为网络不稳定，经常掉线，且网速较慢，分析后认为是驱动不匹配。</p>
-<p><strong>Ubuntu自带的驱动为<code>r8169</code>，高于此类网卡，导致兼容性差，影响了网络连接效果。</strong> 解决方法如下，参考链接见文末。</p>
-<h3 id="1-Check-driver-and-device-info"><a href="#1-Check-driver-and-device-info" class="headerlink" title="1. Check driver and device info"></a>1. Check driver and device info</h3><p>查看系统为网卡型号和对应的驱动，利用如下指令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lspci -vv &gt;&gt; device.txt</div></pre></td></tr></table></figure></p>
-<p>打开<code>device.txt</code>，找到网卡设备，样例如下。其中驱动部分显示为<code>r8169</code>，与现有网卡不吻合<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8169</div><div class="line">Kernel modules: r8169</div></pre></td></tr></table></figure></p>
-<h4 id="2-Download-driver-of-r8168"><a href="#2-Download-driver-of-r8168" class="headerlink" title="2. Download driver of r8168"></a>2. Download driver of r8168</h4><p>从<code>Realtek</code>官网下载<code>rtl8168</code>的<a href="http://www.realtek.com.tw/downloads/downloadsView.aspx?Langid=1&amp;PNid=13&amp;PFid=5&amp;Level=5&amp;Conn=4&amp;DownTypeID=3&amp;GetDown=false#2" target="_blank" rel="external">驱动</a>, 需要根据Linux的内核版本进行选择，例如我的内核是4.9.1,则选择<code>4.7</code>以上的驱动。</p>
-<h4 id="3-Install-driver"><a href="#3-Install-driver" class="headerlink" title="3. Install driver"></a>3. Install driver</h4><p>安装驱动，用如下指令，安装完成后要重启系统。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf 0010-r8168-8.045.08.tar.bz2</div><div class="line">$ <span class="built_in">cd</span> r8168-8.045.08 </div><div class="line">$ sudo ./autorun.sh</div><div class="line">$ sudo reboot</div></pre></td></tr></table></figure></p>
-<p>重启以后，理论上网络连接恢复正常。重新查看系统设备信息，有如下结果，驱动已经更新为<code>r8168</code>。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0b)</div><div class="line">Subsystem: Acer Incorporated [ALI] RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</div><div class="line">Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-DisINTx+</div><div class="line">Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</div><div class="line">Latency: 0, Cache Line Size: 64 bytes</div><div class="line">Interrupt: pin A routed to IRQ 27</div><div class="line">Region 0: I/O ports at d000 [size=256]</div><div class="line">Region 2: Memory at f7104000 (64-bit, prefetchable) [size=4K]</div><div class="line">Region 4: Memory at f7100000 (64-bit, prefetchable) [size=16K]</div><div class="line">Capabilities: &lt;access denied&gt;</div><div class="line">Kernel driver <span class="keyword">in</span> use: r8168</div><div class="line">Kernel modules: r8168</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.cnblogs.com/duwanjiang/p/5907634.html" target="_blank" rel="external">Ubuntu 16.04 RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller” 不能上网</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
