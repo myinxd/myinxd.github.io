@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>how to apply the batch-normalized net - Jason&#39;s blog</title>
+    <title>How to apply the batch-normalized net - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,17 +16,17 @@
     <meta name="description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="how to apply the batch-normalized net">
+<meta property="og:title" content="How to apply the batch-normalized net">
 <meta property="og:url" content="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true">
-<meta property="og:updated_time" content="2018-01-25T09:13:02.049Z">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig-bn-cmp.png?raw=true">
+<meta property="og:updated_time" content="2018-01-25T09:21:22.107Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="how to apply the batch-normalized net">
+<meta name="twitter:title" content="How to apply the batch-normalized net">
 <meta name="twitter:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
-<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig-bn-cmp.png?raw=true">
     
     
         
@@ -254,7 +254,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            how to apply the batch-normalized net
+            How to apply the batch-normalized net
         </h1>
     
     
@@ -296,7 +296,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
 <p>最后，贴上基于<code>tf.contrib.layers.batch_norm</code>的实现样例，更详细的实现见我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_bn_test.ipynb" target="_blank" rel="external">notebook</a>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'BatchNorm'</span>):  </div><div class="line">	y = layers.batch_norm(</div><div class="line">    	x_h,</div><div class="line">        center=<span class="keyword">True</span>,</div><div class="line">        scale=<span class="keyword">True</span>,</div><div class="line">        is_training=is_training)</div><div class="line">        </div><div class="line"><span class="comment"># Train step </span></div><div class="line"><span class="comment"># note: should add update_ops to the train graph</span></div><div class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</div><div class="line"><span class="keyword">with</span> tf.control_dependencies(update_ops):</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'train'</span>):</div><div class="line">        train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)</div></pre></td></tr></table></figure></p>
 <h4 id="MLP是否采用BN的结果对比"><a href="#MLP是否采用BN的结果对比" class="headerlink" title="MLP是否采用BN的结果对比"></a>MLP是否采用BN的结果对比</h4><p>最后，贴一个是否采用BN层的结果对比，效果还是比较显著的。但是我也发现由于我设置的网络层数和FC长度都比较可观，随着Epochs增大，BN的优势并没有那么明显了。。。</p>
 <center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true" height="360" width="480">
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig-bn-cmp.png?raw=true" height="360" width="480">
 </center>
 
 <p>Enjoy it !! 我终于把这个问题看懂了，开心</p>

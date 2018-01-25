@@ -254,7 +254,7 @@
                 <h1 class="postShorten-title" itemprop="headline">
                     
                         <a class="link-unstyled" href="/2018/01/25/how-to-apply-the-batch-normalized-net/">
-                            how to apply the batch-normalized net
+                            How to apply the batch-normalized net
                         </a>
                     
                 </h1>
@@ -294,7 +294,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
 <p>最后，贴上基于<code>tf.contrib.layers.batch_norm</code>的实现样例，更详细的实现见我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_bn_test.ipynb" target="_blank" rel="external">notebook</a>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'BatchNorm'</span>):  </div><div class="line">	y = layers.batch_norm(</div><div class="line">    	x_h,</div><div class="line">        center=<span class="keyword">True</span>,</div><div class="line">        scale=<span class="keyword">True</span>,</div><div class="line">        is_training=is_training)</div><div class="line">        </div><div class="line"><span class="comment"># Train step </span></div><div class="line"><span class="comment"># note: should add update_ops to the train graph</span></div><div class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</div><div class="line"><span class="keyword">with</span> tf.control_dependencies(update_ops):</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'train'</span>):</div><div class="line">        train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)</div></pre></td></tr></table></figure></p>
 <h4 id="MLP是否采用BN的结果对比"><a href="#MLP是否采用BN的结果对比" class="headerlink" title="MLP是否采用BN的结果对比"></a>MLP是否采用BN的结果对比</h4><p>最后，贴一个是否采用BN层的结果对比，效果还是比较显著的。但是我也发现由于我设置的网络层数和FC长度都比较可观，随着Epochs增大，BN的优势并没有那么明显了。。。</p>
 <center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true" height="360" width="480">
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig-bn-cmp.png?raw=true" height="360" width="480">
 </center>
 
 <p>Enjoy it !! 我终于把这个问题看懂了，开心</p>
