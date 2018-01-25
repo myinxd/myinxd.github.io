@@ -6,28 +6,27 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>TensorFlow graph and TensorBoard - Jason&#39;s blog</title>
+    <title>how to apply the batch-normalized net - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考tf.layer.BatchNormalization的思路，需要利用is_training来选择feed给BN的mean和variance。因此，需要理解TensorFlow的graph概念。除此之外，TF提供了TensorBoard作为计算图可视化的工具，也是值得借">
+    <meta name="description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="TensorFlow graph and TensorBoard">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/index.html">
+<meta property="og:title" content="how to apply the batch-normalized net">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考tf.layer.BatchNormalization的思路，需要利用is_training来选择feed给BN的mean和variance。因此，需要理解TensorFlow的graph概念。除此之外，TF提供了TensorBoard作为计算图可视化的工具，也是值得借">
+<meta property="og:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_graph.png?raw=true">
-<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_scalars.png?raw=true">
-<meta property="og:updated_time" content="2018-01-24T12:24:13.429Z">
+<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true">
+<meta property="og:updated_time" content="2018-01-25T09:13:02.049Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TensorFlow graph and TensorBoard">
-<meta name="twitter:description" content="继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考tf.layer.BatchNormalization的思路，需要利用is_training来选择feed给BN的mean和variance。因此，需要理解TensorFlow的graph概念。除此之外，TF提供了TensorBoard作为计算图可视化的工具，也是值得借">
-<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_graph.png?raw=true">
+<meta name="twitter:title" content="how to apply the batch-normalized net">
+<meta name="twitter:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true">
     
     
         
@@ -255,14 +254,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            TensorFlow graph and TensorBoard
+            how to apply the batch-normalized net
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-24T14:55:13+08:00">
+    <time itemprop="datePublished" datetime="2018-01-25T10:24:59+08:00">
 	
-		    Jan 24, 2018
+		    Jan 25, 2018
     	
     </time>
     
@@ -273,38 +272,35 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考<a href="https://www.tensorflow.org/api_docs/python/tf/layers/BatchNormalization" target="_blank" rel="external">tf.layer.BatchNormalization</a>的思路，需要利用<code>is_training</code>来选择feed给BN的<code>mean</code>和<code>variance</code>。因此，需要理解TensorFlow的<strong>graph</strong>概念。除此之外，TF提供了<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard</a>作为计算图可视化的工具，也是值得借鉴的。</p>
-<h3 id="计算图—Graph"><a href="#计算图—Graph" class="headerlink" title="计算图—Graph"></a>计算图—Graph</h3><p>TensorFlow是一个通过计算图的形式来表达张量之间通过计算相互转化的过程[1]。作为TensoFlow的基本概念，TF中的所有计算都会转化为计算图上的节点，节点之间的边用于描述计算之间的依赖关系。TF中不同的计算图之间维护的节点和边是独立的。通过tf.GraphKeys可以对图进行维护，稍后会介绍。</p>
-<p>利用<code>tf.Graph</code>类实例化计算图，有如下的样例，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">g1 = tf.Graph()</div><div class="line"><span class="keyword">with</span> g1.as_default():</div><div class="line">	v = tf.get_variable&#123;<span class="string">"v"</span>, initializer=tf.zeros_initializer(shape=[<span class="number">1</span>])&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="TensorBoard-可视化"><a href="#TensorBoard-可视化" class="headerlink" title="TensorBoard 可视化"></a>TensorBoard 可视化</h3><p>TensorBoard可以有效地展示TF在运行过程中的计算图、各种指标随时间的变化趋势以及训练中使用的图像等信息，其利用TF运行过程中输出的<strong>日志文件</strong>可视化程序的运行状态。TensorBoard和TensorFlow运行在不同的进程中，TB会自动读取TF的日志文件，并呈现当前的运行状态。根据TensorBoard的<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">官方文档</a>，其实现过程有如下步骤，</p>
-<h4 id="1-搭建网络"><a href="#1-搭建网络" class="headerlink" title="1. 搭建网络"></a>1. 搭建网络</h4><p><em>First, create the TensorFlow graph that you’d like to collect summary data from, and decide which nodes you would like to annotate with summary operations.</em></p>
-<p>利用TensorFlow搭建网络，例如基于MLP的手写体识别网络，提供一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_deep_mnist_for_experts_tf.ipynb" target="_blank" rel="external">样例</a>，可以参考。</p>
-<h4 id="2-Select-variables-to-be-summarized"><a href="#2-Select-variables-to-be-summarized" class="headerlink" title="2. Select variables to be summarized"></a>2. Select variables to be summarized</h4><p>通常我们关注训练过程中待学习的参数 (如weights, biases等) 的变化和收敛情况，通过<code>tf.summary.scalar</code>和<code>tf.summary.histogram</code>可以很方便地收集这些数据。下面给出一个样例，参考了[3]，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">variable_summaries</span><span class="params">(var)</span>:</span></div><div class="line">  <span class="string">"""Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""</span></div><div class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">    mean = tf.reduce_mean(var)</div><div class="line">    tf.summary.scalar(<span class="string">'mean'</span>, mean)</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'stddev'</span>):</div><div class="line">      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))</div><div class="line">    tf.summary.scalar(<span class="string">'stddev'</span>, stddev)</div><div class="line">    tf.summary.scalar(<span class="string">'max'</span>, tf.reduce_max(var))</div><div class="line">    tf.summary.scalar(<span class="string">'min'</span>, tf.reduce_min(var))</div><div class="line">    tf.summary.histogram(<span class="string">'histogram'</span>, var)</div></pre></td></tr></table></figure></p>
-<p>而对于单个<code>Variable</code>，可以用<code>tf.summary.scalar(name,variable)</code>的形式进行收集。</p>
-<h4 id="3-Merge-summary-data"><a href="#3-Merge-summary-data" class="headerlink" title="3. Merge summary data"></a>3. Merge summary data</h4><p>定义好要收集的信息，需要对他们进行汇总，此时用<code>tf.summary.merge_all</code>进行汇总，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">merged = tf.summary.merge_all()</div></pre></td></tr></table></figure></p>
-<h4 id="4-FileWriter-for-saving-the-log"><a href="#4-FileWriter-for-saving-the-log" class="headerlink" title="4. FileWriter for saving the log"></a>4. FileWriter for saving the log</h4><p>为了将训练中收集的数据保存到日志中，可以用<code>tf.summary.FileWriter</code>来实现，此时需要提供存放日志的文件夹位置，即<code>logdir</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">logdir = <span class="string">'./log'</span></div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(logdir):</div><div class="line">    os.mkdir(logdir)</div><div class="line">train_writer = tf.summary.FileWriter(logdir + <span class="string">'/train'</span>,</div><div class="line">                                      sess.graph)</div><div class="line">test_writer = tf.summary.FileWriter(logdir + <span class="string">'/test'</span>)</div></pre></td></tr></table></figure></p>
-<p>此时，利用<code>sess.run(tf.global_variables_initializer())</code>初始化所有Tensor和Variable,便可以开始训练网络。</p>
-<h4 id="5-Running"><a href="#5-Running" class="headerlink" title="5. Running"></a>5. Running</h4><p><code>merged</code>的类型为<code>tensorflow.python.framework.ops.Tensor</code>，属于tf.Graph的一部分。因此也需要在<code>session</code>中运行，并且要提供<code>feed_dict</code>。相应的python实现如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">summary, _ = sess.run(</div><div class="line">                [merged, train_step], </div><div class="line">                feed_dict=feed_dict)</div><div class="line">train_writer.add_summary(summary)</div></pre></td></tr></table></figure></p>
-<h4 id="6-利用TensorBoard可视化"><a href="#6-利用TensorBoard可视化" class="headerlink" title="6. 利用TensorBoard可视化"></a>6. 利用TensorBoard可视化</h4><p>TensorFlow提供了<code>tensorboard.py</code>脚本用于可视化。利用如下指令启动并运行TensorBoard, 其默认端口为6006，这里利用<code>--port</code>显式表达</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tensorboard --logdir=<span class="string">'./log --port=6006'</span></div></pre></td></tr></table></figure>
-<p>注：在执行此条指令的时候，可能会报错<em>command not found: tensorboard</em>，解决方法参考<a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">本文</a></p>
-<p>以下给出运行的样例，我写了一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-tensorboard-mlp.ipynb" target="_blank" rel="external">notebook</a>，欢迎来PR :)</p>
-<ul>
-<li>Graph及FC1和train节点</li>
-</ul>
+            <p>继续填<a href="http://www.mazhixian.me/2018/01/23/batch-normalization-with-tensorflow/">这篇文章</a>的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取<code>mean</code>和<code>variance</code>量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。</p>
+<p>在BN的文章里的处理方法是，对所有参与训练的<strong>mini-batch</strong>的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如下，</p>
+<script type="math/tex; mode=display">
+\begin{align}
+E[x] &= E[\mu_B], \notag \\
+\mathrm{Var}[x] &= \frac{m}{m-1} \cdot E[{\sigma_B}^2], \notag
+\end{align}</script><p>进而，BN layer的输出定义为，</p>
+<script type="math/tex; mode=display">
+y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamma E[x]}{\sqrt{\mathrm{Var}[x]+\epsilon}}).</script><p>那么有如下几个问题需要解决，</p>
+<ol>
+<li>训练和测试过程中如何给BN传递<code>mean</code>和<code>variance</code>？即如何在计算图上体现这一运算？</li>
+<li>如何动态收集每个mini-batch的mean和variance，用于总体样本的无偏估计moving_mean, moving_variance</li>
+</ol>
+<p>针对以上问题，TensorFlow的解决思路是设定<code>is_training</code>这个flag，如果为真，则每个mini-batch都会计算均值和方差，训练网络; 如果为假，则进入测试流程。</p>
+<h4 id="基于tf-nn-batch-normalization的底层实现"><a href="#基于tf-nn-batch-normalization的底层实现" class="headerlink" title="基于tf.nn.batch_normalization的底层实现"></a>基于tf.nn.batch_normalization的底层实现</h4><p>TF提供了<code>tf.nn.batch_normalization</code>函数从底层搭建网络，其直接参考了Ioeff\&amp;Szegdy的论文，这里需要利用<code>tf.nn.moments</code>求取mini-batch的均值和方差，详细的实现代码参考<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_batch_norm_tf.ipynb" target="_blank" rel="external">这里</a>.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'BatchNorm'</span>):  </div><div class="line">	axis = list(range(len(x.get_shape()) - <span class="number">1</span>))</div><div class="line">    mean,var = tf.nn.moments(x_h, axis)</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'gamma'</span>):</div><div class="line">        gamma = tf.Variable(tf.constant(<span class="number">0.1</span>, shape=mean.get_shape()))</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'beta'</span>):</div><div class="line">        beta = tf.Variable(tf.constant(<span class="number">0.1</span>, shape=mean.get_shape()))</div><div class="line">    y = tf.nn.batch_normalization(</div><div class="line">           x = x_h,</div><div class="line">           mean = mean,</div><div class="line">           variance = var,</div><div class="line">           offset = beta,</div><div class="line">           scale = gamma,</div><div class="line">           variance_epsilon = <span class="number">1e-5</span>,</div><div class="line">           name= <span class="string">'BN'</span>)</div></pre></td></tr></table></figure></p>
+<h4 id="基于tf-contrib-layers-batch-norm的实现"><a href="#基于tf-contrib-layers-batch-norm的实现" class="headerlink" title="基于tf.contrib.layers.batch_norm的实现"></a>基于tf.contrib.layers.batch_norm的实现</h4><p>在<a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/layers/batch_normalization" target="_blank" rel="external">tf.contrib.layers</a>提供了<code>batch_norm</code>方法，该方法是对<code>tf.nn.batch_normalization</code>的封装，增加了如<code>center</code>，<code>is_training</code>等变量，并对BN的基础算法做了更新，用滑动平均来实现均值和房车的估计。</p>
+<p>那么，如何实现包含BN层的网络的训练和测试？ 其核心是<strong>利用is_training作为flag控制输入给BN的mean和variance的来源，以及如何将moving_mean和moving_variance</strong>加入网络的训练过程中。</p>
+<p>TF官方的建议方法解释是，<br><em>Note: when training, the moving_mean and moving_variance need to be updated. By default the update ops are placed in tf.GraphKeys.UPDATE_OPS, so they need to be added as a dependency to the train_op. For example:</em><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</div><div class="line">  <span class="keyword">with</span> tf.control_dependencies(update_ops):</div><div class="line">    train_op = optimizer.minimize(loss)</div></pre></td></tr></table></figure></p>
+<p>参考<a href="(http://ruishu.io/2016/12/27/batchnorm/">这篇博客</a>，作者对此做了更棒的解释！！！！！<br><em>When you execute an operation (such as train_step), only the subgraph components relevant to train_step will be executed. Unfortunately, the update_moving_averages operation is not a parent of train_step in the computational graph, so we will never update the moving averages!</em></p>
+<p>作者的解决方法：<em>Personally, I think it makes more sense to attach the update ops to the train_step itself. So I modified the code a little and created the following training function</em><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</div><div class="line">    <span class="keyword">with</span> tf.control_dependencies(update_ops):</div><div class="line">        <span class="comment"># Ensures that we execute the update_ops before performing the train_step</span></div><div class="line">        train_step = tf.train.GradientDescentOptimizer(<span class="number">0.01</span>).minimize(loss)</div><div class="line">    sess = tf.Session()</div><div class="line">    sess.run(tf.global_variables_initializer())</div></pre></td></tr></table></figure></p>
+<p>以上代码在<code>tf.slim.batch_norm</code>中也有体现，<a href="https://www.tensorflow.org/api_docs/python/tf/contrib/slim" target="_blank" rel="external">slim</a>是对tf的一个更高层的封装，利用slim实现的ResNet-v2-152可以参考<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_resnet.ipynb" target="_blank" rel="external">这里</a>。</p>
+<p>最后，贴上基于<code>tf.contrib.layers.batch_norm</code>的实现样例，更详细的实现见我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_bn_test.ipynb" target="_blank" rel="external">notebook</a>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'BatchNorm'</span>):  </div><div class="line">	y = layers.batch_norm(</div><div class="line">    	x_h,</div><div class="line">        center=<span class="keyword">True</span>,</div><div class="line">        scale=<span class="keyword">True</span>,</div><div class="line">        is_training=is_training)</div><div class="line">        </div><div class="line"><span class="comment"># Train step </span></div><div class="line"><span class="comment"># note: should add update_ops to the train graph</span></div><div class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</div><div class="line"><span class="keyword">with</span> tf.control_dependencies(update_ops):</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'train'</span>):</div><div class="line">        train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)</div></pre></td></tr></table></figure></p>
+<h4 id="MLP是否采用BN的结果对比"><a href="#MLP是否采用BN的结果对比" class="headerlink" title="MLP是否采用BN的结果对比"></a>MLP是否采用BN的结果对比</h4><p>最后，贴一个是否采用BN层的结果对比，效果还是比较显著的。但是我也发现由于我设置的网络层数和FC长度都比较可观，随着Epochs增大，BN的优势并没有那么明显了。。。</p>
 <center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_graph.png?raw=true" height="360" width="450">
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true" height="360" width="480">
 </center>
 
-<ul>
-<li>Scalars and histograms</li>
-</ul>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_scalars.png?raw=true" height="450" width="800">
-</center>
-
-
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.amazon.cn/dp/B06WGP12TV/" target="_blank" rel="external">TensorFlow实战Google深度学习框架</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/summary/FileWriter" target="_blank" rel="external">tf.summary.FileWriter</a><br>[3] <a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard: Visualizing Learning</a><br>[3] <a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">tensorboard在linux下的启动问题</a></p>
+<p>Enjoy it !! 我终于把这个问题看懂了，开心</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://proceedings.mlr.press/v37/ioffe15.html" target="_blank" rel="external">Ioffe, S. and Szegedy, C., 2015, June. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In International Conference on Machine Learning (pp. 448-456).</a><br>[2] <a href="http://blog.csdn.net/jiruiyang/article/details/77202674" target="_blank" rel="external">tensorflow 中batch normalize 的使用</a><br>[3] <a href="https://github.com/tensorflow/tensorflow/issues/7469" target="_blank" rel="external">docs: batch normalization usage in slim #7469</a><br>[4] <a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/layers/batch_normalization" target="_blank" rel="external">tf.layers.batch_normalization</a><br>[5] <a href="http://ruishu.io/2016/12/27/batchnorm/" target="_blank" rel="external">TENSORFLOW GUIDE: BATCH NORMALIZATION</a></p>
 
             
 
@@ -325,8 +321,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/" data-tooltip="An interesting usage of excel sumif function" aria-label="PREVIOUS: An interesting usage of excel sumif function">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -335,7 +330,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/23/batch-normalization-with-tensorflow/" data-tooltip="Batch normalization with TensorFlow" aria-label="NEXT: Batch normalization with TensorFlow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/" data-tooltip="An interesting usage of excel sumif function" aria-label="NEXT: An interesting usage of excel sumif function">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -353,7 +348,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -405,8 +400,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/" data-tooltip="An interesting usage of excel sumif function" aria-label="PREVIOUS: An interesting usage of excel sumif function">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -415,7 +409,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/23/batch-normalization-with-tensorflow/" data-tooltip="Batch normalization with TensorFlow" aria-label="NEXT: Batch normalization with TensorFlow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/" data-tooltip="An interesting usage of excel sumif function" aria-label="NEXT: An interesting usage of excel sumif function">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -433,7 +427,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -466,7 +460,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -524,9 +518,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/24/tensorflow-graph-and-tensorboard/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/';
                  
-                    this.page.identifier = '2018/01/24/tensorflow-graph-and-tensorboard/';
+                    this.page.identifier = '2018/01/25/how-to-apply-the-batch-normalized-net/';
                  
              };
             (function() {
