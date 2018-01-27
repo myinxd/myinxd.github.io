@@ -263,6 +263,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/27/resnet-with-tensorflow-2/">
+                            Residual network I -- realization by tensorflow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-27T09:51:45+08:00">
+	
+		    Jan 27, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>来填ResNet的坑，residual network的原理已经在<a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">上一篇</a>里做了介绍，这一篇来讨论如何用<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>实现。</p>
+<p>虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用<code>tf.contrib.layers</code>的函数和tf基本的函数来写。我们知道，ResNet的核心模块是<strong>Bottleneck</strong>，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，计算残差，作为下一层的输入。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true" height="150" width="450">
+</center>
+
+<p>多个botleneck组合成一个block，通常会在每个block的最后一个bottleneck进行降采样，以缩小特征图大小。</p>
+<p>具体的实现可以参考我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_resnet13_digit_classification.ipynb" target="_blank" rel="external">notebook</a>, 下面贴一个在手写体识别样本上的测试结果，对比了<a href="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">这篇文章</a>里讨论的DNN网络。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true" height="280" width="400">
+</center>
+
+<p>可以看出ResNet的效果还是非常显著的。但是得强调一下，由于网络显著加深，训练时占用的显存资源非常大，普通的GPU非常吃力。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/27/resnet-with-tensorflow-2/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/25/how-to-apply-the-batch-normalized-net/">
                             How to apply the batch-normalized net
                         </a>
@@ -501,15 +556,15 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个Re
 <td>Conv2,2</td>
 <td style="text-align:center">56x56x64</td>
 <td style="text-align:center">3x3x64</td>
-<td style="text-align:center">1</td>
+<td style="text-align:center"><em>2</em></td>
 <td style="text-align:center">SAME</td>
-<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">28x28x64</td>
 </tr>
 <tr>
 <td>Conv2,3</td>
-<td style="text-align:center">56x56x64</td>
+<td style="text-align:center">28x28x64</td>
 <td style="text-align:center">1x1x256</td>
-<td style="text-align:center"><em>2</em></td>
+<td style="text-align:center">1</td>
 <td style="text-align:center">SAME</td>
 <td style="text-align:center"><em>28x28x256</em></td>
 </tr>
@@ -776,43 +831,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     <p>今天我们讨论数据可视化(data visualization)算法t-SNE (t-distributed Stochastic Neighbor Embedding)，该方法的目的是映射高维数据向量到低维，并保留向量的相似性或者距离。通常我们描述距离会使用类似欧式距离或黎曼距离等概念，映射的方法也多为线性，如PCA。而t-SNE不同，它是用联合概率来描述样本点的相似程度，是非线性的。<br>
                     
                         <a href="/2017/09/11/Data-visualization-with-t-SNE/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/04/Two-typical-tensorflow-exceptions/">
-                            Two typical tensorflow exceptions
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-04T20:32:22+08:00">
-	
-		    Sep 04, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>几天没写东西了，想写自己的故事，又太矫情。今天的故事不长，主要是程序中碰到的两个Bug，记录一下解决方法。这两天在做CAE的pretrain和fine-tuning，白天给老板解释了一遍，感觉他听懂了。。。<br>
-                    
-                        <a href="/2017/09/04/Two-typical-tensorflow-exceptions/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
