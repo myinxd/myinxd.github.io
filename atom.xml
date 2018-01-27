@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-01-27T03:14:31.247Z</updated>
+  <updated>2018-01-27T03:16:16.718Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Residual network I -- realization by tensorflow</title>
+    <title>Residual network II -- realization by tensorflow</title>
     <link href="http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/"/>
     <id>http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/</id>
     <published>2018-01-27T01:51:45.000Z</published>
-    <updated>2018-01-27T03:14:31.247Z</updated>
+    <updated>2018-01-27T03:16:16.718Z</updated>
     
     <content type="html"><![CDATA[<p>来填ResNet的坑，residual network的原理已经在<a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">上一篇</a>里做了介绍，这一篇来讨论如何用<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>实现。</p><p>虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用<code>tf.contrib.layers</code>的函数和tf基本的函数来写。我们知道，ResNet的核心模块是<strong>Bottleneck</strong>，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，计算残差，作为下一层的输入。</p><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true" height="150" width="450"></center><p>多个botleneck组合成一个block，通常会在每个block的最后一个bottleneck进行降采样，以缩小特征图大小。</p><p>具体的实现可以参考我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_resnet13_digit_classification.ipynb" target="_blank" rel="external">notebook</a>, 下面贴一个在手写体识别样本上的测试结果，对比了<a href="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">这篇文章</a>里讨论的DNN网络。</p><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true" height="280" width="400"></center><p>可以看出ResNet的效果还是非常显著的。但是得强调一下，由于网络显著加深，训练时占用的显存资源非常大，普通的GPU非常吃力。</p>]]></content>
     

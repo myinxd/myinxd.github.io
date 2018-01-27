@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Residual network I -- realization by tensorflow - Jason&#39;s blog</title>
+    <title>Residual network II -- realization by tensorflow - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,16 +16,16 @@
     <meta name="description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Residual network I -- realization by tensorflow">
+<meta property="og:title" content="Residual network II -- realization by tensorflow">
 <meta property="og:url" content="http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true">
-<meta property="og:updated_time" content="2018-01-27T03:14:31.247Z">
+<meta property="og:updated_time" content="2018-01-27T03:16:16.718Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Residual network I -- realization by tensorflow">
+<meta name="twitter:title" content="Residual network II -- realization by tensorflow">
 <meta name="twitter:description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
 <meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true">
     
@@ -265,7 +265,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Residual network I -- realization by tensorflow
+            Residual network II -- realization by tensorflow
         </h1>
     
     
