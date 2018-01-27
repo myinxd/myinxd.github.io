@@ -6,28 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Residual network II -- realization by tensorflow - Jason&#39;s blog</title>
+    <title>Upsampling for 2D convolution by tensorflow - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
+    <meta name="description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Residual network II -- realization by tensorflow">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/index.html">
+<meta property="og:title" content="Upsampling for 2D convolution by tensorflow">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
+<meta property="og:description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true">
-<meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true">
-<meta property="og:updated_time" content="2018-01-27T03:16:16.718Z">
+<meta property="og:updated_time" content="2018-01-27T09:50:25.622Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Residual network II -- realization by tensorflow">
-<meta name="twitter:description" content="来填ResNet的坑，residual network的原理已经在上一篇里做了介绍，这一篇来讨论如何用TensorFlow实现。 虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用tf.contrib.layers的函数和tf基本的函数来写。我们知道，ResNet的核心模块是Bottleneck，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，">
-<meta name="twitter:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true">
+<meta name="twitter:title" content="Upsampling for 2D convolution by tensorflow">
+<meta name="twitter:description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
     
     
         
@@ -265,12 +262,12 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Residual network II -- realization by tensorflow
+            Upsampling for 2D convolution by tensorflow
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-27T09:51:45+08:00">
+    <time itemprop="datePublished" datetime="2018-01-27T16:56:22+08:00">
 	
 		    Jan 27, 2018
     	
@@ -283,19 +280,15 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>来填ResNet的坑，residual network的原理已经在<a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">上一篇</a>里做了介绍，这一篇来讨论如何用<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>实现。</p>
-<p>虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用<code>tf.contrib.layers</code>的函数和tf基本的函数来写。我们知道，ResNet的核心模块是<strong>Bottleneck</strong>，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，计算残差，作为下一层的输入。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true" height="150" width="450">
-</center>
-
-<p>多个botleneck组合成一个block，通常会在每个block的最后一个bottleneck进行降采样，以缩小特征图大小。</p>
-<p>具体的实现可以参考我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_resnet13_digit_classification.ipynb" target="_blank" rel="external">notebook</a>, 下面贴一个在手写体识别样本上的测试结果，对比了<a href="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">这篇文章</a>里讨论的DNN网络。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true" height="280" width="400">
-</center>
-
-<p>可以看出ResNet的效果还是非常显著的。但是得强调一下，由于网络显著加深，训练时占用的显存资源非常大，普通的GPU非常吃力。</p>
+            <p>A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like <a href="https://www.tensorflow.org/versions/r1.1/api_docs/python/tf/contrib/layers" target="_blank" rel="external">tf.contrib.layers</a> or <a href="https://www.tensorflow.org/api_docs/python/tf/nn" target="_blank" rel="external">tf.nn</a>, which encapsulate methods for convolution, downsampling, and dense operations. </p>
+<p>However, as for the decoder part, TF does not provide method like <strong>upsampling</strong>, which is the reverse operation of downsampling (<code>avg_pool2, max_pool2</code>). This is because <strong>max pooling</strong> is applied more frequently than <strong>average pooling</strong>, while recover an image from max-pooled matrix is difficult for lossing of locations of the max points. </p>
+<p>For the average-pooled feature maps, there is a simple way to realize upsampling without high-level API like <a href="https://keras.io" target="_blank" rel="external">keras</a>, but with basic functions of TF itself.</p>
+<p>Now, suppose the input is a 4-D tenser whose shape is <code>[1, 4, 4, 1]</code> and sampling rate is <code>[1, 2, 2, 1]</code>, then the upsampled matrix is also a 4-D tenser of shape <code>[1, 8, 8, 1]</code>. Following lines can realize this operation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">x = tf.ones([<span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>])</div><div class="line">k = tf.ones([<span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>]) <span class="comment"># note k.shape = [rows, cols, depth_in, depth_output]</span></div><div class="line">output_shape=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>]</div><div class="line">y = tf.nn.conv2d_transpose(</div><div class="line">    value=x,</div><div class="line">    filter=k,</div><div class="line">    output_shape=output_shape,</div><div class="line">    strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],</div><div class="line">    padding=<span class="string">'SAME'</span></div><div class="line">        )</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    print(sess.run(y))</div></pre></td></tr></table></figure>
+<p>Then, y is the upsampled matrix.</p>
+<p>You may also realize upsampling by the <code>resize_images</code> function of module<code>tf.image</code>, which is,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">y = tf.image.resize_images(</div><div class="line">    images=x,</div><div class="line">    size=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>],</div><div class="line">    method=ResizeMethod.NEAREST_NEIGHBOR</div><div class="line">        )</div></pre></td></tr></table></figure></p>
+<p>Enjoy yourself.</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic" target="_blank" rel="external">Transposed convolution arithmetic</a></p>
 
             
 
@@ -316,8 +309,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" data-tooltip="Upsampling for 2D convolution by tensorflow" aria-label="PREVIOUS: Upsampling for 2D convolution by tensorflow">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -326,7 +318,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/25/how-to-apply-the-batch-normalized-net/" data-tooltip="How to apply the batch-normalized net" aria-label="NEXT: How to apply the batch-normalized net">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/resnet-with-tensorflow-2/" data-tooltip="Residual network II -- realization by tensorflow" aria-label="NEXT: Residual network II -- realization by tensorflow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -344,7 +336,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -396,8 +388,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" data-tooltip="Upsampling for 2D convolution by tensorflow" aria-label="PREVIOUS: Upsampling for 2D convolution by tensorflow">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -406,7 +397,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/25/how-to-apply-the-batch-normalized-net/" data-tooltip="How to apply the batch-normalized net" aria-label="NEXT: How to apply the batch-normalized net">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/resnet-with-tensorflow-2/" data-tooltip="Residual network II -- realization by tensorflow" aria-label="NEXT: Residual network II -- realization by tensorflow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -424,7 +415,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -457,7 +448,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -515,9 +506,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/';
                  
-                    this.page.identifier = '2018/01/27/resnet-with-tensorflow-2/';
+                    this.page.identifier = '2018/01/27/upsampling-for-2D-convolution-by-tensorflow/';
                  
              };
             (function() {
