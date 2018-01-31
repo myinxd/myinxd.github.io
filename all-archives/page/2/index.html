@@ -263,6 +263,56 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/21/python-decorator/">
+                            python decorator
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
+	
+		    Jan 21, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
+<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
+<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
+<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
+<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
+<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/21/python-decorator/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
                             Adjustable learning rate for deep learning by TensorFlow
                         </a>
@@ -781,51 +831,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML-2/">
-                            HTML notebook2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-24T21:47:18+08:00">
-	
-		    Dec 24, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p>
-<p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p>
-<p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/24/Learning-HTML-2/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -844,7 +849,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
             </a>
           </li>
         
-        <li class="pagination-number">page 2 of 4</li>
+        <li class="pagination-number">page 2 of 5</li>
     </ul>
 </div>
 

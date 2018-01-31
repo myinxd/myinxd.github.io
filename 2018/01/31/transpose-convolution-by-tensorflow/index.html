@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Upsampling for 2D convolution by tensorflow - Jason&#39;s blog</title>
+    <title>Transpose convolution by tensorflow--odd kernel shape - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
+    <meta name="description" content="The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-co">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Upsampling for 2D convolution by tensorflow">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/index.html">
+<meta property="og:title" content="Transpose convolution by tensorflow--odd kernel shape">
+<meta property="og:url" content="http://www.mazhixian.me/2018/01/31/transpose-convolution-by-tensorflow/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
+<meta property="og:description" content="The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-co">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-01-27T09:50:25.622Z">
+<meta property="og:updated_time" content="2018-01-31T07:34:06.969Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Upsampling for 2D convolution by tensorflow">
-<meta name="twitter:description" content="A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like tf.contrib.layers or tf.">
+<meta name="twitter:title" content="Transpose convolution by tensorflow--odd kernel shape">
+<meta name="twitter:description" content="The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-co">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Upsampling for 2D convolution by tensorflow
+            Transpose convolution by tensorflow--odd kernel shape
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-27T16:56:22+08:00">
+    <time itemprop="datePublished" datetime="2018-01-31T10:07:44+08:00">
 	
-		    Jan 27, 2018
+		    Jan 31, 2018
     	
     </time>
     
@@ -280,15 +280,13 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like <a href="https://www.tensorflow.org/versions/r1.1/api_docs/python/tf/contrib/layers" target="_blank" rel="external">tf.contrib.layers</a> or <a href="https://www.tensorflow.org/api_docs/python/tf/nn" target="_blank" rel="external">tf.nn</a>, which encapsulate methods for convolution, downsampling, and dense operations. </p>
-<p>However, as for the decoder part, TF does not provide method like <strong>upsampling</strong>, which is the reverse operation of downsampling (<code>avg_pool2, max_pool2</code>). This is because <strong>max pooling</strong> is applied more frequently than <strong>average pooling</strong>, while recover an image from max-pooled matrix is difficult for lossing of locations of the max points. </p>
-<p>For the average-pooled feature maps, there is a simple way to realize upsampling without high-level API like <a href="https://keras.io" target="_blank" rel="external">keras</a>, but with basic functions of TF itself.</p>
-<p>Now, suppose the input is a 4-D tenser whose shape is <code>[1, 4, 4, 1]</code> and sampling rate is <code>[1, 2, 2, 1]</code>, then the upsampled matrix is also a 4-D tenser of shape <code>[1, 8, 8, 1]</code>. Following lines can realize this operation.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">x = tf.ones([<span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>])</div><div class="line">k = tf.ones([<span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>]) <span class="comment"># note k.shape = [rows, cols, depth_in, depth_output]</span></div><div class="line">output_shape=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>]</div><div class="line">y = tf.nn.conv2d_transpose(</div><div class="line">    value=x,</div><div class="line">    filter=k,</div><div class="line">    output_shape=output_shape,</div><div class="line">    strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],</div><div class="line">    padding=<span class="string">'SAME'</span></div><div class="line">        )</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    print(sess.run(y))</div></pre></td></tr></table></figure>
-<p>Then, y is the upsampled matrix.</p>
-<p>You may also realize upsampling by the <code>resize_images</code> function of module<code>tf.image</code>, which is,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">y = tf.image.resize_images(</div><div class="line">    images=x,</div><div class="line">    size=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>],</div><div class="line">    method=ResizeMethod.NEAREST_NEIGHBOR</div><div class="line">        )</div></pre></td></tr></table></figure></p>
-<p>Enjoy yourself.</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic" target="_blank" rel="external">Transposed convolution arithmetic</a></p>
+            <p>The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-connected layers, i.e., DNN, but which is not that clear in CNN. </p>
+<p>For convolution case, the layer in the decoder maintains the shape and kernel configurations for its symmetric layer in the encoder, thus the deconvolution, or <a href="deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">transpose convolution</a> operation will be used instead of the convolution operation.</p>
+<p>TensorFlow provides a method namedly <code>conv2d_transpose</code> in both <code>tf.nn</code> module and <code>tf.contrib.layers</code> module, which are very convenient. However, for <code>tf.contrib.layers.conv2d_transpose</code>, if the output shape of the transpose convolutution is odd when convolution stride setting as 2, it cannot control the output shape to desired one. </p>
+<p>For example, denote a [None, 9, 9, 1] 4D-tensor $X$, convolved by a kernel of size [3, 3] with a 2 step stride and halp padding (SAME), the output 4D tensor $y$ will be [None, 5, 5, 1]. However, the transpose convolution from y by the same parameters setting generates $x’$ into a [None, 10, 10, 1] tensor, not [None, 9, 9, 1].  </p>
+<p>To handle this, I provide a naive but effective way, see as follows,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>])</div><div class="line">y = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">1</span>])</div><div class="line">kernel_size = [<span class="number">3</span>, <span class="number">3</span>]</div><div class="line">stride = <span class="number">2</span></div><div class="line"></div><div class="line">x_r = layers.conv2d_transpose(</div><div class="line">        inputs=x,</div><div class="line">        num_outputs=x.get_shape().as_list()[<span class="number">1</span>],</div><div class="line">        kernel_size=kenerl_size,</div><div class="line">        padding=<span class="string">'SAME'</span>,</div><div class="line">        stride=stride,</div><div class="line">        scope=<span class="string">'conv2d_transpose'</span></div><div class="line">        )</div><div class="line"></div><div class="line">x_r = x_r[:, <span class="number">0</span>:<span class="number">-1</span>, <span class="number">0</span>:<span class="number">-1</span>, :]</div></pre></td></tr></table></figure>
+<p>Above solution played well in my code, though ths crop may introduce bias..</p>
 
             
 
@@ -309,8 +307,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/31/transpose-convolution-by-tensorflow/" data-tooltip="Transpose convolution by tensorflow--odd kernel shape" aria-label="PREVIOUS: Transpose convolution by tensorflow--odd kernel shape">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -319,7 +316,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/resnet-with-tensorflow-2/" data-tooltip="Residual network II -- realization by tensorflow" aria-label="NEXT: Residual network II -- realization by tensorflow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" data-tooltip="Upsampling for 2D convolution by tensorflow" aria-label="NEXT: Upsampling for 2D convolution by tensorflow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -337,7 +334,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/31/transpose-convolution-by-tensorflow/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -389,8 +386,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/31/transpose-convolution-by-tensorflow/" data-tooltip="Transpose convolution by tensorflow--odd kernel shape" aria-label="PREVIOUS: Transpose convolution by tensorflow--odd kernel shape">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -399,7 +395,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/resnet-with-tensorflow-2/" data-tooltip="Residual network II -- realization by tensorflow" aria-label="NEXT: Residual network II -- realization by tensorflow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" data-tooltip="Upsampling for 2D convolution by tensorflow" aria-label="NEXT: Upsampling for 2D convolution by tensorflow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -417,7 +413,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/31/transpose-convolution-by-tensorflow/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -450,7 +446,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/31/transpose-convolution-by-tensorflow/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -508,9 +504,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/';
+                 this.page.url = 'http://www.mazhixian.me/2018/01/31/transpose-convolution-by-tensorflow/';
                  
-                    this.page.identifier = '2018/01/27/upsampling-for-2D-convolution-by-tensorflow/';
+                    this.page.identifier = '2018/01/31/transpose-convolution-by-tensorflow/';
                  
              };
             (function() {
@@ -521,7 +517,24 @@
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
-        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
     
 
 

@@ -262,6 +262,55 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/31/transpose-convolution-by-tensorflow/">
+                            Transpose convolution by tensorflow--odd kernel shape
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-31T10:07:44+08:00">
+	
+		    Jan 31, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-connected layers, i.e., DNN, but which is not that clear in CNN. </p>
+<p>For convolution case, the layer in the decoder maintains the shape and kernel configurations for its symmetric layer in the encoder, thus the deconvolution, or <a href="deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">transpose convolution</a> operation will be used instead of the convolution operation.</p>
+<p>TensorFlow provides a method namedly <code>conv2d_transpose</code> in both <code>tf.nn</code> module and <code>tf.contrib.layers</code> module, which are very convenient. However, for <code>tf.contrib.layers.conv2d_transpose</code>, if the output shape of the transpose convolutution is odd when convolution stride setting as 2, it cannot control the output shape to desired one. </p>
+<p>For example, denote a [None, 9, 9, 1] 4D-tensor $X$, convolved by a kernel of size [3, 3] with a 2 step stride and halp padding (SAME), the output 4D tensor $y$ will be [None, 5, 5, 1]. However, the transpose convolution from y by the same parameters setting generates $x’$ into a [None, 10, 10, 1] tensor, not [None, 9, 9, 1].  </p>
+<p>To handle this, I provide a naive but effective way, see as follows,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>])</div><div class="line">y = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">1</span>])</div><div class="line">kernel_size = [<span class="number">3</span>, <span class="number">3</span>]</div><div class="line">stride = <span class="number">2</span></div><div class="line"></div><div class="line">x_r = layers.conv2d_transpose(</div><div class="line">        inputs=x,</div><div class="line">        num_outputs=x.get_shape().as_list()[<span class="number">1</span>],</div><div class="line">        kernel_size=kenerl_size,</div><div class="line">        padding=<span class="string">'SAME'</span>,</div><div class="line">        stride=stride,</div><div class="line">        scope=<span class="string">'conv2d_transpose'</span></div><div class="line">        )</div><div class="line"></div><div class="line">x_r = x_r[:, <span class="number">0</span>:<span class="number">-1</span>, <span class="number">0</span>:<span class="number">-1</span>, :]</div></pre></td></tr></table></figure>
+<p>Above solution played well in my code, though ths crop may introduce bias..</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/31/transpose-convolution-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/">
                             Upsampling for 2D convolution by tensorflow
                         </a>
@@ -891,56 +940,6 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个Re
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/21/python-decorator/">
-                            python decorator
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
-	
-		    Jan 21, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
-<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
-<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
-<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
-<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
-<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/21/python-decorator/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -952,7 +951,7 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个Re
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 4</li>
+        <li class="pagination-number">page 1 of 5</li>
     </ul>
 </div>
 
