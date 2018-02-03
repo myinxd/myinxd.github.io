@@ -263,6 +263,52 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/04/train-selected-variables-in-tensorflow-graph/">
+                            Train selected variables in tensorflow graph
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-04T02:02:44+08:00">
+	
+		    Feb 04, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>写之前吐个槽，我又把<code>tf.nn.softmax_cross_entropy_with_logits</code>的参数赋反了，折腾了一晚上。。。这篇文章主要讨论TensorFlow中训练指定变量的问题。这篇<a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">博客</a>给了个非常巧妙的方法，简单记录一下。</p>
+<h4 id="1-查看可训练的参数及其index"><a href="#1-查看可训练的参数及其index" class="headerlink" title="1. 查看可训练的参数及其index"></a>1. 查看可训练的参数及其index</h4><p>在<code>tf.trainiable_variables</code>里存储了可以用于训练的变量，利用如下方法可以打印出它们的信息，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">variables_names = [v.name <span class="keyword">for</span> v <span class="keyword">in</span> tf.trainable_variables()]</div><div class="line">values = sess.run(variables_names)</div><div class="line">i = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> zip(variables_names, values):</div><div class="line">    print(i, <span class="string">"Variable: "</span>, k)</div><div class="line">    print(<span class="string">"Shape: "</span>, v.shape)</div><div class="line">    i += <span class="number">1</span></div></pre></td></tr></table></figure></p>
+<h4 id="2-建立train-options，并为其提供不同的trainable-lists"><a href="#2-建立train-options，并为其提供不同的trainable-lists" class="headerlink" title="2. 建立train options，并为其提供不同的trainable lists"></a>2. 建立train options，并为其提供不同的trainable lists</h4><p>假设有两个loss function，分别对应网络中不同区域的变量，为了实现梯度的有效传递，可以利用如下方法，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">loss1 = ...</div><div class="line">loss2 = ...</div><div class="line">var_list1 = tf.trainable_variables()[<span class="number">0</span>:<span class="number">10</span>]</div><div class="line">var_list2 = tf.trainable_variables()[<span class="number">10</span>:]</div><div class="line">train_op1 = tf.train.AdamOptimizer(learning_rate).minimize(loss1, var_list=var_list1)</div><div class="line">train_op2 = tf.train.AdamOptimizer(learning_rate).minimize(lose2, var_list=var_list2)</div></pre></td></tr></table></figure></p>
+<h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><p>[1] <a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">[tensorflow] 在不同层上设置不同的学习率，fine-tuning</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/04/train-selected-variables-in-tensorflow-graph/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/31/transpose-convolution-by-tensorflow/">
                             Transpose convolution by tensorflow--odd kernel shape
                         </a>
@@ -820,43 +866,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     <p>System and Software info<br>
                     
                         <a href="/2017/12/13/Install-tensorflow-with-gpu-library-CUDA-on-Ubuntu-16-04-x64/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/14/Tensorflow-namespace-and-network-restoration/">
-                            Tensorflow namespace and network restoration
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-14T16:20:37+08:00">
-	
-		    Sep 14, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>昨天讨论了基于TensorFlow的迁移学习，提到了网络的存储和恢复的问题，然而我并没有说清楚，而且网络的恢复要考虑的问题其实挺多的。。。<br>
-                    
-                        <a href="/2017/09/14/Tensorflow-namespace-and-network-restoration/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         

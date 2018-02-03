@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-01-31T07:34:06.969Z</updated>
+  <updated>2018-02-03T18:15:17.695Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Train selected variables in tensorflow graph</title>
+    <link href="http://www.mazhixian.me/2018/02/04/train-selected-variables-in-tensorflow-graph/"/>
+    <id>http://www.mazhixian.me/2018/02/04/train-selected-variables-in-tensorflow-graph/</id>
+    <published>2018-02-03T18:02:44.000Z</published>
+    <updated>2018-02-03T18:15:17.695Z</updated>
+    
+    <content type="html"><![CDATA[<p>写之前吐个槽，我又把<code>tf.nn.softmax_cross_entropy_with_logits</code>的参数赋反了，折腾了一晚上。。。这篇文章主要讨论TensorFlow中训练指定变量的问题。这篇<a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">博客</a>给了个非常巧妙的方法，简单记录一下。</p><h4 id="1-查看可训练的参数及其index"><a href="#1-查看可训练的参数及其index" class="headerlink" title="1. 查看可训练的参数及其index"></a>1. 查看可训练的参数及其index</h4><p>在<code>tf.trainiable_variables</code>里存储了可以用于训练的变量，利用如下方法可以打印出它们的信息，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">variables_names = [v.name <span class="keyword">for</span> v <span class="keyword">in</span> tf.trainable_variables()]</div><div class="line">values = sess.run(variables_names)</div><div class="line">i = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> zip(variables_names, values):</div><div class="line">    print(i, <span class="string">"Variable: "</span>, k)</div><div class="line">    print(<span class="string">"Shape: "</span>, v.shape)</div><div class="line">    i += <span class="number">1</span></div></pre></td></tr></table></figure></p><h4 id="2-建立train-options，并为其提供不同的trainable-lists"><a href="#2-建立train-options，并为其提供不同的trainable-lists" class="headerlink" title="2. 建立train options，并为其提供不同的trainable lists"></a>2. 建立train options，并为其提供不同的trainable lists</h4><p>假设有两个loss function，分别对应网络中不同区域的变量，为了实现梯度的有效传递，可以利用如下方法，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">loss1 = ...</div><div class="line">loss2 = ...</div><div class="line">var_list1 = tf.trainable_variables()[<span class="number">0</span>:<span class="number">10</span>]</div><div class="line">var_list2 = tf.trainable_variables()[<span class="number">10</span>:]</div><div class="line">train_op1 = tf.train.AdamOptimizer(learning_rate).minimize(loss1, var_list=var_list1)</div><div class="line">train_op2 = tf.train.AdamOptimizer(learning_rate).minimize(lose2, var_list=var_list2)</div></pre></td></tr></table></figure></p><h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><p>[1] <a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">[tensorflow] 在不同层上设置不同的学习率，fine-tuning</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;写之前吐个槽，我又把&lt;code&gt;tf.nn.softmax_cross_entropy_with_logits&lt;/code&gt;的参数赋反了，折腾了一晚上。。。这篇文章主要讨论TensorFlow中训练指定变量的问题。这篇&lt;a href=&quot;http://blog.csdn.ne
+      
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
+    
+  </entry>
   
   <entry>
     <title>Transpose convolution by tensorflow--odd kernel shape</title>
@@ -220,29 +243,6 @@
     
     
       <category term="hexo" scheme="http://www.mazhixian.me/all-tags/hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Residual network I -- block and bottleneck</title>
-    <link href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/"/>
-    <id>http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/</id>
-    <published>2018-01-21T06:15:00.000Z</published>
-    <updated>2018-01-27T02:53:22.320Z</updated>
-    
-    <content type="html"><![CDATA[<p>ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了<a href="https://www.amazon.cn/dp/B06X8Z4BS9/" target="_blank" rel="external">TensorFlow 实战</a>的6.4节。ResNet的结构能加速超深射精网络的训练，能有效避免过拟合，而且推广性非常好。</p><p>深度神经网络存在<code>Degradation</code>的问题，即随着网络层数的增加，其准确率会从逐渐提升到饱和，进而下降。这一问题在我们近期的工作也出现了，我们在增加了一层全连接后，网络的准确率反而下降了。为了解决这一问题，ResNet提出了一种新的网络思路，<strong>即允许原始输入信息直接传输到后面的层中</strong>。假定某段网络的输入是<script type="math/tex">\mathrm{x}</script>，期望输出是<script type="math/tex">H(\mathrm{x})</script>，如果直接将<script type="math/tex">\mathrm{x}</script>传到输出作为初始结果，那么目标函数变为</p><script type="math/tex; mode=display">F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个ResNet的残差学习单元，即将学习目标从<script type="math/tex">H(\mathrm{x})</script>改为期望与输入的残差。这种结构也被称为<code>shortcut</code>或<code>skip connections</code>.</p><center><img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig3.png?raw=true" height="200" width="300"></center><p>考虑到神经网络相当于对原始数据进行了压缩，存在信息损失的问题，而ResNet结构将部分输入信息直接传递到输出端，可以保留部分的信息。并且ResNet的训练误差会随着层数增加而逐渐减少，并且在测试集上也有很好的表现。</p><p>引自TensorFlow实战，在ResNet的第二篇论文<em>Identity mapping in deep residual networks</em>中，提出了ResNet V2。想对于ResNet V1, 将激活函数<code>ReLU</code>改为了<code>Identity mapping</code>，即y=x。同时，ResNet V2在每一层都使用了Batch Normalization，提升网络的范化能力。</p><h3 id="ResNet的block的理解"><a href="#ResNet的block的理解" class="headerlink" title="ResNet的block的理解"></a>ResNet的block的理解</h3><p>在ResNet的实现中，包含多个<code>block</code>，每个<code>block</code>又由多个<code>bottleneck</code>组成，称为<strong>残差学习单元</strong>，ResNet的残差运算即在每个bottleneck内实现。因为要获取输入<script type="math/tex">\mathrm{x}</script>与block输出的残差，每个<code>bottleneck</code>虽然做了多次卷积和激活运算，但其输出的<code>shape</code>应该保持不变，因此内部的卷积运算的<code>stride</code>和<code>padding</code>都有特殊的设置 (数学推导可以参考<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">此文</a>)。以ResNet-50的第二个block为例，假设该block内包含两个bottleneck单元，则有，</p><h5 id="Bottleneck-One"><a href="#Bottleneck-One" class="headerlink" title="Bottleneck One"></a>Bottleneck One</h5><div class="table-container"><table><thead><tr><th style="text-align:center">Layer</th><th style="text-align:center">Input</th><th style="text-align:center">Kernel</th><th style="text-align:center">Stride</th><th style="text-align:center">Padding</th><th style="text-align:center">Output</th></tr></thead><tbody><tr><td style="text-align:center">Conv1,1</td><td style="text-align:center">56x56x64</td><td style="text-align:center">1x1x64</td><td style="text-align:center">1</td><td style="text-align:center">SAME</td><td style="text-align:center">56x56x64</td></tr><tr><td style="text-align:center">Conv1,2</td><td style="text-align:center">56x56x64</td><td style="text-align:center">3x3x64</td><td style="text-align:center">1</td><td style="text-align:center">SAME</td><td style="text-align:center">56x56x64</td></tr><tr><td style="text-align:center">Conv1,3</td><td style="text-align:center">56x56x64</td><td style="text-align:center">1x1x256</td><td style="text-align:center">1</td><td style="text-align:center">SAME</td><td style="text-align:center">56x56x256</td></tr></tbody></table></div><h5 id="Bottleneck-Two"><a href="#Bottleneck-Two" class="headerlink" title="Bottleneck Two"></a>Bottleneck Two</h5><div class="table-container"><table><thead><tr><th>Layer</th><th style="text-align:center">Input</th><th style="text-align:center">Kernel</th><th style="text-align:center">Stride</th><th style="text-align:center">Padding</th><th style="text-align:center">Output</th></tr></thead><tbody><tr><td>Conv2,1</td><td style="text-align:center">56x56x256</td><td style="text-align:center">1x1x64</td><td style="text-align:center">1</td><td style="text-align:center">SAME</td><td style="text-align:center">56x56x64</td></tr><tr><td>Conv2,2</td><td style="text-align:center">56x56x64</td><td style="text-align:center">3x3x64</td><td style="text-align:center"><em>2</em></td><td style="text-align:center">SAME</td><td style="text-align:center">28x28x64</td></tr><tr><td>Conv2,3</td><td style="text-align:center">28x28x64</td><td style="text-align:center">1x1x256</td><td style="text-align:center">1</td><td style="text-align:center">SAME</td><td style="text-align:center"><em>28x28x256</em></td></tr></tbody></table></div><p>注意<code>Bottleneck Two</code>的<code>Conv2,3</code>层的<code>stride</code>为2,因此输出的尺度大小相当于做了factor为2的降采样，因此该bottleneck不做残差的运算，其输出直接作为下一个block的输入。</p><p>ResNet-V2相对于ResNet-V1增加了<code>Batch Normalization</code>和<code>L2</code>正则，如何在block中体现？ 且听下回分解。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了&lt;a href=&quot;https://www.amazon.cn/dp/B06X8Z4BS9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Tenso
-      
-    
-    </summary>
-    
-    
-      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
     
   </entry>
   
