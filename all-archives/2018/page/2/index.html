@@ -263,6 +263,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/">
+                            Hexo-- deploy google analytics to your website
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-22T14:17:32+08:00">
+	
+		    Jan 22, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>写之前吐槽一下百度的<a href="https://ziyuan.baidu.com/" target="_blank" rel="external">站长平台</a>，添加新站搜索必须要备案，然后就放弃了。。。转到谷歌的<a href="https://analytics.google.com/" target="_blank" rel="external">Google Analytics, GA</a>，可以统计网站的访问数据。搜索了一下，多数<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>模板都嵌入了google analytics相关的ejs，添加起来还是比较方便的。</p>
+<p>下面以我用的模板<a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">tranquilpeak</a>为例，介绍一下添加的步骤，</p>
+<h4 id="1-注册GA账户并添加网站"><a href="#1-注册GA账户并添加网站" class="headerlink" title="1. 注册GA账户并添加网站"></a>1. 注册GA账户并添加网站</h4><p>首先利用谷歌帐号登录Google Analytics，设置关联，而后添加网站信息，如下图所示，</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180122/fig1.png?raw=true" height="600" width="600">
+</center>
+
+<h4 id="2-获取UA"><a href="#2-获取UA" class="headerlink" title="2. 获取UA"></a>2. 获取UA</h4><p>添加好网站信息以后，GA会提供一个名为<code>UA</code>的ID (例如 UA-xxxxxx-x) 以及用于添加进网站页面的<code>gtga.js</code>段代码，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;!-- Global site tag (gtag.js) - Google Analytics --&gt;</div><div class="line">&lt;script async src=<span class="string">"https://www.googletagmanager.com/gtag/js?id=UA-xxxxx-x"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;script&gt;</div><div class="line">  window.dataLayer = window.dataLayer || [];</div><div class="line">  <span class="keyword">function</span> <span class="function"><span class="title">gtag</span></span>()&#123;dataLayer.push(arguments);&#125;</div><div class="line">  gtag(<span class="string">'js'</span>, new Date());</div><div class="line"></div><div class="line">  gtag(<span class="string">'config'</span>, <span class="string">'UA-xxxxx-x'</span>);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="3-在模板中添加GA支持"><a href="#3-在模板中添加GA支持" class="headerlink" title="3. 在模板中添加GA支持"></a>3. 在模板中添加GA支持</h4><p>对于<code>tranquilpeak</code>模板，配置<code>google-analytics</code>是比较简单的，只需要修改<code>theme/tranquilpeal/_config.yml</code>文件中的<code>google-analytics-id</code>部分，如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Your Google analystics web property ID : UA-XXXXX-X</span></div><div class="line">google_analytics_id: UA-xxxx-x</div></pre></td></tr></table></figure></p>
+<p>同样的，相应的<code>google-analytics.ejs</code>文件可以在<code>theme/tranquilpeak/layout/_partial</code>中找到, 其代码如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;% <span class="keyword">if</span> (theme.google_analytics_id) &#123; %&gt;</div><div class="line">    &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">        (<span class="keyword">function</span>(i,s,o,g,r,a,m)&#123;i[<span class="string">'GoogleAnalyticsObject'</span>]=r;i[r]=i[r]||<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        (i[r].q=i[r].q||[]).push(arguments)&#125;,i[r].l=1*new Date();a=s.createElement(o),</div><div class="line">        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)</div><div class="line">        &#125;)(window,document,<span class="string">'script'</span>,<span class="string">'//www.google-analytics.com/analytics.js'</span>,<span class="string">'ga'</span>);</div><div class="line"></div><div class="line">        ga(<span class="string">'create'</span>, <span class="string">'&lt;%= theme.google_analytics_id %&gt;'</span>, <span class="string">'auto'</span>);</div><div class="line">        ga(<span class="string">'send'</span>, <span class="string">'pageview'</span>);</div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;% &#125; %&gt;</div></pre></td></tr></table></figure></p>
+<p>其中的<code>theme.google_analytics_id</code>便对应刚刚我们添加的<code>UA-xxxx-x，该文件不需要修改。当然也可以尝试将GA提供的基于</code>gtag.js<code>代码替换到</code>google-analysis.ejs`中，感兴趣可以试试看。</p>
+<h4 id="4-编译并部署"><a href="#4-编译并部署" class="headerlink" title="4. 编译并部署"></a>4. 编译并部署</h4><p>最后，利用<code>hexo g</code>重新编译相关文件，在每一个<code>.html</code>页面中加入<code>GA</code>相关的内容，谷歌的分析服务便可以发挥作用。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">hexo-theme-tranquilpeak</a><br>[2] <a href="https://www.cnblogs.com/zhcncn/p/4097881.html" target="_blank" rel="external">Hexo搭建Github静态博客</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/21/resnet-with-tensorflow/">
                             Residual network I -- block and bottleneck
                         </a>
