@@ -263,6 +263,50 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/15/happy-chinese-new-year/">
+                            Happy Chinese new year
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-15T17:09:57+08:00">
+	
+		    Feb 15, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github.</p>
+<p>Wish everything well in the new year.</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/15/happy-chinese-new-year/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/02/07/write-a-blog-by-hexo/">
                             Write a blog by Hexo
                         </a>
@@ -781,92 +825,6 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/23/batch-normalization-with-tensorflow/">
-                            Batch normalization with TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-23T11:28:01+08:00">
-	
-		    Jan 23, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>ResNet的坑还没填，先挖Batch Normalization (BN)的坑吧。读了Ioffe &amp; Szegedy 2015年的<a href="http://proceedings.mlr.press/v37/ioffe15.html" target="_blank" rel="external">论文</a>,做个笔记。参考了几篇相关的博客，还是很有帮助的。如<a href="http://blog.csdn.net/hjimce/article/details/50866313" target="_blank" rel="external">此文</a>所述，BN也是神经网络中的一层，并且包含待训练的参数，而这些参数也是其精髓之一。下面我将分两个部分来说，(1) BN的优势、原理及推导, 以及(2) BN在TensorFlow下的实现。</p>
-<h3 id="BN的优势、原理及推导"><a href="#BN的优势、原理及推导" class="headerlink" title="BN的优势、原理及推导"></a>BN的优势、原理及推导</h3><h4 id="Motivations"><a href="#Motivations" class="headerlink" title="Motivations"></a>Motivations</h4><p>首先，Ioffe和Szegedy在摘要中说明了提出BN的动机，其原文为，<br>    The deep neural network is complicated by the fact that the distribution of each layer’s inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring <strong>lower learning rates</strong> and <strong>careful parameter initialization</strong>, and makes it notoriously hard to train models with <strong>saturating nonlinearities.</strong> </p>
-<p>即在网络的训练过程中，受到上一层参数调整的影响，该层输入的分布会发生变化，使得参数训练要重新适应这一分布变化，导致网络的训练时间和迭代次数增加。为了避免这些问题，<strong>传统方法</strong>只能采用小的学习率以及适当的参数初始化策略; 并且无法避免大数值输出在经过激活函数后进入饱和区 (saturating nonlinearities) 的问题。Ioffe和Szegedy将这一现象命名为<code>internal covariate shift</code>。</p>
-<p>LeCun在1998年的论文中提出过这样一个观点，<em>The newtork training converges faster if its inputs are whitened, i.e., linearily transformed to have zero means and unit variances, and decorrelated.</em> 即对网络的输入进行归一化，有利于加速网络的收敛。这一点也是比较好理解的，参考传统机器学习算法，通常分类器的输入是人工提取的特征，这些特征在量纲和数量级上会有相当大的差异性，如果直接输入网络，数值较大的特征便会影响训练结果。为了解决这一问题，通常对特征进行去量纲的操作，最好的方式便是归一化，<strong>这种针对每一维特征进行归一化</strong>的处理方法也是BN的核心。</p>
-<p>那么，在具有多层结构的网络内部，是否可以对每一层的输入做归一化处理，既稳定了样本的分布，也能加速网络的收敛。</p>
-<h4 id="BN的优势"><a href="#BN的优势" class="headerlink" title="BN的优势"></a>BN的优势</h4><p>根据论文的Abstract和Intro, BN的优势可以概括为以下四点，</p>
-<ol>
-<li>解决internal convariate shift问题，加速网络训练;</li>
-<li>避免了梯度传递过程原始数据大小对参数的影响，使得可以选择大的学习率;</li>
-<li>正则化了网络，可以不使用dropout;</li>
-<li>将输入集中在小区间内，避免经过激活函数的输出进入饱和区。</li>
-</ol>
-<h4 id="BN的原理与推导"><a href="#BN的原理与推导" class="headerlink" title="BN的原理与推导"></a>BN的原理与推导</h4><p>BN文的第二节对<strong>normalization</strong>进行了讨论，并在第三节通过两个简化对Batch Normalization进行定义，以解决<strong>Full whitenning of each layer’s inputs is cotly</strong>的问题。</p>
-<ol>
-<li>Nomalize each scalar feature indepently, by making whitened</li>
-<li>Computation over a mini-batch instead of m individuals.</li>
-</ol>
-<p>定义<script type="math/tex">\mathbf{x}=[x^{(1)}, x^{(2)}, ... , x^{(K)}]</script>,<script type="math/tex">x\in \chi,\chi={x_1,x_2,...,x_m}</script>为该层的输入 (上一层的输出)，其中m表示mini-batch中的样本数。$\hat{x}^{(k)}$表示$\mathbf{x}$第$k$维特征的whitening量，由下式给出</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\hat{x}^{(k)} = \frac{x^{(k)} - E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}, \notag
-\end{align}</script><p>其中$E[\cdot]$和$Var[\cdot]$分别对应$x_i^{(k)}, i=1,2,…,m$的期望和方差。</p>
-<p>以上虽然对输入做了归一话，但如BN文中所述<em>Simply normalizing each input of a layer may change what the layer can represent</em>。以激活函数<code>sigmoid</code>为例，如果$x^{(k)}$本来的数值较大，经过sigmoid函数以后会分布在接近饱和区的两端，而白化以后则剧集在sigmoid(x)=0附近，使得原有的分布消失。为了解决这一问题，需要对$\hat{x}$进行尺度(scale)和位移(shift)变换，从而有，</p>
-<script type="math/tex; mode=display">
-y^{(k)} = \gamma^{(k)} \cdot \hat{x}^{(k)} + \beta^{(k)},</script><p>其中$y^{(k)}$即为BN的输出，$\gamma^{(k)}$和$\beta^{(k)}$分别对应scale和shift，是<code>Batch Normalization layer</code>的参数，需要进行初始化，并在网络训练的过程中进行学习和调整。</p>
-<h4 id="BN和activation层的关系"><a href="#BN和activation层的关系" class="headerlink" title="BN和activation层的关系"></a>BN和activation层的关系</h4><p>我们知道，通常在<code>Conv layer</code>和<code>FC layer</code>之后，会加上非线性的激活函数层对输出进行调整，并作为下一层的输入。而BN层也是在<code>Conv layer</code>和<code>FC layer</code>之后对输出进行归一化的，二者的先后关系如何？ 参考BN文3.2节，定义$z$为<code>activation layer</code>的输出，则有，</p>
-<script type="math/tex; mode=display">
-z = g[\mathrm{BN}(x)],</script><p>即先进行Batch Normalization,后通过激活函数。</p>
-<h4 id="BN的训练和测试-inference"><a href="#BN的训练和测试-inference" class="headerlink" title="BN的训练和测试(inference)"></a>BN的训练和测试(inference)</h4><p>BN的训练和测试可以参考下图，截取自Ioffe和Szegedy的论文，这里要注意的是<code>inference</code>的理解，即新样本需要经过怎样的预处理，以利用训练好的网络进行测试？</p>
-<p>网络的训练过程采用了<code>batch training</code>，每个batch会有对应的期望$\mu<em>B$和标准差$\sigma</em>{B}$，用于测试网络的样本在每一个layer依然需要归一化，此时对应的$E[x]$和$\mathrm{Var}[x]$用如下式进行估计，</p>
-<script type="math/tex; mode=display">
-\begin{align}
-E[x] &= E[\mu_B], \notag \\
-\mathrm{Var}[x] &= \frac{m}{m-1} \cdot E[{\sigma_B}^2], \notag
-\end{align}</script><p>进而，BN layer的输出定义为，</p>
-<script type="math/tex; mode=display">
-y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamma E[x]}{\sqrt{\mathrm{Var}[x]+\epsilon}}).</script><center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180123/fig1.png?raw=true" height="600" width="600">
-</center>
-
-<h3 id="BN的TensofFlow实现"><a href="#BN的TensofFlow实现" class="headerlink" title="BN的TensofFlow实现"></a>BN的TensofFlow实现</h3><p>白化本身是很简单的，关键问题是如何训练每个$x^{(k)}$对应的$\gamma^{(k)}$和$\beta^{(k)}$。TensofFlow提供了多个<code>batch_normalization</code>相关的类或方法，比较简单的有<code>tf.nn.batch_normalization</code>，其参数如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">batch_normalization(</div><div class="line">    x, <span class="comment"># inputs</span></div><div class="line">    mean, <span class="comment"># 均值</span></div><div class="line">    variance, <span class="comment"># 方差</span></div><div class="line">    offset, <span class="comment"># shift beta</span></div><div class="line">    scale, <span class="comment"># scale gamma</span></div><div class="line">    variance_epsilon, <span class="comment"># epision</span></div><div class="line">    name=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
-<p>简单实现一个DNN分类手写体的样例，这里基于<code>tf.nn.moments</code>生成<code>mean</code>和<code>varianciences</code>两个tensor<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">from</span> tensorflow.examples.tutorials.mnist <span class="keyword">import</span> input_data</div><div class="line">mnist = input_data.read_data_sets(<span class="string">"MNIST_data"</span>, one_hot=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">y_ = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">10</span>]) <span class="comment"># one-hot 10-dimensional vector</span></div><div class="line"></div><div class="line">l_FC1 = <span class="number">512</span></div><div class="line">W_FC1 = tf.Variable(tf.truncated_normal(shape=[<span class="number">784</span>,l_FC1], stddev=<span class="number">0.1</span>))</div><div class="line">b_FC1 = tf.Variable(tf.constant(<span class="number">0.1</span>,shape=[l_FC1]))</div><div class="line"></div><div class="line"><span class="comment"># batch_norm_l1</span></div><div class="line">x_FC1 = tf.matmul(x, W_FC1)+b_FC1</div><div class="line">axis = list(range(len(x_FC1.get_shape()) - <span class="number">1</span>))</div><div class="line">mean_FC1,var_FC1 = tf.nn.moments(x_FC1, axis)</div><div class="line">gamma_FC1 = tf.Variable(tf.constant(<span class="number">0.1</span>, shape=mean_FC1.get_shape()))</div><div class="line">beta_FC1 = tf.Variable(tf.constant(<span class="number">0.1</span>, shape=mean_FC1.get_shape()))</div><div class="line">y_bn1 = tf.nn.batch_normalization(</div><div class="line">    x = x_FC1,</div><div class="line">    mean = mean_FC1,</div><div class="line">    variance = var_FC1,</div><div class="line">    offset = beta_FC1,</div><div class="line">    scale = gamma_FC1,</div><div class="line">    variance_epsilon = <span class="number">1e-5</span>,</div><div class="line">    name= <span class="string">'BN_FC1'</span>)</div><div class="line">y_FC1 = tf.nn.relu(y_bn1)</div><div class="line"></div><div class="line">...</div></pre></td></tr></table></figure></p>
-<p>测试部分单独开一个坑，见<a href="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">How to apply the batch-normalized net</a>.</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://proceedings.mlr.press/v37/ioffe15.html" target="_blank" rel="external">Ioffe, S. and Szegedy, C., 2015, June. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In International Conference on Machine Learning (pp. 448-456).</a><br>[2] <a href="http://blog.csdn.net/hjimce/article/details/50866313" target="_blank" rel="external">Batch Normalization 学习笔记</a><br>[3] <a href="https://www.jianshu.com/p/0312e04e4e83" target="_blank" rel="external">谈谈Tensorflow的Batch Normalization</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/23/batch-normalization-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -878,7 +836,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 2</li>
+        <li class="pagination-number">page 1 of 3</li>
     </ul>
 </div>
 
