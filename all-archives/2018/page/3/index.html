@@ -263,6 +263,76 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/14/install-and-configure-debian-test/">
+                            Install and configure debian test
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-14T16:58:02+08:00">
+	
+		    Jan 14, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了<code>sudo chown -R</code>，系统真的有提示我的。。。所以是我的锅。</p>
+<p>近期使用的系统是Ubuntu-16.10，考虑到<a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown-Spectre</a>漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！</p>
+<p>于是，一边填坑，一边记录一下步骤，有种预感最近还是会折腾系统。</p>
+<h3 id="debian系统安装"><a href="#debian系统安装" class="headerlink" title="debian系统安装"></a>debian系统安装</h3><p>debian-testing的iso下载路径，可以在USTC的<a href="https://mirrors.ustc.edu.cn" target="_blank" rel="external">镜像站</a>找，我尝试安装debian-9，可能刻录的时候有问题，无法安装，所以改用了<code>network install</code>的版本。使用了<a href="https://cn.ultraiso.net/" target="_blank" rel="external">UltraISO</a>烧写到U盘里，他们的试用版功能已经足够了。烧写好以后开始安装，按流程走就行。这里要注意的地方是： <strong>挂载/目录的分区需要格式化，否则无法安装</strong>。主要原因是与原有的<code>ubuntu</code>系统文件存在冲突。</p>
+<h4 id="多系统引导"><a href="#多系统引导" class="headerlink" title="多系统引导"></a>多系统引导</h4><p>Debian采用grub引导多系统，我是在<code>win10</code>基础上安装Linux系统的，并通过<code>debian</code>引导<code>windows</code>。在重装的过程中，碰到了windows分区没有被读出并列在引导列表中的情形，有一个简答的解决方法，更新一下grub配置, 即<code>update-grub</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo update-grub</div></pre></td></tr></table></figure></p>
+<p>一般更新后的列表后会出现对应<code>windows</code>的分区和条目。当然这个是运气，如果碰到其他问题，建议问谷歌。。。</p>
+<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><p>我选择了<code>gnome</code>桌面环境，系统本身还是很好看的，但也有一些bug，比如<code>gnome-terminal</code>就很丑。。。除此之外，debian比ubuntu预装的软件少很多，例如常用<code>sudo</code>，<code>locate</code>等都需要自己安装，对新手来说比较坑。下面说一下我的配置过程，</p>
+<h4 id="terminal-shortcuts"><a href="#terminal-shortcuts" class="headerlink" title="terminal shortcuts"></a>terminal shortcuts</h4><p>Ubuntu默认的<code>terminal</code>快捷键是<code>Ctrl+Alt+T</code>，debian是没有这个快捷键的，需要自己添加。具体的思路是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">system setting -&gt; devices -&gt; keyboard -&gt; &quot;+&quot; -&gt; add a new shortcut</div></pre></td></tr></table></figure></p>
+<p>Terminal默认的shell通常为<code>bash</code>，如果要更换为其他的，例如<a href="http://ohmyz.sh/" target="_blank" rel="external">zsh</a>, 则执行如下指令即可<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ chsh -s /usr/bin/zsh</div></pre></td></tr></table></figure></p>
+<p>此处会提示用户输入密码。</p>
+<h4 id="sudoer-及-sudo安装"><a href="#sudoer-及-sudo安装" class="headerlink" title="sudoer 及 sudo安装"></a>sudoer 及 sudo安装</h4><p>打开terminal以后，便可以安装和配置软件，此时需要<code>sudo</code>来临时使用<code>root</code>权限，debian默认不将用户添加到<code>sudoer</code>列表里，因此需要手动添加，步骤如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">首先按Ctrl+Alt+F3，进入console，以root身份登录，在安装系统时会要求设置root的密码</div><div class="line">进入以后，执行如下步骤</div><div class="line">1. 添加user到root的group里</div><div class="line"><span class="comment"># usermod -G root user</span></div><div class="line">2. 修改sudoers文件为可写</div><div class="line"><span class="comment"># chmod +w /etc/sudoers</span></div><div class="line">3. 编辑sudoers文件，添加用户</div><div class="line"><span class="comment"># vim /etc/sudoers</span></div><div class="line"><span class="comment"># user ALL=(ALL:ALL) ALL</span></div><div class="line">4. 修改sudoers文件为只读</div><div class="line"><span class="comment"># chmod -w /etc/sudoers</span></div></pre></td></tr></table></figure></p>
+<p>再按<code>Ctrl+Alt+F1</code>回到图形界面，此时便可以用root权限安装<code>sudo</code>，并进一步安装其他软件了。</p>
+<h4 id="系统语言及locale配置"><a href="#系统语言及locale配置" class="headerlink" title="系统语言及locale配置"></a>系统语言及locale配置</h4><p>由于要使用中文，我通常会用中文安装系统，再修改系统为英文。在Ubuntu中，直接在设置中设置语言即可;在debian中会更纯粹一些，即设置系统语言并调整<code>locale</code>的配置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/locale.gen</div><div class="line"><span class="comment"># 将需要的语言反注释掉，如 en-US.UTF-8</span></div></pre></td></tr></table></figure></p>
+<p>再在system setting中调整语言支持即可,或者执行如下指令进行设置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo dkpg-reconfigure locale</div></pre></td></tr></table></figure></p>
+<h4 id="时区调整"><a href="#时区调整" class="headerlink" title="时区调整"></a>时区调整</h4><p>改变语言为英文后，系统会采用UTC时间，此时会出现即使时区选择为<code>Asia/Shanghai</code>，依然与北京时间相差八个小时的情况，这也说明系统与Network Time没有同步，解决方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt install ntpdate</div><div class="line">$ sudo ntpdate time.windows.com</div></pre></td></tr></table></figure></p>
+<p>即将系统时间与<code>windows</code>提供的网络时间同步，这样便会根据系统时区找到对应的时间了。</p>
+<h4 id="Genome-窗口调整问题"><a href="#Genome-窗口调整问题" class="headerlink" title="Genome 窗口调整问题"></a>Genome 窗口调整问题</h4><p>gnome默认的窗口控件没有最大化和最小化，刚转过来会不习惯，解决方法是在<code>genome-tweak-tool</code>的<code>windows</code>选项中进行设置。</p>
+<h4 id="gnome-terminal-无法正常运行"><a href="#gnome-terminal-无法正常运行" class="headerlink" title="gnome-terminal 无法正常运行"></a>gnome-terminal 无法正常运行</h4><p>这个通常与调整了系统语言相关，即locale的语言设置与系统语言冲突，或未设置，导致genome-terminal无法初始化窗口，解决方法是，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># echo "LANG=zh-CN.UTF-8" &gt;&gt; /etc/locale.conf</span></div></pre></td></tr></table></figure></p>
+<h4 id="系统切换以后block-size的问题"><a href="#系统切换以后block-size的问题" class="headerlink" title="系统切换以后block size的问题"></a>系统切换以后block size的问题</h4><p>这个情况比较特殊，实验室可能只有我碰到过。在一块SSD上安装了windows和linux双系统，并且上一次运行的系统是windows, 则开机后因为<code>ext4</code>分区的block错误，导致无法引导进入Linux，目前有两个指令可以解决这一问题，并且要求有<strong>livecd USB</strong>，即能独立引导的最小化系统。可用的指令分别为<code>fsck</code>和<code>e2fsck</code>，二者的区别，我争取专门写一篇，目前还不太理解。</p>
+<p>首先用<code>sudo fdisk -l</code>查看文件格式为<code>ext3/ext4</code>的分区，着重关注包含有<code>Linux</code>系统的主分区，然后修复<code>block</code>的问题。</p>
+<ol>
+<li><p>fsck</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fsck -t ext4 /dev/sda1</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>e2fsck</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># e2fsck -b 32768 /dev/sda1</span></div><div class="line">-b 表示 superblock，具体的解释&lt;TODO&gt;...</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/14/install-and-configure-debian-test/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/12/capture-video-flow-from-firefox/">
                             Capture video flow from firefox
                         </a>
