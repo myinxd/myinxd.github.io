@@ -257,6 +257,94 @@
     <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/">
+                            SVM hyperplane visualization based on libsvm
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-06T09:24:10+08:00">
+	
+		    Mar 06, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Support vector machine (SVM), as a shallow model, has been widely applied for classification tasks. To solve the model, groups of super vectors (SVs) of corresponding classes are extracted, so as to calculate a hyperplane as the classification boarder.</p>
+<h3 id="A-brief-review"><a href="#A-brief-review" class="headerlink" title="A brief review"></a>A brief review</h3><p>Denote <script type="math/tex">\mathbf{x} = \{\mathbf{x_1},~\mathbf{x_2},~\dots,~\mathbf{x_N}\}</script> as the samples to be classified, and $y = \{y_1,~y_2,~\dots,~y_N\}$ are the corresponding labels. Take binary classification as an example, </p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
+\end{equation}</script><p>where <script type="math/tex">\mathbf{w}</script> are the coefficients w.r.t. features in <script type="math/tex">\mathbf{x}</script>, b is the bias.</p>
+<p>The the problem becomes an optimization task, where the object is,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{cases}
+    \min\limits_{w}\frac{\left \| \mathbf{w} \right \|}{2}, \\
+    \mathrm{s.t.}~y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
+\end{cases}
+\end{equation}</script><p>which shall be calculated with Lagrange equation,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(\mathbf{w}\cdot\mathbf{x_i}+b)-1\}}.
+\end{equation}</script><p>To save time, it usually selects a subset of <script type="math/tex">\mathbf{x}</script> namely super vectors to optimize above equation, instead of all of the samples. Those SVs are samples that stand close to the classification hyperplane, i.e., the boarders of different types. They are considered on behalf of the classes they belonging to.</p>
+<p>By solving the Lagrange equation, we obtain the <script type="math/tex">\mathbf{\lambda}</script>, as well as <script type="math/tex">\mathbf{w}</script> and $b$.</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{cases}
+    \mathbf{w} = \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \mathbf{x_i}}, \\
+    b = - \frac{1}{2}\mathbf{w}\cdot(\mathbf{x_{c1}}+\mathbf{x_{c2}}),
+\end{cases}
+\end{equation}</script><p>where <script type="math/tex">\mathbf{x_c1}</script> and <script type="math/tex">\mathbf{x_c2}</script> are arbitrary super vectors of class one and two, respectively.</p>
+<p>The dicision function based on those parameters are,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i (\mathbf{x_i}\cdot\mathbf{x_s}) + b} \right],
+\end{equation}</script><p>here <script type="math/tex">\rm{sgn}</script> is the sign function.</p>
+<p>For non-linear classification, which is more general than linear case, the dot product between <script type="math/tex">\mathbf{x_i}</script> and <script type="math/tex">\mathbf{x_s}</script> are replaced by non-linear kernel functions $\Phi(\cdot)$, i.e.,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \Phi(\mathbf{x_i},\mathbf{x_s})+b} \right].
+\end{equation}</script><h3 id="Realization-and-visualization"><a href="#Realization-and-visualization" class="headerlink" title="Realization and visualization"></a>Realization and visualization</h3><p>With the help of <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, it is easy to realize SVM based classification. What I want to say in this blog is how to visualize or replicate the prediction stage of the <code>svmtrain</code> function. Some comments are as follows,</p>
+<ul>
+<li>After training the SVM with <code>svmtrain</code>, a <code>model</code> will be generated;</li>
+<li>In the <code>model</code>, super vectors, parameters like weights and bias, are archived;</li>
+<li><strong>To save space, the support vectors are saved as sparse matrix.</strong></li>
+<li>For multi-class classification, it can be transformed to multiple binary-classification tasks.</li>
+</ul>
+<p>Here is a naive two-dimensional three-type classification example (<a href="https://github.com/myinxd/svm-toy/blob/master/demos/DrawSepLine3C.m" target="_blank" rel="external">code</a> is available). I divided three-class task into three binary classifications. The linear kernel function was used, thus the classification hyperplanes were also linear.</p>
+<p><center>
+<img src="https://github.com/myinxd/svm-toy/raw/master/images/fig_3c.png?raw=true" height="280" width="600">
+</center><br>In the right figure, only support vector points are plotted. It can be found that the SVs are those points stand at the boarder between different categories.</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
         <div class="postShorten-wrap">
             
@@ -356,7 +444,24 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
