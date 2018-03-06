@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives: 2018/3 - Jason&#39;s blog</title>
+    <title>Tag: matlab - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/03/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-tags/matlab/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -344,52 +344,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/04/a-numpy-matrix-copy-problem/">
-                            Nupy矩阵的复制问题
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-04T10:26:23+08:00">
-	
-		    Mar 04, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用<code>copy</code>方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而<code>copy</code>则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。</p>
-<p>下面看一个例子,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">x = np.arange(<span class="number">9.</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="comment"># copy</span></div><div class="line">y = x.copy()</div><div class="line">y[y&gt;=<span class="number">5</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 赋值法</span></div><div class="line">z = x</div><div class="line">z[z&gt;=<span class="number">5</span>] = <span class="number">0</span></div></pre></td></tr></table></figure></p>
-<p>其输出结果如下,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">6</span>]: y</div><div class="line">Out[<span class="number">6</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">7</span>]: x</div><div class="line">Out[<span class="number">7</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">       [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line"></div><div class="line">In [<span class="number">8</span>]: z</div><div class="line">Out[<span class="number">8</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">9</span>]: x</div><div class="line">Out[<span class="number">9</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div></pre></td></tr></table></figure></p>
-<p>可以看到，采用<code>copy</code>后，对<code>y</code>的操作不会影响到原矩阵<code>x</code>，而采用直接赋值后，对<code>z</code>的操作对<code>x</code>产生了影响。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/04/a-numpy-matrix-copy-problem/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -399,7 +353,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
 </div>
 
 </section>
-
 
 
                 <footer id="footer" class="main-content-wrap">
