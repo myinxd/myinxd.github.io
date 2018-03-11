@@ -6,23 +6,27 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives: 2018/3 - Jason&#39;s blog</title>
+    <title>二分类及AUC的理解 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Valar morghulis, valar dohaeris.">
+    <meta name="description" content="在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (s">
+<meta name="keywords" content="machine-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/03/index.html">
+<meta property="og:title" content="二分类及AUC的理解">
+<meta property="og:url" content="http://www.mazhixian.me/2018/03/11/understanding-of-auc-curve/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:description" content="在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (s">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_roc.png?raw=true">
+<meta property="og:updated_time" content="2018-03-11T11:27:50.522Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jason&#39;s blog">
-<meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
+<meta name="twitter:title" content="二分类及AUC的理解">
+<meta name="twitter:description" content="在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (s">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_roc.png?raw=true">
     
     
         
@@ -72,7 +76,7 @@
         
     
 
-<header id="header" data-behavior="1">
+<header id="header" data-behavior="4">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a class="header-title-link" href="/ ">Jason&#39;s blog</a>
@@ -96,7 +100,7 @@
         
     
 
-<nav id="sidebar" data-behavior="1">
+<nav id="sidebar" data-behavior="4">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -249,26 +253,22 @@
 </nav>
 
             
-            <div id="main" data-behavior="1"
+            <div id="main" data-behavior="4"
                  class="
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/11/understanding-of-auc-curve/">
-                            二分类及AUC的理解
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            二分类及AUC的理解
+        </h1>
+    
+    
+        <div class="post-meta">
     <time itemprop="datePublished" datetime="2018-03-11T13:36:59+08:00">
 	
 		    Mar 11, 2018
@@ -277,10 +277,12 @@
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (specificity)等；最后，讨论对ROC曲线及其衍生的AUC指标的理解，并给出样例。</p>
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (specificity)等；最后，讨论对ROC曲线及其衍生的AUC指标的理解，并给出样例。</p>
 <h4 id="二分类标签"><a href="#二分类标签" class="headerlink" title="二分类标签"></a>二分类标签</h4><p>应用于二分类的样本通常用正例 (Positive, P) 和反例 (Negative, N) 进行标注，作为实际标签。而经过分类器估计后的输出，根据其结果的正确与否，划分为真例 (True, T) 和假 (False)两个集合。因此，需要注意的是<code>T</code>和<code>F</code>两个集合均包含正例和反例样本。</p>
 <p>根据实际标签和预测结果进行两两组合，得到四个子集，分别为真正率 (True positive, TP)、真反例 (True negative, TN)、假正率 (False positive, FP) 和假反例 (False negative, FN)，如下表所示。</p>
 <div class="table-container">
@@ -372,166 +374,87 @@
 <p>在我的notebook中，分别给出了我的实现和sklearn.metrics.auc的实现，二者结果相同。最后吐个槽，因为haroopad的bug，这篇是我重新写的！！！</p>
 <h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] 周志华，机器学习，2017 清华大学出版社<br>[2] <a href="https://www.zhihu.com/question/39840928" target="_blank" rel="external">机器学习和统计里面的auc怎么理解？</a><br>[3] <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html" target="_blank" rel="external">sklearn.metrics.auc</a></p>
 
-                    
-                        
+            
 
-                    
-                    
-                        <p>
-                            <a href="/2018/03/11/understanding-of-auc-curve/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
         </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/">
-                            SVM hyperplane visualization based on libsvm
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-06T09:24:10+08:00">
-	
-		    Mar 06, 2018
-    	
-    </time>
-    
-</div>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/machine-learning/">machine-learning</a>
 
             </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Support vector machine (SVM), as a shallow model, has been widely applied for classification tasks. To solve the model, groups of super vectors (SVs) of corresponding classes are extracted, so as to calculate a hyperplane as the classification boarder.</p>
-<h3 id="A-brief-review"><a href="#A-brief-review" class="headerlink" title="A brief review"></a>A brief review</h3><p>Denote <script type="math/tex">\mathbf{x} = \{\mathbf{x_1},~\mathbf{x_2},~\dots,~\mathbf{x_N}\}</script> as the samples to be classified, and $y = \{y_1,~y_2,~\dots,~y_N\}$ are the corresponding labels. Take binary classification as an example, </p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
-\end{equation}</script><p>where <script type="math/tex">\mathbf{w}</script> are the coefficients w.r.t. features in <script type="math/tex">\mathbf{x}</script>, b is the bias.</p>
-<p>The the problem becomes an optimization task, where the object is,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{cases}
-    \min\limits_{w}\frac{\left \| \mathbf{w} \right \|}{2}, \\
-    \mathrm{s.t.}~y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
-\end{cases}
-\end{equation}</script><p>which shall be calculated with Lagrange equation,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(\mathbf{w}\cdot\mathbf{x_i}+b)-1\}}.
-\end{equation}</script><p>To save time, it usually selects a subset of <script type="math/tex">\mathbf{x}</script> namely super vectors to optimize above equation, instead of all of the samples. Those SVs are samples that stand close to the classification hyperplane, i.e., the boarders of different types. They are considered on behalf of the classes they belonging to.</p>
-<p>By solving the Lagrange equation, we obtain the <script type="math/tex">\mathbf{\lambda}</script>, as well as <script type="math/tex">\mathbf{w}</script> and $b$.</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{cases}
-    \mathbf{w} = \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \mathbf{x_i}}, \\
-    b = - \frac{1}{2}\mathbf{w}\cdot(\mathbf{x_{c1}}+\mathbf{x_{c2}}),
-\end{cases}
-\end{equation}</script><p>where <script type="math/tex">\mathbf{x_c1}</script> and <script type="math/tex">\mathbf{x_c2}</script> are arbitrary super vectors of class one and two, respectively.</p>
-<p>The dicision function based on those parameters are,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i (\mathbf{x_i}\cdot\mathbf{x_s}) + b} \right],
-\end{equation}</script><p>here <script type="math/tex">\rm{sgn}</script> is the sign function.</p>
-<p>For non-linear classification, which is more general than linear case, the dot product between <script type="math/tex">\mathbf{x_i}</script> and <script type="math/tex">\mathbf{x_s}</script> are replaced by non-linear kernel functions $\Phi(\cdot)$, i.e.,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \Phi(\mathbf{x_i},\mathbf{x_s})+b} \right].
-\end{equation}</script><h3 id="Realization-and-visualization"><a href="#Realization-and-visualization" class="headerlink" title="Realization and visualization"></a>Realization and visualization</h3><p>With the help of <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, it is easy to realize SVM based classification. What I want to say in this blog is how to visualize or replicate the prediction stage of the <code>svmtrain</code> function. Some comments are as follows,</p>
-<ul>
-<li>After training the SVM with <code>svmtrain</code>, a <code>model</code> will be generated;</li>
-<li>In the <code>model</code>, super vectors, parameters like weights and bias, are archived;</li>
-<li><strong>To save space, the support vectors are saved as sparse matrix.</strong></li>
-<li>For multi-class classification, it can be transformed to multiple binary-classification tasks.</li>
-</ul>
-<p>Here is a naive two-dimensional three-type classification example (<a href="https://github.com/myinxd/svm-toy/blob/master/demos/DrawSepLine3C.m" target="_blank" rel="external">code</a> is available). I divided three-class task into three binary classifications. The linear kernel function was used, thus the classification hyperplanes were also linear.</p>
-<p><center>
-<img src="https://github.com/myinxd/svm-toy/raw/master/images/fig_3c.png?raw=true" height="280" width="600">
-</center><br>In the right figure, only support vector points are plotted. It can be found that the SVs are those points stand at the boarder between different categories.</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/04/a-numpy-matrix-copy-problem/">
-                            Nupy矩阵的复制问题
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-04T10:26:23+08:00">
-	
-		    Mar 04, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用<code>copy</code>方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而<code>copy</code>则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。</p>
-<p>下面看一个例子,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">x = np.arange(<span class="number">9.</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="comment"># copy</span></div><div class="line">y = x.copy()</div><div class="line">y[y&gt;=<span class="number">5</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 赋值法</span></div><div class="line">z = x</div><div class="line">z[z&gt;=<span class="number">5</span>] = <span class="number">0</span></div></pre></td></tr></table></figure></p>
-<p>其输出结果如下,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">6</span>]: y</div><div class="line">Out[<span class="number">6</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">7</span>]: x</div><div class="line">Out[<span class="number">7</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">       [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line"></div><div class="line">In [<span class="number">8</span>]: z</div><div class="line">Out[<span class="number">8</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">9</span>]: x</div><div class="line">Out[<span class="number">9</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div></pre></td></tr></table></figure></p>
-<p>可以看到，采用<code>copy</code>后，对<code>y</code>的操作不会影响到原矩阵<code>x</code>，而采用直接赋值后，对<code>z</code>的操作对<code>x</code>产生了影响。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/04/a-numpy-matrix-copy-problem/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
         
         
-        <li class="pagination-number">page 1 of 1</li>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="NEXT: SVM hyperplane visualization based on libsvm">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/11/understanding-of-auc-curve/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
 
 
 
@@ -542,6 +465,81 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="NEXT: SVM hyperplane visualization based on libsvm">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/11/understanding-of-auc-curve/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/11/understanding-of-auc-curve/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
             
         </div>
         
@@ -587,24 +585,26 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
+<!--SCRIPTS END-->
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2018/03/11/understanding-of-auc-curve/';
+                 
+                    this.page.identifier = '2018/03/11/understanding-of-auc-curve/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
 
 
 
