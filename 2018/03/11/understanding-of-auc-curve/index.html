@@ -22,7 +22,7 @@
 <meta property="og:description" content="在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (s">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_roc.png?raw=true">
-<meta property="og:updated_time" content="2018-03-11T11:27:50.522Z">
+<meta property="og:updated_time" content="2018-03-11T11:38:24.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二分类及AUC的理解">
 <meta name="twitter:description" content="在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (s">
@@ -283,7 +283,7 @@
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
             <p>在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (specificity)等；最后，讨论对ROC曲线及其衍生的AUC指标的理解，并给出样例。</p>
-<h4 id="二分类标签"><a href="#二分类标签" class="headerlink" title="二分类标签"></a>二分类标签</h4><p>应用于二分类的样本通常用正例 (Positive, P) 和反例 (Negative, N) 进行标注，作为实际标签。而经过分类器估计后的输出，根据其结果的正确与否，划分为真例 (True, T) 和假 (False)两个集合。因此，需要注意的是<code>T</code>和<code>F</code>两个集合均包含正例和反例样本。</p>
+<h4 id="二分类标签"><a href="#二分类标签" class="headerlink" title="二分类标签"></a>二分类标签</h4><p>应用于二分类的样本通常用正例 (Positive, P) 和反例 (Negative, N) 进行标注，作为实际标签。而经过分类器估计后的输出，根据其结果的正确与否，划分为真例 (True, T) 和假 (False, F)两个集合。因此，需要注意的是<code>T</code>和<code>F</code>两个集合均包含正例和反例样本。</p>
 <p>根据实际标签和预测结果进行两两组合，得到四个子集，分别为真正率 (True positive, TP)、真反例 (True negative, TN)、假正率 (False positive, FP) 和假反例 (False negative, FN)，如下表所示。</p>
 <div class="table-container">
 <table>
@@ -311,7 +311,7 @@
 <p>通过对这四个子集样本的组合，可以得到一些评估指标，用于评价分类器的表现。这里我想强调一下对FN和FP的理解，其中FN指的是<em>实际为反例，但被分类器判断为正例</em>，而FP指的是<em>实际为正例，但被分类器判断为反例</em>，二者的合集为<code>F</code>。</p>
 <h4 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h4><p>下面讨论常用的二分类器的评估指标 (index or measure)。定义<script type="math/tex">S</script>为所有的样本数量，<script type="math/tex">S_{P}</script>和<script type="math/tex">S_{N}</script>对应实际标注为正例和反例的样本数；<script type="math/tex">S_{T}</script>和<script type="math/tex">S_{F}</script>表示分类器估计的标签中正确和错误的样本数。相应的，定义<script type="math/tex">S_{\mathrm{TP}}</script>、<script type="math/tex">S_{\mathrm{TN}}</script>、<script type="math/tex">S_{\mathrm{FP}}</script>和<script type="math/tex">S_{\mathrm{FN}}</script>为TP、TN、FP、FN样本的数目。因此，定义如下的评估指标</p>
 <ul>
-<li><p>准确率 (accuracy)<br>准确率为分类器预测结果中判断正确的样本占所有样本的比例，即<script type="math/tex">\mathrm{acc} = S_{T}/S = (S_{\mathrm{TP}} + \mathrm{TN}) / S</script>.</p>
+<li><p>准确率 (accuracy)<br>准确率为分类器预测结果中判断正确的样本占所有样本的比例，即<script type="math/tex">\mathrm{acc} = S_{T}/S = (S_{\mathrm{TP}} + S_\mathrm{TN}) / S</script>.</p>
 </li>
 <li><p>精确度 (precision)<br>精确度又称为查准率，衡量分类器预测为正的样本中实际为正例的样本比例，即 <script type="math/tex">\mathrm{pre} = S_{\mathrm{TP}} / (S_{\mathrm{TP}} + S_{\mathrm{FP}})</script>.</p>
 </li>
