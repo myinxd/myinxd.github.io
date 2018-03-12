@@ -780,7 +780,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
             </div>
             
                 <div class="postShorten-content" itemprop="articleBody">
-                    <p>ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了<a href="https://www.amazon.cn/dp/B06X8Z4BS9/" target="_blank" rel="external">TensorFlow 实战</a>的6.4节。ResNet的结构能加速超深射精网络的训练，能有效避免过拟合，而且推广性非常好。</p>
+                    <p>ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了<a href="https://www.amazon.cn/dp/B06X8Z4BS9/" target="_blank" rel="external">TensorFlow 实战</a>的6.4节。ResNet的结构能加速超深神经网络的训练，能有效避免过拟合，而且推广性非常好。</p>
 <p>深度神经网络存在<code>Degradation</code>的问题，即随着网络层数的增加，其准确率会从逐渐提升到饱和，进而下降。这一问题在我们近期的工作也出现了，我们在增加了一层全连接后，网络的准确率反而下降了。为了解决这一问题，ResNet提出了一种新的网络思路，<strong>即允许原始输入信息直接传输到后面的层中</strong>。假定某段网络的输入是<script type="math/tex">\mathrm{x}</script>，期望输出是<script type="math/tex">H(\mathrm{x})</script>，如果直接将<script type="math/tex">\mathrm{x}</script>传到输出作为初始结果，那么目标函数变为</p>
 <script type="math/tex; mode=display">
 F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}</script><p>如下图所示为一个ResNet的残差学习单元，即将学习目标从<script type="math/tex">H(\mathrm{x})</script>改为期望与输入的残差。这种结构也被称为<code>shortcut</code>或<code>skip connections</code>.</p>
