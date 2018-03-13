@@ -6,23 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Tag: machine-learning - Jason&#39;s blog</title>
+    <title>Expectation maximization algorithm - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Valar morghulis, valar dohaeris.">
+    <meta name="description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
+<meta name="keywords" content="machine-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-tags/machine-learning/index.html">
+<meta property="og:title" content="Expectation maximization algorithm">
+<meta property="og:url" content="http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Valar morghulis, valar dohaeris.">
+<meta property="og:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-03-13T16:52:38.835Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jason&#39;s blog">
-<meta name="twitter:description" content="Valar morghulis, valar dohaeris.">
+<meta name="twitter:title" content="Expectation maximization algorithm">
+<meta name="twitter:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
     
     
         
@@ -72,7 +74,7 @@
         
     
 
-<header id="header" data-behavior="1">
+<header id="header" data-behavior="4">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a class="header-title-link" href="/ ">Jason&#39;s blog</a>
@@ -96,7 +98,7 @@
         
     
 
-<nav id="sidebar" data-behavior="1">
+<nav id="sidebar" data-behavior="4">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -249,26 +251,22 @@
 </nav>
 
             
-            <div id="main" data-behavior="1"
+            <div id="main" data-behavior="4"
                  class="
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/13/expectation-maximization-algorithm/">
-                            Expectation maximization algorithm
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Expectation maximization algorithm
+        </h1>
+    
+    
+        <div class="post-meta">
     <time itemprop="datePublished" datetime="2018-03-13T15:16:35+08:00">
 	
 		    Mar 13, 2018
@@ -277,10 +275,12 @@
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE).</p>
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE).</p>
 <h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>定义<script type="math/tex">Y</script>为观测随机变量，<script type="math/tex">Z</script>为隐含随机变量，则<script type="math/tex">Y</script>和<script type="math/tex">Z</script>一起构成完全数据 (complete-data)。假设待估计的概率模型参数为<script type="math/tex">\theta</script>，则观测数据的概率分布为<script type="math/tex">P(Y|\theta)</script>, 即为其似然函数，对应的对数似然函数为<script type="math/tex">L(\theta) = \log{P(Y|\theta)}</script>. 设<script type="math/tex">Y</script>和<script type="math/tex">Z</script>Z的联合概率分布为<script type="math/tex">P(Y,Z|\theta)</script>，那么完全数据的对数似然函数为<script type="math/tex">\log{P(Y,Z|\theta)}</script>.</p>
 <p>EM算法的目的就是求解参数<script type="math/tex">\theta</script>，极大化观测量的对数似然函数<script type="math/tex">L(\theta)</script>。因为包含隐含量，所以采用迭代的方法，分为E (期望) 和M (极大化)两步，求解算法如下。</p>
 <ol>
@@ -336,165 +336,88 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 </ul>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>李航，统计学系方法，2012 清华大学出版社</p>
 
-                    
-                        
+            
 
-                    
-                    
-                        <p>
-                            <a href="/2018/03/13/expectation-maximization-algorithm/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
         </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/11/understanding-of-auc-curve/">
-                            二分类及AUC的理解
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-11T13:36:59+08:00">
-	
-		    Mar 11, 2018
-    	
-    </time>
-    
-</div>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/machine-learning/">machine-learning</a>
 
             </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="NEXT: 二分类及AUC的理解">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
             
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (specificity)等；最后，讨论对ROC曲线及其衍生的AUC指标的理解，并给出样例。</p>
-<h4 id="二分类标签"><a href="#二分类标签" class="headerlink" title="二分类标签"></a>二分类标签</h4><p>应用于二分类的样本通常用正例 (Positive, P) 和反例 (Negative, N) 进行标注，作为实际标签。而经过分类器估计后的输出，根据其结果的正确与否，划分为真例 (True, T) 和假 (False, F)两个集合。因此，需要注意的是<code>T</code>和<code>F</code>两个集合均包含正例和反例样本。</p>
-<p>根据实际标签和预测结果进行两两组合，得到四个子集，分别为真正率 (True positive, TP)、真反例 (True negative, TN)、假正率 (False positive, FP) 和假反例 (False negative, FN)，如下表所示。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">预测正例</th>
-<th style="text-align:center">预测反例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">实际正例</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FN</td>
-</tr>
-<tr>
-<td style="text-align:center">实际反例</td>
-<td style="text-align:center">FP</td>
-<td style="text-align:center">TN</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>通过对这四个子集样本的组合，可以得到一些评估指标，用于评价分类器的表现。这里我想强调一下对FN和FP的理解，其中FN指的是<em>实际为反例，但被分类器判断为正例</em>，而FP指的是<em>实际为正例，但被分类器判断为反例</em>，二者的合集为<code>F</code>。</p>
-<h4 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h4><p>下面讨论常用的二分类器的评估指标 (index or measure)。定义<script type="math/tex">S</script>为所有的样本数量，<script type="math/tex">S_{P}</script>和<script type="math/tex">S_{N}</script>对应实际标注为正例和反例的样本数；<script type="math/tex">S_{T}</script>和<script type="math/tex">S_{F}</script>表示分类器估计的标签中正确和错误的样本数。相应的，定义<script type="math/tex">S_{\mathrm{TP}}</script>、<script type="math/tex">S_{\mathrm{TN}}</script>、<script type="math/tex">S_{\mathrm{FP}}</script>和<script type="math/tex">S_{\mathrm{FN}}</script>为TP、TN、FP、FN样本的数目。因此，定义如下的评估指标</p>
-<ul>
-<li><p>准确率 (accuracy)<br>准确率为分类器预测结果中判断正确的样本占所有样本的比例，即<script type="math/tex">\mathrm{acc} = S_{T}/S = (S_{\mathrm{TP}} + S_\mathrm{TN}) / S</script>.</p>
-</li>
-<li><p>精确度 (precision)<br>精确度又称为查准率，衡量分类器预测为正的样本中实际为正例的样本比例，即 <script type="math/tex">\mathrm{pre} = S_{\mathrm{TP}} / (S_{\mathrm{TP}} + S_{\mathrm{FP}})</script>.</p>
-</li>
-<li><p>敏感性 (sensitivity)<br>敏感性又称为召回率或真正率，衡量实际为正例的样本经过分类器预测后标记正确的样本所占比例，即<script type="math/tex">\mathrm{sen} = S_{\mathrm{TP}} / (S_{\mathrm{TP}} + S_{\mathrm{FN}})</script>.</p>
-</li>
-<li><p>F1-score<br>F1-score是对精确度和敏感性的结合，因为这两者本质上是矛盾的，通常敏感性越高则精确度会较低。F1-score的表达式为, <script type="math/tex">\mathrm{F1} = (2 \times \mathrm{pre} \times \mathrm{sen}) / (\mathrm{pre} + \mathrm{sen})</script>.</p>
-</li>
-<li><p>特异性 (specificity)<br>特异性是实际标注为反例的样本经过分类器预测正确的样本的比例，即<script type="math/tex">\mathrm{spe} = S_\mathrm{TN} / (S_\mathrm{FN} + S_\mathrm{TN})</script>.</p>
-</li>
-<li><p>假正率 (fasle positive rate)<br>假正率表示分类器预测为反例的样本中实际为反例的样本的比例，即<script type="math/tex">\mathrm{fpr} = S_\mathrm{TN} / (S_\mathrm{FP} + S_\mathrm{TN})</script>.</p>
-</li>
-</ul>
-<p>对于这些评估指标，我的理解见下表，</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">评估指标</th>
-<th style="text-align:center">意义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">准确率</td>
-<td style="text-align:center">衡量了分类器总体上的准确性，不考虑样本的实际类别.</td>
-</tr>
-<tr>
-<td style="text-align:center">精确度</td>
-<td style="text-align:center">衡量了正例的分类准确性，通常比准确率要高.</td>
-</tr>
-<tr>
-<td style="text-align:center">敏感性</td>
-<td style="text-align:center">衡量了分类器对正例的泛化能力，在异常检测中应用较多.</td>
-</tr>
-<tr>
-<td style="text-align:center">特异性</td>
-<td style="text-align:center">衡量了分类器对反例的分类准确性.</td>
-</tr>
-<tr>
-<td style="text-align:center">假正率</td>
-<td style="text-align:center">与敏感性类似，衡量分类器对反例的泛化能力.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h4 id="ROC和AUC"><a href="#ROC和AUC" class="headerlink" title="ROC和AUC"></a>ROC和AUC</h4><p>以上的评估指标均要求分类器的输出为确定的标签，而分类器通常输出的是样本被判断为正例的概率，为了得到标签，需要设定概率的门限，即大于该门限的概率对应的样本判断为正例，否则为反例。门限的设定，影响分类器的泛化能力。</p>
-<p>因此，人们提出了receiver operating characteristic (ROC) 的概念，最早出现二战时检测敌机的雷达分析技术。在信号处理中，有这样一组指标，即捕获率 (catch rate) 和追踪率 (follow rate)，前者衡量了系统对于目标信号的捕获能力，后者衡量系统在捕获信号后继续追踪的能力。这两个指标，对应到二分类问题中就是敏感性或真正率 (truu positive rate, TPR)和假正率。</p>
-<p>通过TPR和FRP即可求解ROC曲线。对分类器输出的样本概率进行排序，设定概率门限<code>thrs</code>，将高于该门限的样本判断为正例，反之判断为反例。而后，与实际的样本标签进行比较，计算对应该门限的TPR和FPR。记录不同门限处的TPR和FRP，则得到了该分类器的ROC曲线。</p>
-<p>如下为ROC曲线的求解算法，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Step1. input labels and probs estimated by classifier;</div><div class="line">Step2. set thresholding step</div><div class="line">Step3. for thrs = 1.0 : step : 0.0</div><div class="line">		labels_est = zeros(size(labels))</div><div class="line">        labels_Est[probs &gt; thrs] = 1</div><div class="line">        calculate fpr and tpr w.r.t. thrs</div><div class="line">Step4. Draw the ROC curve</div></pre></td></tr></table></figure></p>
-<p>针对不同的分类器，若某个分类器的ROC曲线整体在其他分类器的上方，则可认为该分类器最优。但往往存在ROC曲线交叉的情形，此时通过计算ROC曲线下方的面积，即AUC (area under curve)值来进行对比，AUC数值越大，分类器的分类效果越好，泛化能力越强。</p>
-<p>给出一个ROC曲线和AUC的求解样例，具体的代码实现见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-roc-auc.ipynb" target="_blank" rel="external">这里</a>.</p>
-<p>首先，设样本的标签和二分类器输出的概率为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">labels = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]</div><div class="line">probs = [<span class="number">0.5</span>, <span class="number">0.6</span>, <span class="number">0.2</span>, <span class="number">0.9</span>, <span class="number">0.5</span>, <span class="number">0.3</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, <span class="number">0.3</span>, <span class="number">0.9</span>, <span class="number">0.5</span>]</div></pre></td></tr></table></figure></p>
-<p>设定thrs的步长为0.1，则求解的TPR和FPR分别为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tpr = [<span class="number">0.0</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.6</span>, <span class="number">0.8</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>]</div><div class="line">fpr = [<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.33</span>, <span class="number">0.33</span>, <span class="number">0.67</span>, <span class="number">0.83</span>, <span class="number">1.0</span>]</div></pre></td></tr></table></figure></p>
-<p>最后，求解得到auc=0.967. 下图为该样例的ROC曲线，</p>
-<center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_roc.png?raw=true" height="250" width="360">
-</center>
-
-<p><a href="https://www.scikit-learn.org" target="_blank" rel="external">scikit-learn</a>也提供了求解auc的函数，其用法如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> metrics</div><div class="line">fpr, tpr, thresholds = metrics.roc_curve(labels+<span class="number">1</span>, p, pos_label=<span class="number">2</span>)</div><div class="line">auc = metrics.auc(fpr, tpr)</div></pre></td></tr></table></figure></p>
-<p>在我的notebook中，分别给出了我的实现和sklearn.metrics.auc的实现，二者结果相同。最后吐个槽，因为haroopad的bug，这篇是我重新写的！！！</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] 周志华，机器学习，2017 清华大学出版社<br>[2] <a href="https://www.zhihu.com/question/39840928" target="_blank" rel="external">机器学习和统计里面的auc怎么理解？</a><br>[3] <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html" target="_blank" rel="external">sklearn.metrics.auc</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/11/understanding-of-auc-curve/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
             
-        </div>
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
         
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
         
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
         
-        <li class="pagination-number">page 1 of 1</li>
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
 
 
                 <footer id="footer" class="main-content-wrap">
@@ -504,6 +427,81 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="NEXT: 二分类及AUC的理解">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
             
         </div>
         
@@ -549,7 +547,25 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/';
+                 
+                    this.page.identifier = '2018/03/13/expectation-maximization-algorithm/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -567,6 +583,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+    
 
 
 

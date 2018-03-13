@@ -263,6 +263,103 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/13/expectation-maximization-algorithm/">
+                            Expectation maximization algorithm
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-13T15:16:35+08:00">
+	
+		    Mar 13, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE).</p>
+<h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>定义<script type="math/tex">Y</script>为观测随机变量，<script type="math/tex">Z</script>为隐含随机变量，则<script type="math/tex">Y</script>和<script type="math/tex">Z</script>一起构成完全数据 (complete-data)。假设待估计的概率模型参数为<script type="math/tex">\theta</script>，则观测数据的概率分布为<script type="math/tex">P(Y|\theta)</script>, 即为其似然函数，对应的对数似然函数为<script type="math/tex">L(\theta) = \log{P(Y|\theta)}</script>. 设<script type="math/tex">Y</script>和<script type="math/tex">Z</script>Z的联合概率分布为<script type="math/tex">P(Y,Z|\theta)</script>，那么完全数据的对数似然函数为<script type="math/tex">\log{P(Y,Z|\theta)}</script>.</p>
+<p>EM算法的目的就是求解参数<script type="math/tex">\theta</script>，极大化观测量的对数似然函数<script type="math/tex">L(\theta)</script>。因为包含隐含量，所以采用迭代的方法，分为E (期望) 和M (极大化)两步，求解算法如下。</p>
+<ol>
+<li><p>初始化参数<script type="math/tex">\theta^{(0)}</script>;</p>
+</li>
+<li><p>E step: 记<script type="math/tex">\theta^{(i)}</script>为第<script type="math/tex">i</script>次迭代参数<script type="math/tex">\theta</script>的估计值，则第<script type="math/tex">i+1</script>次迭代，计算如下期望.</p>
+<script type="math/tex; mode=display">
+\begin{align}
+Q(\theta,\theta^{(i)}) &= E_{z}[\log{P(Y,Z|\theta)}|Y,\theta^{(i)}] \notag \\
+&=\sum_{z}{\log{P(Y,Z|\theta)P(Z|Y,\theta^{(i)})}},
+\end{align}</script><p>其中<script type="math/tex">P(Z|Y,\theta^{(i)})</script>是在给定观测数据<script type="math/tex">Y</script>和当前估计的参数$\theta^{(i)}$下隐含变量<script type="math/tex">Z</script>的条件概率分布；<script type="math/tex">Q(\theta,\theta^{(i)})</script>定义为完全数据的对数似然函数在给定观测数据和当前参数下对隐含数据<script type="math/tex">Z</script>的条件概率分布<script type="math/tex">P(Z|Y,\theta^{(i)})</script>的期望，即<script type="math/tex">\log{P(Y|\theta)}</script>。</p>
+</li>
+<li><p>M step: 求使<script type="math/tex">Q(\theta, \theta^{(i)})</script>极大化的参数<script type="math/tex">\theta</script>，以确定第<script type="math/tex">i+1</script>次迭代的参数的估计值<script type="math/tex">\theta^{(i+1)}</script>, 即计算</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\theta^{(i+1)} = \mathrm{arg}\max\limits_{\theta}{Q(\theta,\theta^{(i)})}
+\end{align}</script></li>
+<li><p>重复E和M两步，直到收敛. </p>
+</li>
+</ol>
+<p>李航老师也强调了一点：<strong>EM算法与初值的选择有关，选择不同的初值可能得到不同的参数估计值。</strong> 我在这个<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-expectation-maximum-three-coiins.ipynb" target="_blank" rel="external">notebook</a>里给了一个样例，即“三硬币模型”。</p>
+<h3 id="高斯混合模型的求解"><a href="#高斯混合模型的求解" class="headerlink" title="高斯混合模型的求解"></a>高斯混合模型的求解</h3><p>EM算法最经典的应用就是高斯混合模型的参数估计，该模型是语音信号处理的基础模型之一，其定义如下，</p>
+<script type="math/tex; mode=display">
+\begin{align}
+P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta_k)}}
+\end{align}</script><p>其中，<script type="math/tex">c_k</script>是系数，<script type="math/tex">c_k\geq0</script>, <script type="math/tex">\sum_{k=1}^{K}{c_k=1}</script>; <script type="math/tex">\phi(\mathbf{y}|\mathbf{\theta_k})</script>是高斯分布，<script type="math/tex">\mathbf{\theta_k} = (\mathbf{\mu_k},\Sigma_k^2)</script>,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\phi(\mathbf{y}|\mathbf{\theta_k}) = \frac{1}{(2\pi)^{M/2}|\Sigma_k|}{-\exp{(\mathbf{y}-\mathbf{\mu_k})^{T}{\Sigma_{k}}^{-1}(\mathbf{y}-\mathbf{\mu_k})}}.
+\end{equation}</script><p>在GMM模型中有，</p>
+<ul>
+<li>观测变量：<script type="math/tex">\mathbf{Y}</script>，</li>
+<li>隐含变量：<script type="math/tex">\gamma_k\in{0,1}, k=1,~2,~,\cdots,~K</script>，表示<script type="math/tex">\mathbf{y}</script>是否来自第<script type="math/tex">k</script>个高斯分量</li>
+<li>模型参数：<script type="math/tex">\mathbf{\theta} = {c_k, \mathbf{\theta_k}}, k=1,~2,~,\cdots,~K</script>.</li>
+</ul>
+<p>详细的推导见《统计学习方法》，这里给出GMM模型的E和M步骤，python的notebook见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-expectation-maximum-three-coiins.ipynb" target="_blank" rel="external">这里</a>.<br>设观测数据<script type="math/tex">\mathbf{Y} = \{\mathbf{y1},~\mathbf{y2},~\cdots,~\mathbf{y_N}\}</script></p>
+<ul>
+<li><p>E step</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\hat{\gamma_{jk}} = \frac{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}{\sum_{k=1}^{K}{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}} 
+\end{align}</script><p>其中<script type="math/tex">j=1,~2,~\cdots,~,N, k=1,~2,~\cdots,~K</script>.</p>
+</li>
+<li><p>M step</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\hat{\mu}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}y_{jm}}/{\sum^{N}_{j=1}{\hat{\gamma}_{jk}}} 
+\notag \\
+\hat{\sigma}^{2}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}(y_{jm}-\mu_{km})^2}/{\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} \notag \\
+\hat{c}_{k} &= {\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} / N
+\end{align}</script><p>其中<script type="math/tex">m=1,~2,~\cdots,~,M, k=1,~2,~\cdots,~K</script>.</p>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>李航，统计学系方法，2012 清华大学出版社</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/13/expectation-maximization-algorithm/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/11/understanding-of-auc-curve/">
                             二分类及AUC的理解
                         </a>
