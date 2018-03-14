@@ -21,10 +21,12 @@
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-13T16:52:38.835Z">
+<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true">
+<meta property="og:updated_time" content="2018-03-14T14:56:01.665Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Expectation maximization algorithm">
 <meta name="twitter:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true">
     
     
         
@@ -316,7 +318,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 <li>隐含变量：<script type="math/tex">\gamma_k\in{0,1}, k=1,~2,~,\cdots,~K</script>，表示<script type="math/tex">\mathbf{y}</script>是否来自第<script type="math/tex">k</script>个高斯分量</li>
 <li>模型参数：<script type="math/tex">\mathbf{\theta} = {c_k, \mathbf{\theta_k}}, k=1,~2,~,\cdots,~K</script>.</li>
 </ul>
-<p>详细的推导见《统计学习方法》，这里给出GMM模型的E和M步骤，python的notebook见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-expectation-maximum-three-coiins.ipynb" target="_blank" rel="external">这里</a>.<br>设观测数据<script type="math/tex">\mathbf{Y} = \{\mathbf{y1},~\mathbf{y2},~\cdots,~\mathbf{y_N}\}</script></p>
+<p>详细的推导见《统计学习方法》，这里给出GMM模型的E和M步骤.<br>设观测数据<script type="math/tex">\mathbf{Y} = \{\mathbf{y1},~\mathbf{y2},~\cdots,~\mathbf{y_N}\}</script></p>
 <ul>
 <li><p>E step</p>
 <script type="math/tex; mode=display">
@@ -334,6 +336,12 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 \end{align}</script><p>其中<script type="math/tex">m=1,~2,~\cdots,~,M, k=1,~2,~\cdots,~K</script>.</p>
 </li>
 </ul>
+<p>最后，给出一个样例，简单的二维GMM，如下图，notebook见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-EM-GMM-2D.ipynb" target="_blank" rel="external">这里</a>.</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true" height="600" width="600">
+</center>
+
+<p>可以看出，EM的估计效果还是不错的，并且提供初始化参数值的结果 (左下) 比随机初始化 (右下) 的结果要好。</p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>李航，统计学系方法，2012 清华大学出版社</p>
 
             
