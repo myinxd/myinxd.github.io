@@ -6,27 +6,28 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Expectation maximization algorithm - Jason&#39;s blog</title>
+    <title>Recurrent neural network and LSTM - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
-<meta name="keywords" content="machine-learning">
+    <meta name="description" content="简单记录一下循环神经网络 (recurrent neural network, RNN)， 另一种RNN，主要关注时间序列的预测、分类和识别等问题。这里卖个瓜，前面有讨论过残差神经网络，感兴趣地可以去围观，链接见文末。本文首先讨论RNN的motivation及其特点；然后是为了解决长程依赖 (long-term dependencies) 而提出的long short term memory (L">
+<meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Expectation maximization algorithm">
-<meta property="og:url" content="http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/index.html">
+<meta property="og:title" content="Recurrent neural network and LSTM">
+<meta property="og:url" content="http://www.mazhixian.me/2018/03/08/recurrent-neural-network-and-lstm/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
+<meta property="og:description" content="简单记录一下循环神经网络 (recurrent neural network, RNN)， 另一种RNN，主要关注时间序列的预测、分类和识别等问题。这里卖个瓜，前面有讨论过残差神经网络，感兴趣地可以去围观，链接见文末。本文首先讨论RNN的motivation及其特点；然后是为了解决长程依赖 (long-term dependencies) 而提出的long short term memory (L">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true">
-<meta property="og:updated_time" content="2018-03-14T14:56:01.665Z">
+<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-rnn.png?raw=true">
+<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-lstm.png?raw=true">
+<meta property="og:updated_time" content="2018-03-15T09:17:03.853Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Expectation maximization algorithm">
-<meta name="twitter:description" content="回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE). EM算法定义Y为观测随机变量，Z为隐含随机变量，则Y和Z一起构成完全数据 (complete-data)。假设待估计的概率模型参数为\th">
-<meta name="twitter:image" content="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true">
+<meta name="twitter:title" content="Recurrent neural network and LSTM">
+<meta name="twitter:description" content="简单记录一下循环神经网络 (recurrent neural network, RNN)， 另一种RNN，主要关注时间序列的预测、分类和识别等问题。这里卖个瓜，前面有讨论过残差神经网络，感兴趣地可以去围观，链接见文末。本文首先讨论RNN的motivation及其特点；然后是为了解决长程依赖 (long-term dependencies) 而提出的long short term memory (L">
+<meta name="twitter:image" content="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-rnn.png?raw=true">
     
     
         
@@ -264,14 +265,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Expectation maximization algorithm
+            Recurrent neural network and LSTM
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-03-13T15:16:35+08:00">
+    <time itemprop="datePublished" datetime="2018-03-08T11:56:04+08:00">
 	
-		    Mar 13, 2018
+		    Mar 08, 2018
     	
     </time>
     
@@ -282,67 +283,59 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE).</p>
-<h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>定义<script type="math/tex">Y</script>为观测随机变量，<script type="math/tex">Z</script>为隐含随机变量，则<script type="math/tex">Y</script>和<script type="math/tex">Z</script>一起构成完全数据 (complete-data)。假设待估计的概率模型参数为<script type="math/tex">\theta</script>，则观测数据的概率分布为<script type="math/tex">P(Y|\theta)</script>, 即为其似然函数，对应的对数似然函数为<script type="math/tex">L(\theta) = \log{P(Y|\theta)}</script>. 设<script type="math/tex">Y</script>和<script type="math/tex">Z</script>Z的联合概率分布为<script type="math/tex">P(Y,Z|\theta)</script>，那么完全数据的对数似然函数为<script type="math/tex">\log{P(Y,Z|\theta)}</script>.</p>
-<p>EM算法的目的就是求解参数<script type="math/tex">\theta</script>，极大化观测量的对数似然函数<script type="math/tex">L(\theta)</script>。因为包含隐含量，所以采用迭代的方法，分为E (期望) 和M (极大化)两步，求解算法如下。</p>
-<ol>
-<li><p>初始化参数<script type="math/tex">\theta^{(0)}</script>;</p>
-</li>
-<li><p>E step: 记<script type="math/tex">\theta^{(i)}</script>为第<script type="math/tex">i</script>次迭代参数<script type="math/tex">\theta</script>的估计值，则第<script type="math/tex">i+1</script>次迭代，计算如下期望.</p>
-<script type="math/tex; mode=display">
-\begin{align}
-Q(\theta,\theta^{(i)}) &= E_{z}[\log{P(Y,Z|\theta)}|Y,\theta^{(i)}] \notag \\
-&=\sum_{z}{\log{P(Y,Z|\theta)P(Z|Y,\theta^{(i)})}},
-\end{align}</script><p>其中<script type="math/tex">P(Z|Y,\theta^{(i)})</script>是在给定观测数据<script type="math/tex">Y</script>和当前估计的参数$\theta^{(i)}$下隐含变量<script type="math/tex">Z</script>的条件概率分布；<script type="math/tex">Q(\theta,\theta^{(i)})</script>定义为完全数据的对数似然函数在给定观测数据和当前参数下对隐含数据<script type="math/tex">Z</script>的条件概率分布<script type="math/tex">P(Z|Y,\theta^{(i)})</script>的期望，即<script type="math/tex">\log{P(Y|\theta)}</script>。</p>
-</li>
-<li><p>M step: 求使<script type="math/tex">Q(\theta, \theta^{(i)})</script>极大化的参数<script type="math/tex">\theta</script>，以确定第<script type="math/tex">i+1</script>次迭代的参数的估计值<script type="math/tex">\theta^{(i+1)}</script>, 即计算</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\theta^{(i+1)} = \mathrm{arg}\max\limits_{\theta}{Q(\theta,\theta^{(i)})}
-\end{align}</script></li>
-<li><p>重复E和M两步，直到收敛. </p>
-</li>
-</ol>
-<p>李航老师也强调了一点：<strong>EM算法与初值的选择有关，选择不同的初值可能得到不同的参数估计值。</strong> 我在这个<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-expectation-maximum-three-coiins.ipynb" target="_blank" rel="external">notebook</a>里给了一个样例，即“三硬币模型”。</p>
-<h3 id="高斯混合模型的求解"><a href="#高斯混合模型的求解" class="headerlink" title="高斯混合模型的求解"></a>高斯混合模型的求解</h3><p>EM算法最经典的应用就是高斯混合模型的参数估计，该模型是语音信号处理的基础模型之一，其定义如下，</p>
-<script type="math/tex; mode=display">
-\begin{align}
-P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta_k)}}
-\end{align}</script><p>其中，<script type="math/tex">c_k</script>是系数，<script type="math/tex">c_k\geq0</script>, <script type="math/tex">\sum_{k=1}^{K}{c_k=1}</script>; <script type="math/tex">\phi(\mathbf{y}|\mathbf{\theta_k})</script>是高斯分布，<script type="math/tex">\mathbf{\theta_k} = (\mathbf{\mu_k},\Sigma_k^2)</script>,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\phi(\mathbf{y}|\mathbf{\theta_k}) = \frac{1}{(2\pi)^{M/2}|\Sigma_k|}{-\exp{(\mathbf{y}-\mathbf{\mu_k})^{T}{\Sigma_{k}}^{-1}(\mathbf{y}-\mathbf{\mu_k})}}.
-\end{equation}</script><p>在GMM模型中有，</p>
+            <p>简单记录一下循环神经网络 (recurrent neural network, RNN)， 另一种RNN，主要关注时间序列的预测、分类和识别等问题。这里卖个瓜，前面有讨论过残差神经网络，感兴趣地可以去围观，链接见文末。<br>本文首先讨论RNN的motivation及其特点；然后是为了解决长程依赖 (long-term dependencies) 而提出的long short term memory (LSTM) 结构； 最后是二者在tensorflow中的简单样例。参考文献很多，这里强烈案例下面两篇文章！</p>
 <ul>
-<li>观测变量：<script type="math/tex">\mathbf{Y}</script>，</li>
-<li>隐含变量：<script type="math/tex">\gamma_k\in{0,1}, k=1,~2,~,\cdots,~K</script>，表示<script type="math/tex">\mathbf{y}</script>是否来自第<script type="math/tex">k</script>个高斯分量</li>
-<li>模型参数：<script type="math/tex">\mathbf{\theta} = {c_k, \mathbf{\theta_k}}, k=1,~2,~,\cdots,~K</script>.</li>
+<li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a></li>
+<li><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">The Unreasonable Effectiveness of Recurrent Neural Networks</a></li>
 </ul>
-<p>详细的推导见《统计学习方法》，这里给出GMM模型的E和M步骤.<br>设观测数据<script type="math/tex">\mathbf{Y} = \{\mathbf{y1},~\mathbf{y2},~\cdots,~\mathbf{y_N}\}</script></p>
-<ul>
-<li><p>E step</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\hat{\gamma_{jk}} = \frac{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}{\sum_{k=1}^{K}{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}} 
-\end{align}</script><p>其中<script type="math/tex">j=1,~2,~\cdots,~,N, k=1,~2,~\cdots,~K</script>.</p>
-</li>
-<li><p>M step</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\hat{\mu}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}y_{jm}}/{\sum^{N}_{j=1}{\hat{\gamma}_{jk}}} 
-\notag \\
-\hat{\sigma}^{2}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}(y_{jm}-\mu_{km})^2}/{\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} \notag \\
-\hat{c}_{k} &= {\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} / N
-\end{align}</script><p>其中<script type="math/tex">m=1,~2,~\cdots,~,M, k=1,~2,~\cdots,~K</script>.</p>
-</li>
-</ul>
-<p>最后，给出一个样例，简单的二维GMM，如下图，notebook见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-EM-GMM-2D.ipynb" target="_blank" rel="external">这里</a>.</p>
+<h4 id="Recurrent-neural-network"><a href="#Recurrent-neural-network" class="headerlink" title="Recurrent neural network"></a>Recurrent neural network</h4><p>循环神经网络的动机是<em>刻画一个时间序列当前输入与此前信息的联系</em>，从网络结构上，循环神经网络通过称为<strong>循环体</strong>的模块 (如下图) 实现对信息的记忆，即该层在<script type="math/tex">t-1</script>时刻的输出状态<script type="math/tex">\mathbf{h_{t-1}}</script>会被记录，并作为<script type="math/tex">t</script>时刻该模块输入的一部分，以级联的形式与<script type="math/tex">\mathbf{x_t}</script>构成此刻的输入 <script type="math/tex">[\mathbf{h_{t-1}}, \mathbf{x_{t}}]</script>.</p>
+<p>显然，循环体中的循环理论上是无穷的，但在实际应用中会限制循环的次数以避免<strong>梯度消失 (gradient vanishing) </strong>的问题，用<code>num_step</code>来定义，即循环体的基本模块被复制并展开为<code>num_step</code>个。如<br>文献[4]所述，循环体结构是RNN的基础，在RNN中对于复制展开的循环体，其参数是共享的。这一点与卷积神经网络中的权值共享有类似之处。在<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">这篇</a>文章里给出了非常多的RNN的应用场景，我很喜欢里面关于手写体识别的问题，体现了权值共享的效果。</p>
 <center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true" height="600" width="600">
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-rnn.png?raw=true" height="120" width="400">
 </center>
 
-<p>可以看出，EM的估计效果还是不错的，并且提供初始化参数值的结果 (左下) 比随机初始化 (右下) 的结果要好。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>李航，统计学系方法，2012 清华大学出版社</p>
+<p>设<script type="math/tex">t</script>时刻循环体的输入为<script type="math/tex">\mathbf{x}(t)</script>，$t-1$时刻循环体的输出状态为<script type="math/tex">\mathbf{h(t)}</script>，则RNN中<script type="math/tex">t</script>时刻的输出<script type="math/tex">\mathbf{h}(t)</script>为，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{h}(t) = \rm{tanh}\left(W\cdot[\mathbf{h}(t-1),\mathbf{x}(t)] + b\right).
+\end{equation}</script><p>其中<script type="math/tex">W</script>是权值矩阵，其shape为<script type="math/tex">[\mathrm{len}(\mathbf{h}) + \mathrm{len}(\mathbf{x}), \rmlen(\mathbf{h})]</script>, <script type="math/tex">b</script>为偏置。这里采用的激活函数是tanh，将数据限制到<script type="math/tex">[-1,1]</script>之间。</p>
+<p>那么，为什么用tanh，而不是有high reputation的ReLU? 知乎的<a href="https://www.zhihu.com/question/61265076/answer/186644426" target="_blank" rel="external">这个讨论</a>给出了很棒的解释，参考Hinton<a href="https://arxiv.org/abs/1504.00941" target="_blank" rel="external">论文</a>中的观点 <em>ReLUs seem inappropriate for RNNs because they can have very large outputs so they might be expected to be far more likely to explode than units thathave bounded values.</em> ReLU将输出的值限制在<script type="math/tex">[0, \infty}</script>之间，而RNN中循环体之间的权值是共享的，经过公式(1)的多次作用，相当于对<script type="math/tex">W</script>做了连乘，ReLU函数会导致梯度爆炸的问题。因此，采用tanh可以将每层的输出空控制在限定的范围内，既避免了梯度消失，也避免了梯度爆炸的问题。</p>
+<h4 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h4><p>在时间序列的预测中存在长期依赖 (long-term dependencies) 的问题，即网络需要记住离时间<script type="math/tex">t</script>很远的某个时刻的信息，固定的<code>num_step</code>将不适用于这一情形，并且长时间间隔下的梯度消失问题将无法处理。因此，需要对RNN的循环体模块进行修改，即长短时记忆网络 (long short term memory, LSTM). </p>
+<p>LSTM的基本模块如下图所示，参考<a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a>的解释，<em>The key to LSTMs is the cell state, the horizontal line running through the top of the diagram. The cell state is kind of like a conveyor belt.</em> 即LSTM的核心是组成为<code>cell state</code>，用于存储和记忆上文的信息，类似传送带的功能。</p>
+<p>而<code>cell state</code>的更新，通过三个逻辑门以及<script type="math/tex">\mathbf{x_t}</script>和<script type="math/tex">\mathbf{h_{t-1}}</script>共同完成。它们分别称为 (1) forget gate, (2) input gate, (3) output gate. 采用sigmoid函数将数值规范化到<script type="math/tex">[0,1]</script>区间，并与待处理信号进行点乘，本质上实现软判决.</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-lstm.png?raw=true" height="400" width="640">
+</center>
+
+<p>与RNN类似，首先将<script type="math/tex">t-1</script>时刻LSTM cell的输出<script type="math/tex">\mathbf{h}_{t-1}</script>与<script type="math/tex">t</script>时刻的输入<script type="math/tex">\mathbf{x}_{t}</script>进行级联，逐一通过三个门，</p>
+<ul>
+<li>遗忘门 (Forget gate)<script type="math/tex; mode=display">
+\begin{equation}
+  \mathbf{f_t} = \sigma\left(W_f \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_f\right) 
+\end{equation}</script></li>
+<li>输入门 (Input gate)<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{i_t} = \sigma\left(W_i \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_i \right).
+\end{equation}</script></li>
+<li>输出门 (Output gate)<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{o_t} = \sigma\left(W_o \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_o \right).
+\end{equation}</script></li>
+</ul>
+<p>其中遗忘门的作用是<strong>抛弃cell state中不需要的信息</strong>，与<script type="math/tex">\mathbf{C_{t-1}}</script>作用； 输入门则是<strong>决定cell state中待更新的信息</strong>，与<script type="math/tex">\mathbf{\tilde{C}_t}</script>，即state candidates作用；输出门则从更新后的<code>cell state</code>中<strong>决定输出的状态</strong>。结合以上三个门结构，便可以更新<code>cell state</code>以及<code>cell output</code>,</p>
+<ul>
+<li>cell state update<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{\tilde{C_{t}}} &= \rm{tanh}\left(W_c \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_c \right) \\ 
+\mathbf{C_t} &= \mathbf{f_t}\cdot\mathbf{C_{t-1}} + \mathbf{i_t} \cdot \mathbf{\tilde{C_{t}}}
+\end{align}</script></li>
+<li>cell output upadte<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{h_{t}} = \rm{tanh}(\mathbf{C_{t}} \cdot \mathbf{o_t}
+\end{equation}</script><h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4></li>
+</ul>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a><br>[2] <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">The Unreasonable Effectiveness of Recurrent Neural Networks</a><br>[3] <a href="https://www.tensorflow.org/tutorials/recurrent" target="_blank" rel="external">Tensorflow tutorial</a><br>[4] TensorFlow实战Google深度学习框架<br>[5] TensorFlow实战<br>[6] <a href="https://www.zhihu.com/question/61265076/answer/186644426" target="_blank" rel="external">RNN中为什么要采用tanh而不是ReLu作为激活函数？</a></p>
+<h3 id="广告位"><a href="#广告位" class="headerlink" title="广告位"></a>广告位</h3><p><a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">Residual network I — block and bottleneck</a><br><a href="http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/">Residual network II — realize with tensorflow</a></p>
 
             
 
@@ -353,7 +346,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/machine-learning/">machine-learning</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
 
             </div>
         
@@ -364,7 +357,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/15/recurrent-neural-network-and-lstm/" data-tooltip="Recurrent neural network and LSTM" aria-label="PREVIOUS: Recurrent neural network and LSTM">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="PREVIOUS: 二分类及AUC的理解">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -373,7 +366,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="NEXT: 二分类及AUC的理解">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="NEXT: SVM hyperplane visualization based on libsvm">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -391,7 +384,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/08/recurrent-neural-network-and-lstm/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -444,7 +437,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/15/recurrent-neural-network-and-lstm/" data-tooltip="Recurrent neural network and LSTM" aria-label="PREVIOUS: Recurrent neural network and LSTM">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="PREVIOUS: 二分类及AUC的理解">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -453,7 +446,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/11/understanding-of-auc-curve/" data-tooltip="二分类及AUC的理解" aria-label="NEXT: 二分类及AUC的理解">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="NEXT: SVM hyperplane visualization based on libsvm">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -471,7 +464,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/08/recurrent-neural-network-and-lstm/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -504,7 +497,7 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/08/recurrent-neural-network-and-lstm/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -562,9 +555,9 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/03/13/expectation-maximization-algorithm/';
+                 this.page.url = 'http://www.mazhixian.me/2018/03/08/recurrent-neural-network-and-lstm/';
                  
-                    this.page.identifier = '2018/03/13/expectation-maximization-algorithm/';
+                    this.page.identifier = '2018/03/08/recurrent-neural-network-and-lstm/';
                  
              };
             (function() {

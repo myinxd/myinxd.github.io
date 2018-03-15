@@ -263,6 +263,110 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/15/recurrent-neural-network-and-lstm/">
+                            Recurrent neural network and LSTM
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-15T09:56:04+08:00">
+	
+		    Mar 15, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下循环神经网络 (recurrent neural network, RNN)， 另一种RNN，主要关注时间序列的预测、分类和识别等问题。这里卖个瓜，前面有讨论过残差神经网络，感兴趣地可以去围观，链接见文末。<br>本文首先讨论RNN的motivation及其特点；然后是为了解决长程依赖 (long-term dependencies) 而提出的long short term memory (LSTM) 结构； 最后是二者在tensorflow中的简单样例。参考文献很多，这里强烈案例下面两篇文章！</p>
+<ul>
+<li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a></li>
+<li><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">The Unreasonable Effectiveness of Recurrent Neural Networks</a></li>
+</ul>
+<h4 id="Recurrent-neural-network"><a href="#Recurrent-neural-network" class="headerlink" title="Recurrent neural network"></a>Recurrent neural network</h4><p>循环神经网络的动机是<em>刻画一个时间序列当前输入与此前信息的联系</em>，从网络结构上，循环神经网络通过称为<strong>循环体</strong>的模块 (如下图) 实现对信息的记忆，即该层在<script type="math/tex">t-1</script>时刻的输出状态<script type="math/tex">\mathbf{h_{t-1}}</script>会被记录，并作为<script type="math/tex">t</script>时刻该模块输入的一部分，以级联的形式与<script type="math/tex">\mathbf{x_t}</script>构成此刻的输入 <script type="math/tex">[\mathbf{h_{t-1}}, \mathbf{x_{t}}]</script>.</p>
+<p>显然，循环体中的循环理论上是无穷的，但在实际应用中会限制循环的次数以避免<strong>梯度消失 (gradient vanishing) </strong>的问题，用<code>num_step</code>来定义，即循环体的基本模块被复制并展开为<code>num_step</code>个。如<br>文献[4]所述，循环体结构是RNN的基础，在RNN中对于复制展开的循环体，其参数是共享的。这一点与卷积神经网络中的权值共享有类似之处。在<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">这篇</a>文章里给出了非常多的RNN的应用场景，我很喜欢里面关于手写体识别的问题，体现了权值共享的效果。</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-rnn.png?raw=true" height="140" width="500">
+</center>
+
+<p>设<script type="math/tex">t</script>时刻循环体的输入为<script type="math/tex">\mathbf{x}(t)</script>，$t-1$时刻循环体的输出状态为<script type="math/tex">\mathbf{h(t)}</script>，则RNN中<script type="math/tex">t</script>时刻的输出<script type="math/tex">\mathbf{h}(t)</script>为，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{h}(t) = \rm{tanh}\left(W\cdot[\mathbf{h}(t-1),\mathbf{x}(t)] + b\right).
+\end{equation}</script><p>其中<script type="math/tex">W</script>是权值矩阵，其shape为<script type="math/tex">[\mathrm{len}(\mathbf{h}) + \mathrm{len}(\mathbf{x}), \mathrm{len}(\mathbf{h})]</script>, <script type="math/tex">b</script>为偏置。这里采用的激活函数是tanh，将数据限制到<script type="math/tex">[-1,1]</script>之间。</p>
+<p>那么，为什么用tanh，而不是有high reputation的ReLU? 知乎的<a href="https://www.zhihu.com/question/61265076/answer/186644426" target="_blank" rel="external">这个讨论</a>给出了很棒的解释，参考Hinton<a href="https://arxiv.org/abs/1504.00941" target="_blank" rel="external">论文</a>中的观点 <em>ReLUs seem inappropriate for RNNs because they can have very large outputs so they might be expected to be far more likely to explode than units thathave bounded values.</em> ReLU将输出的值限制在<script type="math/tex">[0, \infty)</script>之间，而RNN中循环体之间的权值是共享的，经过公式(1)的多次作用，相当于对<script type="math/tex">W</script>做了连乘，ReLU函数会导致梯度爆炸的问题。因此，采用tanh可以将每层的输出空控制在限定的范围内，既避免了梯度消失，也避免了梯度爆炸的问题。</p>
+<h4 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h4><p>在时间序列的预测中存在长期依赖 (long-term dependencies) 的问题，即网络需要记住离时间<script type="math/tex">t</script>很远的某个时刻的信息，固定的<code>num_step</code>将不适用于这一情形，并且长时间间隔下的梯度消失问题将无法处理。因此，需要对RNN的循环体模块进行修改，即长短时记忆网络 (long short term memory, LSTM). </p>
+<p>LSTM的基本模块如下图所示，参考<a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a>的解释，<em>The key to LSTMs is the cell state, the horizontal line running through the top of the diagram. The cell state is kind of like a conveyor belt.</em> 即LSTM的核心是组成为<code>cell state</code>，用于存储和记忆上文的信息，类似传送带的功能。</p>
+<p>而<code>cell state</code>的更新，通过三个逻辑门以及<script type="math/tex">\mathbf{x_t}</script>和<script type="math/tex">\mathbf{h_{t-1}}</script>共同完成。它们分别称为 (1) forget gate, (2) input gate, (3) output gate. 采用sigmoid函数将数值规范化到<script type="math/tex">[0,1]</script>区间，并与待处理信号进行点乘，本质上实现软判决.</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-lstm.png?raw=true" height="400" width="640">
+</center>
+
+<p>与RNN类似，首先将<script type="math/tex">t-1</script>时刻LSTM cell的输出<script type="math/tex">\mathbf{h}_{t-1}</script>与<script type="math/tex">t</script>时刻的输入<script type="math/tex">\mathbf{x}_{t}</script>进行级联，逐一通过三个门，</p>
+<ul>
+<li>遗忘门 (Forget gate)<script type="math/tex; mode=display">
+\begin{equation}
+  \mathbf{f_t} = \sigma\left(W_f \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_f\right) 
+\end{equation}</script></li>
+<li>输入门 (Input gate)<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{i_t} = \sigma\left(W_i \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_i \right).
+\end{equation}</script></li>
+<li>输出门 (Output gate)<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{o_t} = \sigma\left(W_o \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_o \right).
+\end{equation}</script></li>
+</ul>
+<p>其中遗忘门的作用是<strong>抛弃cell state中不需要的信息</strong>，与<script type="math/tex">\mathbf{C_{t-1}}</script>作用； 输入门则是<strong>决定cell state中待更新的信息</strong>，与<script type="math/tex">\mathbf{\tilde{C}_t}</script>，即state candidates作用；输出门则从更新后的<code>cell state</code>中<strong>决定输出的状态</strong>。结合以上三个门结构，便可以更新<code>cell state</code>以及<code>cell output</code>,</p>
+<ul>
+<li>cell state update<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{\tilde{C_{t}}} &= \rm{tanh}\left(W_c \cdot [\mathbf{h_{t-1}}, \mathbf{x_{t}}] + b_c \right) \\ 
+\mathbf{C_t} &= \mathbf{f_t}\cdot\mathbf{C_{t-1}} + \mathbf{i_t} \cdot \mathbf{\tilde{C_{t}}}
+\end{align}</script></li>
+<li>cell output upadte<script type="math/tex; mode=display">
+\begin{equation}
+\mathbf{h_{t}} = \rm{tanh}(\mathbf{C_{t}}) \cdot \mathbf{o_t}
+\end{equation}</script></li>
+</ul>
+<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><p>参考《TensorFlow实战》第7章的LSTM基于<a href="http://www.fit.vutbr.cz/~imikolov/rnnlm/simple-examples.tgz" target="_blank" rel="external">PTB数据集</a>的语言预测样例，以及TensorFlow的<a href="https://www.tensorflow.org/tutorials/recurrent" target="_blank" rel="external">Tutorial</a>，设计了一个小实验，对比RNN和LSTM的performance，以及激活函数对于RNN的影响。(详细的notebooks见这里: <a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-rnn-tanh.ipynb" target="_blank" rel="external">RNN</a>, <a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-lstm.ipynb" target="_blank" rel="external">LSTM</a>)</p>
+<p>这里给出<code>tf.contrib.rnn</code>中提供的用于搭建RNN和LSTM cell的类的实例化方法，以及如何构建多个Recurrent层，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># RNN</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">rnn_cell</span><span class="params">(num_units, activation, reuse=None)</span>:</span></div><div class="line">   <span class="keyword">return</span> tf.contrib.rnn.BasicLSTMCell(</div><div class="line">       num_units=num_units,  </div><div class="line">       activation=activation,</div><div class="line">       reuse=reuse)</div><div class="line"></div><div class="line"><span class="comment"># LSTM</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">lstm_cell</span><span class="params">(num_units, forget_bias=<span class="number">0.0</span>, state_in_tuple=True, reuse=None)</span>:</span></div><div class="line">	<span class="keyword">return</span> tf.contrib.rnn.BasicLSTMCell(</div><div class="line">    	num_units=size, </div><div class="line">        forget_bias=forget_bias, </div><div class="line">        state_is_tuple=state_in_tuple,</div><div class="line">        reuse=reuse)</div><div class="line"></div><div class="line"><span class="comment"># Multiple layers</span></div><div class="line">attn_cell = rnn_cell</div><div class="line">numlayers = <span class="number">2</span></div><div class="line">cell = tf.contrib.rnn.MultiRNNCell(</div><div class="line">	[attn_cell() <span class="keyword">for</span> _ <span class="keyword">in</span> range(numlayers)],</div><div class="line">    state_is_tuple=<span class="keyword">True</span>)</div></pre></td></tr></table></figure></p>
+<p>另外，在PTB的TF教程里，设置了可变的学习率以及梯度的clipping用于抑制梯度爆炸 (gradient explosion) 的问题，代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Adjustable learning rate</span></div><div class="line">new_lr = tf.placeholder(tf.float32, shape=[], name=<span class="string">"new_learning_rate"</span>)</div><div class="line">lr_update = tf.assign(self._lr, self._new_lr) <span class="comment"># use tf.assign to transfer the updated lr</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">assign_lr</span><span class="params">(session, lr_value)</span>:</span></div><div class="line">	sess.run(self._lr_update, feed_dict=&#123;new_lr: lr_value&#125;)</div><div class="line"></div><div class="line"><span class="comment"># Gradient clipping</span></div><div class="line">...</div><div class="line">max_grad_norm = <span class="number">5.0</span> <span class="comment"># maximum gradient</span></div><div class="line">tvars = tf.trainable_variables()  <span class="comment"># Get all trainable variables</span></div><div class="line">grads, _ = tf.clip_by_global_norm(</div><div class="line">	tf.gradients(cost, tvars), max_grad_norm)</div><div class="line">optimizer = tf.train.GradientDescentOptimizer(self._lr)</div><div class="line">train_op = optimizer.apply_gradients(</div><div class="line">    zip(grads, tvars),</div><div class="line">    global_step = tf.contrib.framework.get_or_create_global_step())</div></pre></td></tr></table></figure></p>
+<p>下面来比较一下RNN和LSTM的效果。比较的指标是perplexity (复杂度)，用于刻画该模型能够估计出某一句话的概率，其数值越小，模型表现越好。</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-rnn-lstm-cmp.png?raw=true" height="300" width="500">
+</center>
+
+<p>容易看出，LSTM的表现是优于RNN的。除此之外，采用tanh函数的RNN要显著好于采用ReLU，在训练中也出现了<em>RuntimeWarning: overflow encountered in exp</em>的警告，说明出现了gradient explosion的问题。最后，我尝试增加了RNN的层数，但是效果并没有变好，也许是参数多了？也有可能是我偷懒了，没多训测试几次。。。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Understanding LSTM</a><br>[2] <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">The Unreasonable Effectiveness of Recurrent Neural Networks</a><br>[3] <a href="https://www.tensorflow.org/tutorials/recurrent" target="_blank" rel="external">Tensorflow tutorial</a><br>[4] TensorFlow实战Google深度学习框架<br>[5] TensorFlow实战<br>[6] <a href="https://www.zhihu.com/question/61265076/answer/186644426" target="_blank" rel="external">RNN中为什么要采用tanh而不是ReLu作为激活函数？</a></p>
+<h3 id="广告位"><a href="#广告位" class="headerlink" title="广告位"></a>广告位</h3><p><a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">Residual network I — block and bottleneck</a><br><a href="http://www.mazhixian.me/2018/01/27/resnet-with-tensorflow-2/">Residual network II — realize with tensorflow</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/15/recurrent-neural-network-and-lstm/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/13/expectation-maximization-algorithm/">
                             Expectation maximization algorithm
                         </a>
