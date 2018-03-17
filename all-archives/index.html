@@ -263,6 +263,99 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/">
+                            Confusion matrix and generation with TensorFlow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-17T14:45:29+08:00">
+	
+		    Mar 17, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。</p>
+<h4 id="Confusion-matrix"><a href="#Confusion-matrix" class="headerlink" title="Confusion matrix"></a>Confusion matrix</h4><p>混淆矩阵通过比较分类器的<strong>预测</strong>和<strong>真实</strong>标签，评估分类器效果，通常用于多分类问题。TF的<a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">audio recognition tutorial</a>里对混淆矩阵的评价是, <em>This matrix can be more useful than just a single accuracy score because it gives a good summary of what mistakes the network is making.</em> 即混淆矩阵可以帮助分析分类器在哪些类上的表现最差。相对于单一的准确率这种衡量指标，更加直观。</p>
+<p>混淆矩阵是一个二维的方阵，横轴代表真实标签，枞轴代表预测标签，其中的元素<script type="math/tex">CM_{ij}</script>代表实际为第<script type="math/tex">i</script>，被分成第<script type="math/tex">j</script>类的样本数目。<strong>显然矩阵的非零元素集中在对角线时，分类器的表现更优异。</strong></p>
+<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><p>下面给出一个样例，这是一个六分类的问题，结果来自我们近期的工作。其中A的样本量约1000, B的样本量约10000，A random是随机产生预测标签的CM矩阵。如下所示，A的CM map中，多数样本集中在对角线；B的表现也不错，但(6,6)的色块显然淡了很多，说明分类器对第六类的分类效果不好；而A random，因为是随机生成的，其CM的各个元素的样本数比较均衡，因此分类准确率也非常差。</p>
+<center>
+<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-confmat.png?raw=true" height="200" width="720">
+</center>
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">Simple Audio Recognition</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/confusion_matrix" target="_blank" rel="external">tf.confusion_matrix</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/03/17/simple-speech-recognition-example-by-tensorflow/">
+                            A simple audio recognition example by tensorflow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-17T11:17:02+08:00">
+	
+		    Mar 17, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/17/simple-speech-recognition-example-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/15/recurrent-neural-network-and-lstm/">
                             Recurrent neural network and LSTM
                         </a>
@@ -871,120 +964,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
                     
                         <p>
                             <a href="/2018/02/26/Curve-fitting-by-scipy/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/02/15/happy-chinese-new-year/">
-                            Happy Chinese new year
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-02-15T17:09:57+08:00">
-	
-		    Feb 15, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github.</p>
-<p>Wish everything well in the new year.</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/02/15/happy-chinese-new-year/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/02/07/write-a-blog-by-hexo/">
-                            Write a blog by Hexo
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-02-07T22:30:21+08:00">
-	
-		    Feb 07, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>写之前吐个槽，连续的熬夜加酗酒，要跪。。。睡前写个hexo相关的教程，基于hexo如何撰写和发布一篇博客。主要分为两步，(1) 掌握markdown语法和git相关指令; (2) 利用hexo命令初始和编译文章。</p>
-<h4 id="Markdown语法和git相关指令"><a href="#Markdown语法和git相关指令" class="headerlink" title="Markdown语法和git相关指令"></a>Markdown语法和git相关指令</h4><p>Markdown的基本语法可以参考<a href="http://blog.sina.com.cn/s/blog_9b6253b10102x998.html" target="_blank" rel="external">这篇文章</a>，在博客中主要会用到三种语法结构，</p>
-<ul>
-<li>标题控制 用#，#号数量越多，标题级别越低;</li>
-<li>超链接： 形如<code>[name](address)</code>;</li>
-<li>图像: 形如<code>![name](address)</code> 注意感叹号。</li>
-</ul>
-<p>而git相关的指令，用于上传图片，作为图床。主要指令有，</p>
-<ul>
-<li>git add xxx : 添加一个需要push的文件;</li>
-<li>git commit -m “xxx”: 给这次push添加commitp;</li>
-<li>git push： 将commit的文件推送到git仓库中。</li>
-</ul>
-<h4 id="利用Hexo命令初始、编译和发布文章"><a href="#利用Hexo命令初始、编译和发布文章" class="headerlink" title="利用Hexo命令初始、编译和发布文章"></a>利用Hexo命令初始、编译和发布文章</h4><p>Hexo 的安装和配置参考<a href="http://www.mazhixian.me/2017/08/23/Build-your-blog/">这篇文章</a>，这里只介绍新文章的生成过程。</p>
-<ol>
-<li><p>新建一篇名为xxx的文章，此时在blog/source/_posts路径下会生成名为’xxx.md’的文件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> blog</div><div class="line">$ hexo new <span class="string">"xxx"</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>编写文章</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ./<span class="built_in">source</span>/_posts</div><div class="line">$ vim xxx.md</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>或者可以利用markdown相关的编辑器，如<a href="http://pad.haroopress.com/user.html" target="_blank" rel="external">haroopad</a>，这是一款非常好用的编辑器。</p>
-<ol>
-<li>编译、预览和发布文章<br>利用如下命令可以编译、预览和发布文章，<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo g <span class="comment"># 编译</span></div><div class="line">$ hexo s <span class="comment"># 预览，此时在浏览器输入 localhost:4000</span></div><div class="line">$ hexo d <span class="comment"># 发布文章到github</span></div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>Enjoy it~~</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/02/07/write-a-blog-by-hexo/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
