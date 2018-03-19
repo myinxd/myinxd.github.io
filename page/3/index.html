@@ -262,6 +262,64 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/23/multiple-websites-with-nginx/">
+                            multiple websites with nginx
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-23T22:31:05+08:00">
+	
+		    Jan 23, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>前面写过<a href="http://www.mazhixian.me/2018/01/22/hexo-deploy-google-analytics-to-your-website/">文章</a>讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，</p>
+<ol>
+<li>利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上</li>
+<li>自己利用vps搭服务器，同样用dnspod进行解析。</li>
+</ol>
+<p>我准备尝试后者。</p>
+<p>考虑到已经在vps上挂了一个网站，此刻如果镜像github的网站，就得让nginx部署两个网站，即虚拟服务器，参考了几篇博客，记录一下配置的过程。</p>
+<h4 id="1-定位nginx的配置文件"><a href="#1-定位nginx的配置文件" class="headerlink" title="1. 定位nginx的配置文件"></a>1. 定位nginx的配置文件</h4><p>如果是用<a href="https://lnmp.org" target="_blank" rel="external">lnmp</a>安装的nginx,其配置文件在<code>/usr/local/nginx/conf/nginx.conf</code>中，可以通过cat查看，应该是默认配置了一个default服务器。</p>
+<h4 id="2-修改-vhost-conf，添加多个网站配置"><a href="#2-修改-vhost-conf，添加多个网站配置" class="headerlink" title="2. 修改./vhost/*.conf，添加多个网站配置"></a>2. 修改./vhost/*.conf，添加多个网站配置</h4><p>参考[2]，按照如下过程配置，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx/cong/vhost</div><div class="line">$ sudo vim vhost_myweb.conf</div></pre></td></tr></table></figure></p>
+<p>添加如下行，以网站路径为/home/wwwroot/myweb为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">server</div><div class="line">    &#123;</div><div class="line">	listen 80;</div><div class="line">	server_name xxx.xxx.xxx;</div><div class="line">	index index.html;</div><div class="line">	root /home/wwwroot/myweb;</div><div class="line">	<span class="comment">#php</span></div><div class="line">	location ~ /.php$ &#123;</div><div class="line">		include fastcgi_params;</div><div class="line">		fastcgi_pass 127.0.0.1:9000;</div><div class="line">		fastcgi_index index.php;</div><div class="line">		fastcgi_param SCRIPT_FILENAME /home/wwwroot/myweb<span class="variable">$fastcgi_script_name</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着，修改<code>/usr/local/php/etc/php-fpm.conf</code>为<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[www]</div><div class="line"><span class="comment"># listen = /tmp/php-cgi.sock</span></div><div class="line">listen = 127.0.0.1:9000</div></pre></td></tr></table></figure></p>
+<p>最后重启php和nginx服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo killall php-fpm</div><div class="line">$ sudo systemctl start php-fpm.service</div><div class="line">$ sudo /etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>到此便配置完毕。</p>
+<h4 id="502-bad-gateway-问题"><a href="#502-bad-gateway-问题" class="headerlink" title="502 bad gateway 问题"></a>502 bad gateway 问题</h4><p>在配置过程中碰到了<strong>502 bad gateway</strong>的问题，引起502的可能因素很多，其中对于lnmp常见的就是nginx和php通信的问题。常用的通信方法有两种，分别是socket和ip:port。这里我采用的是ip:port。详细的解释可以参考<a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.zhihu.com/question/30898326" target="_blank" rel="external">如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题？</a><br>[2] <a href="https://www.cnblogs.com/Erick-L/p/7066564.html" target="_blank" rel="external">在Nginx上配置多个站点</a><br>[3] <a href="http://blog.csdn.net/wzqzhq/article/details/53320533" target="_blank" rel="external">nginx502错误和错误日志级别</a><br>[4] <a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">LNMP 常见502 Bad Gateway问题汇总</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/23/multiple-websites-with-nginx/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/23/batch-normalization-with-tensorflow/">
                             Batch normalization with TensorFlow
                         </a>
@@ -885,50 +943,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     
                         <p>
                             <a href="/2018/01/12/capture-video-flow-from-firefox/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/03/monte-carlo-simulation/">
-                            monte carlo simulation
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-03T20:24:28+08:00">
-	
-		    Jan 03, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="To-be-continue…"><a href="#To-be-continue…" class="headerlink" title="To be continue…"></a>To be continue…</h2><p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p>
-<h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/03/monte-carlo-simulation/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

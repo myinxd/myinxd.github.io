@@ -310,6 +310,51 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/19/launch-google-chrome-from-outside-links/">
+                            Ubuntu外链打开chrome显示空白标签的问题
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-19T22:28:31+08:00">
+	
+		    Feb 19, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <h4 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h4><p>也许是Ubuntu16.04以后版本，或者是google-chrome的版本问题，会出现从chrome以外的链接打开chrome后只显示空白标签的情形。</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>其解决方法是给<code>google-chrome.desktop</code>配置文件的<code>Exec</code>提供<code>%U</code>的值，步骤如下<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim ~/.local/share/applications/google-chrome.desktop</div><div class="line"><span class="meta">#</span><span class="bash"> Find Exec and add %U</span></div><div class="line">Exec=/opt/google/chrome/chrome %U</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="http://blog.csdn.net/Artprog/article/details/71076111" target="_blank" rel="external">解决Ubuntu无法从外部应用启动Chrome打开链接的问题</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/19/launch-google-chrome-from-outside-links/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/16/install-cuda-on-debian-test-with-apt-get/">
                             Install cuda on Debian test with apt-get
                         </a>

@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Happy Chinese new year - Jason&#39;s blog</title>
+    <title>Ubuntu外链打开chrome显示空白标签的问题 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github. Wish everything well">
-<meta name="keywords" content="life">
+    <meta name="description" content="问题描述也许是Ubuntu16.04以后版本，或者是google-chrome的版本问题，会出现从chrome以外的链接打开chrome后只显示空白标签的情形。 解决方法其解决方法是给google-chrome.desktop配置文件的Exec提供%U的值，步骤如下123vim ~/.local/share/applications/google-chrome.desktop# Find Exec">
+<meta name="keywords" content="linux">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Happy Chinese new year">
-<meta property="og:url" content="http://www.mazhixian.me/2018/02/15/happy-chinese-new-year/index.html">
+<meta property="og:title" content="Ubuntu外链打开chrome显示空白标签的问题">
+<meta property="og:url" content="http://www.mazhixian.me/2018/02/19/launch-google-chrome-from-outside-links/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github. Wish everything well">
+<meta property="og:description" content="问题描述也许是Ubuntu16.04以后版本，或者是google-chrome的版本问题，会出现从chrome以外的链接打开chrome后只显示空白标签的情形。 解决方法其解决方法是给google-chrome.desktop配置文件的Exec提供%U的值，步骤如下123vim ~/.local/share/applications/google-chrome.desktop# Find Exec">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-02-15T09:15:34.765Z">
+<meta property="og:updated_time" content="2018-03-19T14:37:18.410Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Happy Chinese new year">
-<meta name="twitter:description" content="Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github. Wish everything well">
+<meta name="twitter:title" content="Ubuntu外链打开chrome显示空白标签的问题">
+<meta name="twitter:description" content="问题描述也许是Ubuntu16.04以后版本，或者是google-chrome的版本问题，会出现从chrome以外的链接打开chrome后只显示空白标签的情形。 解决方法其解决方法是给google-chrome.desktop配置文件的Exec提供%U的值，步骤如下123vim ~/.local/share/applications/google-chrome.desktop# Find Exec">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Happy Chinese new year
+            Ubuntu外链打开chrome显示空白标签的问题
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-02-15T17:09:57+08:00">
+    <time itemprop="datePublished" datetime="2018-02-19T22:28:31+08:00">
 	
-		    Feb 15, 2018
+		    Feb 19, 2018
     	
     </time>
     
@@ -280,8 +280,9 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>Nothing to tell, ‘cause I am out of work for a week, lol. A warm greeting from my hometown that happy Chinese new year. Also a celebrationg for my 400th contribution to my github.</p>
-<p>Wish everything well in the new year.</p>
+            <h4 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h4><p>也许是Ubuntu16.04以后版本，或者是google-chrome的版本问题，会出现从chrome以外的链接打开chrome后只显示空白标签的情形。</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>其解决方法是给<code>google-chrome.desktop</code>配置文件的<code>Exec</code>提供<code>%U</code>的值，步骤如下<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim ~/.local/share/applications/google-chrome.desktop</div><div class="line"><span class="meta">#</span><span class="bash"> Find Exec and add %U</span></div><div class="line">Exec=/opt/google/chrome/chrome %U</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="http://blog.csdn.net/Artprog/article/details/71076111" target="_blank" rel="external">解决Ubuntu无法从外部应用启动Chrome打开链接的问题</a></p>
 
             
 
@@ -292,7 +293,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/life/">life</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/linux/">linux</a>
 
             </div>
         
@@ -303,7 +304,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/19/launch-google-chrome-from-outside-links/" data-tooltip="Ubuntu外链打开chrome显示空白标签的问题" aria-label="PREVIOUS: Ubuntu外链打开chrome显示空白标签的问题">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/26/Curve-fitting-by-scipy/" data-tooltip="Curve fitting by SciPy" aria-label="PREVIOUS: Curve fitting by SciPy">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -312,7 +313,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/07/write-a-blog-by-hexo/" data-tooltip="Write a blog by Hexo" aria-label="NEXT: Write a blog by Hexo">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/15/happy-chinese-new-year/" data-tooltip="Happy Chinese new year" aria-label="NEXT: Happy Chinese new year">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -330,7 +331,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/15/happy-chinese-new-year/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/19/launch-google-chrome-from-outside-links/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -383,7 +384,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/19/launch-google-chrome-from-outside-links/" data-tooltip="Ubuntu外链打开chrome显示空白标签的问题" aria-label="PREVIOUS: Ubuntu外链打开chrome显示空白标签的问题">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/26/Curve-fitting-by-scipy/" data-tooltip="Curve fitting by SciPy" aria-label="PREVIOUS: Curve fitting by SciPy">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -392,7 +393,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/07/write-a-blog-by-hexo/" data-tooltip="Write a blog by Hexo" aria-label="NEXT: Write a blog by Hexo">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/15/happy-chinese-new-year/" data-tooltip="Happy Chinese new year" aria-label="NEXT: Happy Chinese new year">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -410,7 +411,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/15/happy-chinese-new-year/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/19/launch-google-chrome-from-outside-links/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -443,7 +444,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/15/happy-chinese-new-year/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/02/19/launch-google-chrome-from-outside-links/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -501,9 +502,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/02/15/happy-chinese-new-year/';
+                 this.page.url = 'http://www.mazhixian.me/2018/02/19/launch-google-chrome-from-outside-links/';
                  
-                    this.page.identifier = '2018/02/15/happy-chinese-new-year/';
+                    this.page.identifier = '2018/02/19/launch-google-chrome-from-outside-links/';
                  
              };
             (function() {
