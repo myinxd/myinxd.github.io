@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>python decorator - Jason&#39;s blog</title>
+    <title>Range based for loop by cpp - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="简单记录一下python修饰符@的理解和使用方法，一直没好好理解，现在卡住了。。。参考wiki的定义, A decorator is any callable Python object that is used to modify a function, method or class defination. The decorator syntax is pure syntactic suga">
-<meta name="keywords" content="python">
+    <meta name="description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
+<meta name="keywords" content="cpp">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="python decorator">
-<meta property="og:url" content="http://www.mazhixian.me/2018/01/21/python-decorator/index.html">
+<meta property="og:title" content="Range based for loop by cpp">
+<meta property="og:url" content="http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="简单记录一下python修饰符@的理解和使用方法，一直没好好理解，现在卡住了。。。参考wiki的定义, A decorator is any callable Python object that is used to modify a function, method or class defination. The decorator syntax is pure syntactic suga">
+<meta property="og:description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-01-21T07:49:13.055Z">
+<meta property="og:updated_time" content="2018-03-26T14:47:08.360Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python decorator">
-<meta name="twitter:description" content="简单记录一下python修饰符@的理解和使用方法，一直没好好理解，现在卡住了。。。参考wiki的定义, A decorator is any callable Python object that is used to modify a function, method or class defination. The decorator syntax is pure syntactic suga">
+<meta name="twitter:title" content="Range based for loop by cpp">
+<meta name="twitter:description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            python decorator
+            Range based for loop by cpp
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
+    <time itemprop="datePublished" datetime="2018-03-26T22:03:19+08:00">
 	
-		    Jan 21, 2018
+		    Mar 26, 2018
     	
     </time>
     
@@ -280,14 +280,18 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
-<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
-<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
-<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
-<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
-<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
+            <p>最近落了好多没写了，感觉已经废了。继续C++的笔记，关于<em>range-based for loop</em>的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。</p>
+<h4 id="range-based-for-loop"><a href="#range-based-for-loop" class="headerlink" title="range-based for loop"></a>range-based for loop</h4><p>C++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于python中直接进行列表索引的for循环。请看下面的样例，分别是C++和python的for循环写法，</p>
+<h5 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> numArray[<span class="number">5</span>] = &#123;<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>&#125;;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> num : numArray)</div><div class="line">	    <span class="built_in">cout</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="python"><a href="#python" class="headerlink" title="python"></a>python</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">numArray = [<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numArray:</div><div class="line">    print(num)</div></pre></td></tr></table></figure>
+<p>二者的输出结果均为如下形式，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">11</div><div class="line">22</div><div class="line">33</div><div class="line">44</div></pre></td></tr></table></figure></p>
+<p>显然，相对于C99的for循环，基于范围的这种for循环能够减少多行代码量。</p>
+<h4 id="g-update"><a href="#g-update" class="headerlink" title="g++ update"></a>g++ update</h4><p>为了应用C++11/14的新标准，<code>gcc/g++</code>也需要做相应的更新，由于我还在Ubuntu-16.04 LTS的坑里，gcc的最高版本为5.4。如果编译时看到如下的警告，则需要对gcc进行更新。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">warning: range-based ‘<span class="keyword">for</span>’ loops only available with -std=c++11 or -std=gnu++11</div></pre></td></tr></table></figure></p>
+<p>更新方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r/<span class="built_in">test</span></div><div class="line">sudo apt update</div><div class="line">sudo apt install gcc-7 g++-7</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.linuxidc.com/Linux/2016-11/136840.htm" target="_blank" rel="external">Ubuntu升级GCC版本</a></li>
+<li>Sams Teach Yourself C++ in One Hour a Day</li>
+</ul>
 
             
 
@@ -298,7 +302,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/python/">python</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/cpp/">cpp</a>
 
             </div>
         
@@ -308,8 +312,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/21/resnet-with-tensorflow/" data-tooltip="Residual network I -- block and bottleneck" aria-label="PREVIOUS: Residual network I -- block and bottleneck">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -318,7 +321,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/" data-tooltip="cpp notebook 1" aria-label="NEXT: cpp notebook 1">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" data-tooltip="Confusion matrix and generation with TensorFlow" aria-label="NEXT: Confusion matrix and generation with TensorFlow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -336,7 +339,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/21/python-decorator/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -388,8 +391,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/21/resnet-with-tensorflow/" data-tooltip="Residual network I -- block and bottleneck" aria-label="PREVIOUS: Residual network I -- block and bottleneck">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -398,7 +400,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/" data-tooltip="cpp notebook 1" aria-label="NEXT: cpp notebook 1">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" data-tooltip="Confusion matrix and generation with TensorFlow" aria-label="NEXT: Confusion matrix and generation with TensorFlow">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -416,7 +418,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/21/python-decorator/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -449,7 +451,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/01/21/python-decorator/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -507,9 +509,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/01/21/python-decorator/';
+                 this.page.url = 'http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/';
                  
-                    this.page.identifier = '2018/01/21/python-decorator/';
+                    this.page.identifier = '2018/03/26/range-based-for-loop-by-cpp/';
                  
              };
             (function() {
