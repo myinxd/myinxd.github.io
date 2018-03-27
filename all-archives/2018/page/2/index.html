@@ -263,6 +263,58 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/27/difference-of-indexing-between-python-and-matlab/">
+                            Python和MATLAB矩阵索引的一个区别
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-27T10:04:15+08:00">
+	
+		    Feb 27, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>这两天尝试将一个MATLAB工程转成Python，卡在一个bug上很久，最后发现是二者在矩阵索引上存在区别。这里我采用的是Python的<a href="https://www.numpy.org" target="_blank" rel="external">NumPy</a>库。</p>
+<p>我们经常会通过一定的逻辑关系索引矩阵中的元素，并获取这些元素的位置信息，即indices。例如，<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">% MATLAB实现</span></div><div class="line">x = resize(<span class="number">0</span>:<span class="number">8</span>, <span class="number">3</span>, <span class="number">3</span>);</div><div class="line"><span class="comment">% 一维索引</span></div><div class="line">idx = <span class="built_in">find</span>(x &gt;= <span class="number">3</span>);</div><div class="line"><span class="comment">% 二维索引</span></div><div class="line">[idr, idc] = <span class="built_in">find</span>(x &gt;= <span class="number">3</span>);</div></pre></td></tr></table></figure></p>
+<p>对应的python实现为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">x = np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="comment"># 只有二维索引</span></div><div class="line">[idr, idc] = np.where(x &gt;= <span class="number">3</span>)</div></pre></td></tr></table></figure></p>
+<p>这里可以看出，MATLAB提供一种一维索引，即将二维矩阵以列为先，行次之转为一维向量，输出的索引对应该一维向量中元素所在位置。（这种处理方法经常可以用于加速运算，缩短运行时间。）然而，NumPy的where方法根据矩阵的维数提供对应axis的索引，没有MATLAB这种一维索引的输出。</p>
+<p>因此，在python中使用np.where进行矩阵元素索引时，要注意如下两点，</p>
+<ol>
+<li>np.where的输出是一个列表;</li>
+<li>np.where的输出列表的元素个数与矩阵的维数对应。</li>
+</ol>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html" target="_blank" rel="external">numpy.where</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/27/difference-of-indexing-between-python-and-matlab/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/02/26/Curve-fitting-by-scipy/">
                             Curve fitting by SciPy
                         </a>
@@ -729,57 +781,6 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
                     
                         <p>
                             <a href="/2018/01/25/how-to-apply-the-batch-normalized-net/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/">
-                            An interesting usage of excel sumif function
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-24T20:25:52+08:00">
-	
-		    Jan 24, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>新开一个Tag,关于Excel的，突然有去学VBA的想法了。。。然而作为码农，有了python和pandas，为什么还要用VBA。。。言归正传，描述一下问题，如图所示，</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_excel.png?raw=true" height="200" width="300">
-</center>
-
-<p>已知A列和B列，其中A列对应ID,B列对应该ID的数值。设C列某一行为<strong>R</strong>,统计A列A2:AR中出现ID=AR的元素的行号，将B列中相应行的值相加，输出到CR单元格中。用如下算法表示，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">R &lt;-- ROW(CR)</div><div class="line">Rows &lt;-- FIND(A2:AR, AR) </div><div class="line">CR &lt;-- SUM(B(Rows))</div></pre></td></tr></table></figure></p>
-<p>利用Excel自带的公式<code>SUMIF</code>可以实现以上算法，其核心是固定A2,用<code>A$2</code>表示，相应的公式则为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">=SUMIF(A$2:A2, A2, B$2:B2)</div></pre></td></tr></table></figure></p>
-<p>最后，再利用excel单元格的自动填充功能，获取CR对应的运算结果。</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://baike.baidu.com/item/SUMIF%E5%87%BD%E6%95%B0/6894362" target="_blank" rel="external">SUMIF函数</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
