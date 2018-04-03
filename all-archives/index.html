@@ -884,6 +884,55 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/03/deepcopy-of-list-in-python/">
+                            Python 列表嵌套复制
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-03T12:42:16+08:00">
+	
+		    Mar 03, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>则<code>y</code>和<code>x</code>变为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">2</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<p>list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决方法是用copy库中的<code>deepcopy</code>方法，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</div><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>此时的<code>x</code>和<code>y</code>为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.cnblogs.com/pyramid1001/p/5844905.html" target="_blank" rel="external">Python——列表深浅拷贝</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/03/deepcopy-of-list-in-python/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/01/ubuntu-16-10-no-network-problem/">
                             Ubuntu 16.10 无法联网的问题
                         </a>
@@ -926,53 +975,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
                     
                         <p>
                             <a href="/2018/03/01/ubuntu-16-10-no-network-problem/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/02/28/upgrade-ubuntu-from-1610-to-1710/">
-                            Upgrade Ubuntu from 1610 to 1710
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-02-28T10:59:38+08:00">
-	
-		    Feb 28, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>考虑到系统的稳定性，也因为懒，一直没升级Ubuntu 1610，也没有update。最近发现官方已经不支持1610了，而且直接把<code>yakkety</code>的镜像给取消了。所以，即使是利用系统自带的update manager，也无法直接升级到1710，会出现如下的两类错误，</p>
-<h5 id="无法更新"><a href="#无法更新" class="headerlink" title="无法更新"></a>无法更新</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">E:The repository <span class="string">'http://archive.canonical.com/ubuntu yakkety Release'</span> does not have a Release file., </div><div class="line">W:Updating from such a repository can<span class="string">'t be done securely, and is therefore disabled by default., </span></div><div class="line"><span class="string">W:See apt-secure(8) manpage for repository creation and user configuration details., </span></div><div class="line"><span class="string">E:The repository '</span>http://archive.ubuntu.com/ubuntu yakkety Release<span class="string">' does not have a Release file., </span></div><div class="line"><span class="string">W:Updating from such a repository can'</span>t be <span class="keyword">done</span> securely, and is therefore disabled by default., </div><div class="line">W:See apt-secure(8) manpage <span class="keyword">for</span> repository creation and user configuration details., </div><div class="line">E:The repository <span class="string">'http://archive.ubuntu.com/ubuntu yakkety-updates Release'</span> does not have a Release file., </div><div class="line">...</div></pre></td></tr></table></figure>
-<h5 id="无法升级"><a href="#无法升级" class="headerlink" title="无法升级"></a>无法升级</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">An upgrade from <span class="string">'yakkety'</span> to <span class="string">'artful'</span> is not supported with this tool.</div></pre></td></tr></table></figure>
-<p>参考Askubuntu上的<a href="https://askubuntu.com/questions/997047/how-to-update-ubuntu-from-16-10-to-17-10" target="_blank" rel="external">问题</a>，有如下的解决方法，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /etc/apt/</div><div class="line"><span class="comment"># 备份现有的sources.list</span></div><div class="line">sudo cp sources.list sources.list.bkp</div><div class="line"><span class="comment"># 替换yakkety为artful</span></div><div class="line">sudo vim sources.list</div><div class="line">:%s/yakkety/artful/g</div><div class="line"><span class="comment"># 保存并重新更新和升级</span></div><div class="line">sudo update</div><div class="line">sudo upgrade</div><div class="line"><span class="comment"># 重启系统</span></div><div class="line">reboot</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://askubuntu.com/questions/997047/how-to-update-ubuntu-from-16-10-to-17-10" target="_blank" rel="external">How to upgrade ubuntu from 1610 to 1710</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/02/28/upgrade-ubuntu-from-1610-to-1710/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Nupy矩阵的复制问题 - Jason&#39;s blog</title>
+    <title>Python 列表嵌套复制 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用copy方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而copy则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。 下面看一个例子,12345678910import numpy as npx = np.">
+    <meta name="description" content="最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，1234x = [[1, 2], 3]y = x.copy()y.reverse()y[1][0] = 2 则y和x变为，12x = [[2, 2], 3]y = [3, [2, 2]] list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决">
 <meta name="keywords" content="python">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Nupy矩阵的复制问题">
-<meta property="og:url" content="http://www.mazhixian.me/2018/03/04/a-numpy-matrix-copy-problem/index.html">
+<meta property="og:title" content="Python 列表嵌套复制">
+<meta property="og:url" content="http://www.mazhixian.me/2018/03/03/deepcopy-of-list-in-python/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用copy方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而copy则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。 下面看一个例子,12345678910import numpy as npx = np.">
+<meta property="og:description" content="最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，1234x = [[1, 2], 3]y = x.copy()y.reverse()y[1][0] = 2 则y和x变为，12x = [[2, 2], 3]y = [3, [2, 2]] list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-04T02:46:30.801Z">
+<meta property="og:updated_time" content="2018-04-03T09:22:07.885Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nupy矩阵的复制问题">
-<meta name="twitter:description" content="简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用copy方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而copy则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。 下面看一个例子,12345678910import numpy as npx = np.">
+<meta name="twitter:title" content="Python 列表嵌套复制">
+<meta name="twitter:description" content="最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，1234x = [[1, 2], 3]y = x.copy()y.reverse()y[1][0] = 2 则y和x变为，12x = [[2, 2], 3]y = [3, [2, 2]] list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Nupy矩阵的复制问题
+            Python 列表嵌套复制
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-03-04T10:26:23+08:00">
+    <time itemprop="datePublished" datetime="2018-03-03T12:42:16+08:00">
 	
-		    Mar 04, 2018
+		    Mar 03, 2018
     	
     </time>
     
@@ -280,10 +280,13 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用<code>copy</code>方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而<code>copy</code>则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。</p>
-<p>下面看一个例子,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">x = np.arange(<span class="number">9.</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="comment"># copy</span></div><div class="line">y = x.copy()</div><div class="line">y[y&gt;=<span class="number">5</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 赋值法</span></div><div class="line">z = x</div><div class="line">z[z&gt;=<span class="number">5</span>] = <span class="number">0</span></div></pre></td></tr></table></figure></p>
-<p>其输出结果如下,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">6</span>]: y</div><div class="line">Out[<span class="number">6</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">7</span>]: x</div><div class="line">Out[<span class="number">7</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">       [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line"></div><div class="line">In [<span class="number">8</span>]: z</div><div class="line">Out[<span class="number">8</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">9</span>]: x</div><div class="line">Out[<span class="number">9</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div></pre></td></tr></table></figure></p>
-<p>可以看到，采用<code>copy</code>后，对<code>y</code>的操作不会影响到原矩阵<code>x</code>，而采用直接赋值后，对<code>z</code>的操作对<code>x</code>产生了影响。</p>
+            <p>最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>则<code>y</code>和<code>x</code>变为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">2</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<p>list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决方法是用copy库中的<code>deepcopy</code>方法，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</div><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>此时的<code>x</code>和<code>y</code>为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.cnblogs.com/pyramid1001/p/5844905.html" target="_blank" rel="external">Python——列表深浅拷贝</a></li>
+</ul>
 
             
 
@@ -305,7 +308,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="PREVIOUS: SVM hyperplane visualization based on libsvm">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/04/a-numpy-matrix-copy-problem/" data-tooltip="Nupy矩阵的复制问题" aria-label="PREVIOUS: Nupy矩阵的复制问题">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -314,7 +317,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/03/deepcopy-of-list-in-python/" data-tooltip="Python 列表嵌套复制" aria-label="NEXT: Python 列表嵌套复制">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/01/ubuntu-16-10-no-network-problem/" data-tooltip="Ubuntu 16.10 无法联网的问题" aria-label="NEXT: Ubuntu 16.10 无法联网的问题">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -332,7 +335,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/04/a-numpy-matrix-copy-problem/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/03/deepcopy-of-list-in-python/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -385,7 +388,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/" data-tooltip="SVM hyperplane visualization based on libsvm" aria-label="PREVIOUS: SVM hyperplane visualization based on libsvm">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/04/a-numpy-matrix-copy-problem/" data-tooltip="Nupy矩阵的复制问题" aria-label="PREVIOUS: Nupy矩阵的复制问题">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -394,7 +397,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/03/deepcopy-of-list-in-python/" data-tooltip="Python 列表嵌套复制" aria-label="NEXT: Python 列表嵌套复制">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/01/ubuntu-16-10-no-network-problem/" data-tooltip="Ubuntu 16.10 无法联网的问题" aria-label="NEXT: Ubuntu 16.10 无法联网的问题">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -412,7 +415,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/04/a-numpy-matrix-copy-problem/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/03/deepcopy-of-list-in-python/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -445,7 +448,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/04/a-numpy-matrix-copy-problem/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/03/deepcopy-of-list-in-python/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -503,9 +506,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/03/04/a-numpy-matrix-copy-problem/';
+                 this.page.url = 'http://www.mazhixian.me/2018/03/03/deepcopy-of-list-in-python/';
                  
-                    this.page.identifier = '2018/03/04/a-numpy-matrix-copy-problem/';
+                    this.page.identifier = '2018/03/03/deepcopy-of-list-in-python/';
                  
              };
             (function() {
