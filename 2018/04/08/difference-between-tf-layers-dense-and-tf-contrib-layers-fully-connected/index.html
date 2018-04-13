@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Range based for loop by cpp - Jason&#39;s blog</title>
+    <title>tf.layers.dense 和 tf.contrib.layers.fully_connected的区别 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
-<meta name="keywords" content="cpp">
+    <meta name="description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
+<meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Range based for loop by cpp">
-<meta property="og:url" content="http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/index.html">
+<meta property="og:title" content="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
+<meta property="og:url" content="http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
+<meta property="og:description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-26T14:47:08.360Z">
+<meta property="og:updated_time" content="2018-04-08T14:03:14.759Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Range based for loop by cpp">
-<meta name="twitter:description" content="最近落了好多没写了，感觉已经废了。继续C++的笔记，关于range-based for loop的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。 range-based for loopC++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于pytho">
+<meta name="twitter:title" content="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
+<meta name="twitter:description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Range based for loop by cpp
+            tf.layers.dense 和 tf.contrib.layers.fully_connected的区别
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-03-26T22:03:19+08:00">
+    <time itemprop="datePublished" datetime="2018-04-08T18:53:03+08:00">
 	
-		    Mar 26, 2018
+		    Apr 08, 2018
     	
     </time>
     
@@ -280,17 +280,20 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>最近落了好多没写了，感觉已经废了。继续C++的笔记，关于<em>range-based for loop</em>的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。</p>
-<h4 id="range-based-for-loop"><a href="#range-based-for-loop" class="headerlink" title="range-based for loop"></a>range-based for loop</h4><p>C++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于python中直接进行列表索引的for循环。请看下面的样例，分别是C++和python的for循环写法，</p>
-<h5 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> numArray[<span class="number">5</span>] = &#123;<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>&#125;;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> num : numArray)</div><div class="line">	    <span class="built_in">cout</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="python"><a href="#python" class="headerlink" title="python"></a>python</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">numArray = [<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numArray:</div><div class="line">    print(num)</div></pre></td></tr></table></figure>
-<p>二者的输出结果均为如下形式，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">11</div><div class="line">22</div><div class="line">33</div><div class="line">44</div></pre></td></tr></table></figure></p>
-<p>显然，相对于C99的for循环，基于范围的这种for循环能够减少多行代码量。</p>
-<h4 id="g-update"><a href="#g-update" class="headerlink" title="g++ update"></a>g++ update</h4><p>为了应用C++11/14的新标准，<code>gcc/g++</code>也需要做相应的更新，由于我还在Ubuntu-16.04 LTS的坑里，gcc的最高版本为5.4。如果编译时看到如下的警告，则需要对gcc进行更新。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">warning: range-based ‘<span class="keyword">for</span>’ loops only available with -std=c++11 or -std=gnu++11</div></pre></td></tr></table></figure></p>
-<p>更新方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r/<span class="built_in">test</span></div><div class="line">sudo apt update</div><div class="line">sudo apt install gcc-7 g++-7</div></pre></td></tr></table></figure></p>
+            <p>TensorFlow的<code>tf.layers</code>和c<code>tf.contrib.layers</code>都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。</p>
+<p>今天主要讨论一下<code>tf.layers.dense</code>和<code>tf.contrib.layers.fully_connected</code>的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，</p>
+<ul>
+<li><p>tf.layers.dense</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">tf.layers.dense(</div><div class="line">    inputs,</div><div class="line">    units,</div><div class="line">    activation=<span class="keyword">None</span>,</div><div class="line">    use_bias=<span class="keyword">True</span>,</div><div class="line">    kernel_initializer=<span class="keyword">None</span>,</div><div class="line">    bias_initializer=tf.zeros_initializer(),</div><div class="line">    kernel_regularizer=<span class="keyword">None</span>,</div><div class="line">    bias_regularizer=<span class="keyword">None</span>,</div><div class="line">    activity_regularizer=<span class="keyword">None</span>,</div><div class="line">    kernel_constraint=<span class="keyword">None</span>,</div><div class="line">    bias_constraint=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    name=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+<li><p>tf.contrib.layers.fully-connected</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">fully_connected(</div><div class="line">    inputs,</div><div class="line">    num_outputs,</div><div class="line">    activation_fn=tf.nn.relu,</div><div class="line">    normalizer_fn=<span class="keyword">None</span>,</div><div class="line">    normalizer_params=<span class="keyword">None</span>,</div><div class="line">    weights_initializer=initializers.xavier_initializer(),</div><div class="line">    weights_regularizer=<span class="keyword">None</span>,</div><div class="line">    biases_initializer=tf.zeros_initializer(),</div><div class="line">    biases_regularizer=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span>,</div><div class="line">    variables_collections=<span class="keyword">None</span>,</div><div class="line">    outputs_collections=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    scope=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以看出，<code>tf.layers.dense</code>相对更简单，没有提供默认的<code>activation</code>和<code>kernel_initializer</code>, 而后者这两个参数都做了默认的初始化。使用时一定要显示说明这些，否则会出现不可控的错误。。。</p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://www.linuxidc.com/Linux/2016-11/136840.htm" target="_blank" rel="external">Ubuntu升级GCC版本</a></li>
-<li>Sams Teach Yourself C++ in One Hour a Day</li>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf/layers/dense" target="_blank" rel="external">tf.layers.dense</a></li>
+<li><a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/fully_connected" target="_blank" rel="external">tf.contrib.layers.fully_connected</a></li>
 </ul>
 
             
@@ -302,7 +305,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/cpp/">cpp</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
 
             </div>
         
@@ -312,8 +315,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" data-tooltip="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别" aria-label="PREVIOUS: tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -322,7 +324,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" data-tooltip="Confusion matrix and generation with TensorFlow" aria-label="NEXT: Confusion matrix and generation with TensorFlow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/26/range-based-for-loop-by-cpp/" data-tooltip="Range based for loop by cpp" aria-label="NEXT: Range based for loop by cpp">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -340,7 +342,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -392,8 +394,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" data-tooltip="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别" aria-label="PREVIOUS: tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -402,7 +403,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" data-tooltip="Confusion matrix and generation with TensorFlow" aria-label="NEXT: Confusion matrix and generation with TensorFlow">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/26/range-based-for-loop-by-cpp/" data-tooltip="Range based for loop by cpp" aria-label="NEXT: Range based for loop by cpp">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -420,7 +421,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -453,7 +454,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -511,9 +512,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/03/26/range-based-for-loop-by-cpp/';
+                 this.page.url = 'http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/';
                  
-                    this.page.identifier = '2018/03/26/range-based-for-loop-by-cpp/';
+                    this.page.identifier = '2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/';
                  
              };
             (function() {

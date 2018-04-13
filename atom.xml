@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.mazhixian.me/"/>
-  <updated>2018-03-26T14:47:08.360Z</updated>
+  <updated>2018-04-08T14:03:14.759Z</updated>
   <id>http://www.mazhixian.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>tf.layers.dense 和 tf.contrib.layers.fully_connected的区别</title>
+    <link href="http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/"/>
+    <id>http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/</id>
+    <published>2018-04-08T10:53:03.000Z</published>
+    <updated>2018-04-08T14:03:14.759Z</updated>
+    
+    <content type="html"><![CDATA[<p>TensorFlow的<code>tf.layers</code>和c<code>tf.contrib.layers</code>都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。</p><p>今天主要讨论一下<code>tf.layers.dense</code>和<code>tf.contrib.layers.fully_connected</code>的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，</p><ul><li><p>tf.layers.dense</p><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">tf.layers.dense(</div><div class="line">    inputs,</div><div class="line">    units,</div><div class="line">    activation=<span class="keyword">None</span>,</div><div class="line">    use_bias=<span class="keyword">True</span>,</div><div class="line">    kernel_initializer=<span class="keyword">None</span>,</div><div class="line">    bias_initializer=tf.zeros_initializer(),</div><div class="line">    kernel_regularizer=<span class="keyword">None</span>,</div><div class="line">    bias_regularizer=<span class="keyword">None</span>,</div><div class="line">    activity_regularizer=<span class="keyword">None</span>,</div><div class="line">    kernel_constraint=<span class="keyword">None</span>,</div><div class="line">    bias_constraint=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    name=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure></li><li><p>tf.contrib.layers.fully-connected</p><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">fully_connected(</div><div class="line">    inputs,</div><div class="line">    num_outputs,</div><div class="line">    activation_fn=tf.nn.relu,</div><div class="line">    normalizer_fn=<span class="keyword">None</span>,</div><div class="line">    normalizer_params=<span class="keyword">None</span>,</div><div class="line">    weights_initializer=initializers.xavier_initializer(),</div><div class="line">    weights_regularizer=<span class="keyword">None</span>,</div><div class="line">    biases_initializer=tf.zeros_initializer(),</div><div class="line">    biases_regularizer=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span>,</div><div class="line">    variables_collections=<span class="keyword">None</span>,</div><div class="line">    outputs_collections=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    scope=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure></li></ul><p>可以看出，<code>tf.layers.dense</code>相对更简单，没有提供默认的<code>activation</code>和<code>kernel_initializer</code>, 而后者这两个参数都做了默认的初始化。使用时一定要显示说明这些，否则会出现不可控的错误。。。</p><h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul><li><a href="https://www.tensorflow.org/api_docs/python/tf/layers/dense" target="_blank" rel="external">tf.layers.dense</a></li><li><a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/fully_connected" target="_blank" rel="external">tf.contrib.layers.fully_connected</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;TensorFlow的&lt;code&gt;tf.layers&lt;/code&gt;和c&lt;code&gt;tf.contrib.layers&lt;/code&gt;都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。&lt;/p&gt;
+&lt;p&gt;今天主要讨论一下&lt;code&gt;
+      
+    
+    </summary>
+    
+    
+      <category term="deep-learning" scheme="http://www.mazhixian.me/all-tags/deep-learning/"/>
+    
+  </entry>
   
   <entry>
     <title>Range based for loop by cpp</title>
@@ -216,29 +240,6 @@
     
     
       <category term="python" scheme="http://www.mazhixian.me/all-tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ubuntu 16.10 无法联网的问题</title>
-    <link href="http://www.mazhixian.me/2018/03/01/ubuntu-16-10-no-network-problem/"/>
-    <id>http://www.mazhixian.me/2018/03/01/ubuntu-16-10-no-network-problem/</id>
-    <published>2018-03-01T01:34:02.000Z</published>
-    <updated>2018-03-27T05:08:52.576Z</updated>
-    
-    <content type="html"><![CDATA[<p>趁着系统在升级，记录一下ubuntu recovery mode的网络恢复功能。我的系统是Ubuntu1610，因为不是LTS，官方已经不支持更新了，因此也无法通过正常的手段升级，曲线升级的方法参考<a href="http://www.mazhixian.me/2018/02/28/upgrade-ubuntu-from-1610-to-1710/">这里</a>。</p><h4 id="Revoery-模式下网络连接"><a href="#Revoery-模式下网络连接" class="headerlink" title="Revoery 模式下网络连接"></a>Revoery 模式下网络连接</h4><p>在升级过程中，可能会出现重启后无法连接网络的问题，其中最严重的就是网卡驱动没有了。解决方法如下，</p><ol><li>重启系统;</li><li>选择Advanced options for ubuntu;</li><li>选择最近的image的recover mode;</li><li>进入后，选择network enable network;</li><li>再次重启。</li></ol><h4 id="DNS-server"><a href="#DNS-server" class="headerlink" title="DNS server"></a>DNS server</h4><p>另一种情况是，DNS server出现问题，例如<code>/etc/reconv.conf</code>文件为空，或者出现问题。解决方法是自己添加，默认的配置如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)</span></div><div class="line"><span class="comment">#     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN</span></div><div class="line"><span class="comment"># 127.0.0.53 is the systemd-resolved stub resolver.</span></div><div class="line"><span class="comment"># run "systemd-resolve --status" to see details about the actual nameservers.</span></div><div class="line"></div><div class="line">nameserver 127.0.0.53</div></pre></td></tr></table></figure></p><p>也可以自己修改成如下形式，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nameserver 114.114.114.114</div><div class="line">nameserver 8.8.8.8</div></pre></td></tr></table></figure></p><h4 id="多网卡的配置"><a href="#多网卡的配置" class="headerlink" title="多网卡的配置"></a>多网卡的配置</h4><p>除了网络恢复问题，多网卡的配置也是我关注的问题，这样可以一定程度上保证电脑处在联网状态。以我的系统为例，分别有两块网卡，有线网卡<code>enp0s31f6</code>和无线网卡<code>wlp4s0</code>，二者将连接到不同的网络，以有线网卡作为主要网卡，则配置如下，配置文件为<code>/etc/network/interfaces</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># interfaces(5) file used by ifup(8) and ifdown(8)</span></div><div class="line">auto lo</div><div class="line">iface lo inet loopback</div><div class="line"></div><div class="line"><span class="comment"># The primary network interface</span></div><div class="line">auto enp0s31f6</div><div class="line">iface enp0s31f6 inet static</div><div class="line">    address 192.168.1.100</div><div class="line">    netmask 255.255.255.0</div><div class="line">    network 192.168.1.0</div><div class="line">    gateway 192.168.1.1</div><div class="line"> </div><div class="line"><span class="comment"># The wireless network interface with dhcp</span></div><div class="line">auto wlp4s0</div><div class="line">iface wlp4s0 inet dhcp</div><div class="line">    address 192.168.30.100</div><div class="line">    netmask 255.255.255.0</div><div class="line">    network 192.168.30.0</div><div class="line">    gateway 192.168.30.1</div><div class="line">    wpa-ssid WIFI-NAME   <span class="comment"># SSID name</span></div><div class="line">    wpa-key-mgmt WPA-PSK <span class="comment"># Encryption method</span></div><div class="line">    wpa-psk YOYR-PASSWORD-HERE <span class="comment"># WIFI password</span></div></pre></td></tr></table></figure></p><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul><li><a href="https://blog.csdn.net/fansilean/article/details/43069883" target="_blank" rel="external">Ubuntu /etc/network/interface</a></li><li><a href="https://segmentfault.com/a/1190000006078381" target="_blank" rel="external">Linux网卡命名enp3s0说明</a></li><li><a href="https://blog.csdn.net/liuqz2009/article/details/51097159" target="_blank" rel="external">Ubuntu中启用关闭Network-manager网络设置问题</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;趁着系统在升级，记录一下ubuntu recovery mode的网络恢复功能。我的系统是Ubuntu1610，因为不是LTS，官方已经不支持更新了，因此也无法通过正常的手段升级，曲线升级的方法参考&lt;a href=&quot;http://www.mazhixian.me/2018/
-      
-    
-    </summary>
-    
-    
-      <category term="linux" scheme="http://www.mazhixian.me/all-tags/linux/"/>
     
   </entry>
   

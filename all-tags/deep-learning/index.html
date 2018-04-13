@@ -263,6 +263,63 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/">
+                            tf.layers.dense 和 tf.contrib.layers.fully_connected的区别
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-04-08T18:53:03+08:00">
+	
+		    Apr 08, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>TensorFlow的<code>tf.layers</code>和c<code>tf.contrib.layers</code>都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。</p>
+<p>今天主要讨论一下<code>tf.layers.dense</code>和<code>tf.contrib.layers.fully_connected</code>的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，</p>
+<ul>
+<li><p>tf.layers.dense</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">tf.layers.dense(</div><div class="line">    inputs,</div><div class="line">    units,</div><div class="line">    activation=<span class="keyword">None</span>,</div><div class="line">    use_bias=<span class="keyword">True</span>,</div><div class="line">    kernel_initializer=<span class="keyword">None</span>,</div><div class="line">    bias_initializer=tf.zeros_initializer(),</div><div class="line">    kernel_regularizer=<span class="keyword">None</span>,</div><div class="line">    bias_regularizer=<span class="keyword">None</span>,</div><div class="line">    activity_regularizer=<span class="keyword">None</span>,</div><div class="line">    kernel_constraint=<span class="keyword">None</span>,</div><div class="line">    bias_constraint=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    name=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+<li><p>tf.contrib.layers.fully-connected</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">fully_connected(</div><div class="line">    inputs,</div><div class="line">    num_outputs,</div><div class="line">    activation_fn=tf.nn.relu,</div><div class="line">    normalizer_fn=<span class="keyword">None</span>,</div><div class="line">    normalizer_params=<span class="keyword">None</span>,</div><div class="line">    weights_initializer=initializers.xavier_initializer(),</div><div class="line">    weights_regularizer=<span class="keyword">None</span>,</div><div class="line">    biases_initializer=tf.zeros_initializer(),</div><div class="line">    biases_regularizer=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span>,</div><div class="line">    variables_collections=<span class="keyword">None</span>,</div><div class="line">    outputs_collections=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    scope=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以看出，<code>tf.layers.dense</code>相对更简单，没有提供默认的<code>activation</code>和<code>kernel_initializer</code>, 而后者这两个参数都做了默认的初始化。使用时一定要显示说明这些，否则会出现不可控的错误。。。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf/layers/dense" target="_blank" rel="external">tf.layers.dense</a></li>
+<li><a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/fully_connected" target="_blank" rel="external">tf.contrib.layers.fully_connected</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/">
                             Confusion matrix and generation with TensorFlow
                         </a>
@@ -884,64 +941,6 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}
                     
                         <p>
                             <a href="/2018/01/21/resnet-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
-                            Adjustable learning rate for deep learning by TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-19T09:11:34+08:00">
-	
-		    Jan 19, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true" height="200" width="360">
-</center>
-
-<p>参考<a href="https://www.amazon.cn/dp/B06WGP12TV/ref=sr_1_1?ie=UTF8&amp;qid=1516326593&amp;sr=8-1&amp;keywords=Tensorflow" target="_blank" rel="external">TensorFlow: 实战Google深度学习框架</a>这本书，利用<strong>指数衰减</strong>的方法设置<a href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent" target="_blank" rel="external">梯度下降算法</a>的学习率，TensofFLow中集成了这一算法，即<code>tf.train.exponential_decay</code>。其实现了</p>
-<script type="math/tex; mode=display">
-L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学习率，$R_d$表示衰减率，$S_g$和$S_d$分别表示总Epochs和每个Epochs中的Batches。从而没迭代一轮，学习率便更新一次。</p>
-<p>在TensorFlow中可以用如下代码实现指数衰减的学习率更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">init_lr = tf.Variable(<span class="number">0.</span>, name=<span class="string">"LR"</span>)</div><div class="line">global_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"global_step"</span>)</div><div class="line">decay_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_step"</span>)</div><div class="line">decay_rate = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_rate"</span>)</div><div class="line">learning_rate = tf.train.exponential_decay(</div><div class="line">    learning_rate = init_lr ,</div><div class="line">    global_step = global_step,</div><div class="line">    decay_steps = decay_step,</div><div class="line">    decay_rate = decay_rate,</div><div class="line">    staircase=<span class="keyword">False</span>,</div><div class="line">    name=<span class="keyword">None</span></div><div class="line">	)</div><div class="line"><span class="comment"># Test</span></div><div class="line">lr_init = <span class="number">0.1</span></div><div class="line">epochs = <span class="number">200</span></div><div class="line">batches = <span class="number">100.</span></div><div class="line">d_rate = <span class="number">0.9</span></div><div class="line">epoch = np.arange(<span class="number">0</span>,epochs,<span class="number">1</span>)</div><div class="line">lr = np.zeros(epoch.shape)</div><div class="line"><span class="comment"># Init a session</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> epoch.astype(int):</div><div class="line">	lr[i] = sess.run(learning_rate, </div><div class="line">                     feed_dict=&#123;init_lr: lr_init,</div><div class="line">                                global_step: i,</div><div class="line">                                decay_step: batches,</div><div class="line">                                decay_rate: d_rate</div><div class="line">                                &#125;)</div></pre></td></tr></table></figure></p>
-<p><a href="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/Learning_rate_adjust_demo.ipynb" target="_blank" rel="external">这里</a>提供了一个样例，其输出结果如下图，通过设置<code>tf.exponential_decay</code>的参数<code>staircase</code>可以控制learning rate是否为阶梯型或者平滑的。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig2.png?raw=true" height="360" width="480">
-</center>
-
-<p>而在训练网络，优化目标函数的过程中，可以参考官方手册，用如下语句进行梯度更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">global_step = tf.Variable(<span class="number">0</span>, trainable=<span class="keyword">False</span>)</div><div class="line">starter_learning_rate = <span class="number">0.1</span></div><div class="line">learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,</div><div class="line">                                           <span class="number">100000</span>, <span class="number">0.96</span>, staircase=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># Passing global_step to minimize() will increment it at each step.</span></div><div class="line">learning_step = (</div><div class="line">    tf.train.GradientDescentOptimizer(learning_rate)</div><div class="line">    .minimize(...my loss..., global_step=global_step)</div><div class="line">)</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/train/exponential_decay" target="_blank" rel="external">exponential decay</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
