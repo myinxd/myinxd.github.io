@@ -263,6 +263,101 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/">
+                            Ubuntu 16.10 launch user script when log in
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-12-25T10:44:11+08:00">
+	
+		    Dec 25, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。</p>
+<h5 id="Step1-prepare-your-script"><a href="#Step1-prepare-your-script" class="headerlink" title="Step1 prepare your script"></a>Step1 prepare your script</h5><p>准备待执行的脚本并修改权限为可执行，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/<span class="built_in">local</span>/</div><div class="line">$ touch myscript.sh</div><div class="line">$ vim myscript.sh <span class="comment"># Add the lines you want to execute...</span></div><div class="line">$ chmod +x myscript.sh <span class="comment"># Change mode to executable</span></div></pre></td></tr></table></figure></p>
+<h5 id="Step2-configure-the-conf-file"><a href="#Step2-configure-the-conf-file" class="headerlink" title="Step2 configure the .conf file"></a>Step2 configure the .conf file</h5><p>编写配置文件，放入<code>~/.config/upstart/</code>中，例如<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.config/upstart</div><div class="line">$ touch myscript.conf</div><div class="line">$ vim myscript.conf</div><div class="line"><span class="comment">#### configurations to be added.</span></div><div class="line">start on startup</div><div class="line">task</div><div class="line"><span class="built_in">exec</span> /home/usrname/<span class="built_in">local</span>/myscript.sh</div></pre></td></tr></table></figure></p>
+<h5 id="Step3-log-out-and-relogin"><a href="#Step3-log-out-and-relogin" class="headerlink" title="Step3 log out and relogin"></a>Step3 log out and relogin</h5><p>重新登录，检验是否实现<code>myscript.sh</code>的自启动</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="http://blog.csdn.net/upshi/article/details/53884770" target="_blank" rel="external">Ubuntu添加开机启动执行脚本</a></li>
+<li><a href="http://askubuntu.com/questions/814/how-to-run-scripts-on-start-up" target="_blank" rel="external">How to run scripts on start up</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML-2/">
+                            HTML notebook2
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2017-12-24T21:47:18+08:00">
+	
+		    Dec 24, 2017
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p>
+<p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p>
+<p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2017/12/24/Learning-HTML-2/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2017/12/24/Learning-HTML/">
                             HTML notebook
                         </a>
@@ -593,80 +688,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/09/Catch-data-with-provided-keys/">
-                            Catch data with provided keys
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-09T22:51:49+08:00">
-	
-		    Sep 09, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>晚上粗去吃大餐了，走了很多路，超级开心。。。今天还是写个短博客，讲一下怎么从文件里根据关键词提取相关信息。举个例子，比如我们订阅了arXiv的arXiv.cs板块，那么每天会收到一封邮件，如果想批量且自动化地下载这些论文，应该怎么做呢？ 有一些解决方案，比如提取每篇摘要文末的链接，利用python的url,requests等包进行下载; 比如利用linux的wget工具进行下载，但相对来说，这两种方案是比较难入门的，我到现在都写不好。。。那么，是否有更简单的解决方案呢？ 答案是用正则表达式re.<br>
-                    
-                        <a href="/2017/09/09/Catch-data-with-provided-keys/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/09/08/matplotlib-tips-I/">
-                            matplotlib tips I
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-08T23:00:34+08:00">
-	
-		    Sep 08, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。<br>
-                    
-                        <a href="/2017/09/08/matplotlib-tips-I/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -685,7 +706,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 5 of 6</li>
+        <li class="pagination-number">page 5 of 7</li>
     </ul>
 </div>
 
@@ -745,7 +766,24 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
-<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!--SCRIPTS END--><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

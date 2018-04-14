@@ -262,6 +262,242 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/">
+                            Generative adversarial network and its conditional case
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-04-14T22:36:34+08:00">
+	
+		    Apr 14, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>本来想讨论InfoGAN的，先留个坑吧。今天先讨论标准的GAN，即生成对抗网络。GAN最先由Ian Goodfellow在<a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="external">2014</a>年提出，跟<a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external">Variational Auto-Encoder (VAE)</a>的时间差不多，二者都是非常好的生成网络，在无监督学习中发挥了重要的作用。</p>
+<h3 id="Basic-theory"><a href="#Basic-theory" class="headerlink" title="Basic theory"></a>Basic theory</h3><p>生成对抗网络属于一个minmax game，其目标是<em>Learn a generator, whose distribution <script type="math/tex">P_G(x)</script> matches the real data distribution <script type="math/tex">P_\mathrm{data}(x)</script></em>，即实现一个生成器<script type="math/tex">G(x)</script>用于从随机分布 (一般为高斯) 的噪声<script type="math/tex">z</script>中生成与目标样本<script type="math/tex">x_\mathrm{data}</script>类似的模拟$x_g$。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig1.png?raw=true" height="360" width="540">
+</center>
+
+<p>为了衡量<script type="math/tex">x_g</script>与<script type="math/tex">x_\mathrm{data}</script>的相似性，设计一个称为<strong>Discriminator</strong>的对抗网络<script type="math/tex">D(x)</script>，该网络的输入可以是真实的<script type="math/tex">x_\mathrm{data}</script>，也可以是有generator生成的伪造的样本<script type="math/tex">x_{g}</script>。我们要求<script type="math/tex">D(x)</script>能够分辨出输入给它的样本的真实性。因此discriminator的输出应该是样本真实的概率，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
+\end{equation}</script><p>可以看出，当P<em>{G}(x)与P</em>\mathrm{data}(x)接近时，$D(x) \sim 1/2$，即discriminator无法判断其输入来自真实样本还是伪造的样本。因此<script type="math/tex">G(x)</script>与<script type="math/tex">D(x)</script>构成了一对相互对抗的网络，即生成对抗。相应的目标函数为，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\min\limits_{G}\max\limits_{D} V(D,G) = 
+\mathrm{E}_{x \sim P_\mathrm{data}[\log(D(x))]} + \mathrm{E}_{z}[1 - \log(D(G(x)))]
+\end{equation}</script><p>参考Goodfellow的论文，该目标函数的优化求解分为两步，</p>
+<h4 id="Step1"><a href="#Step1" class="headerlink" title="Step1"></a>Step1</h4><ul>
+<li>随机生成minibatch个z noise作为generator的输入，得到对应的输出<script type="math/tex">x_g</script>；</li>
+<li>随机选取minibatch个real data样本<script type="math/tex">x_\mathrm{data}</script>；</li>
+<li>计算<script type="math/tex">L_D = \mathrm{E}_{x \sim P_\mathrm{data}[\log(D(x))]} + \mathrm{E}_{z}[1 - \log(D(G(x)))]</script>；</li>
+<li>将<script type="math/tex">L_D</script>沿梯度方向传递给Discriminator的参数，进行参数学习。</li>
+</ul>
+<h4 id="Step2"><a href="#Step2" class="headerlink" title="Step2"></a>Step2</h4><ul>
+<li>随机生成minibatch个z noise作为generator的输入，得到对应的输出<script type="math/tex">x_g</script>；</li>
+<li>计算<script type="math/tex">L_G = \mathrm{E}_{z}[1 - \log(D(G(x)))]</script>；</li>
+<li>将<script type="math/tex">L_G</script>沿梯度方向传递给Generator的参数，进行参数学习。</li>
+</ul>
+<p>交替重复以上两步，直到<script type="math/tex">L_D</script>和<script type="math/tex">L_G</script>收敛，即 <em>After several steps of training, if G and D have enough capacity, they will reach a point at which both cannot improve</em>.</p>
+<h3 id="Conditional-case"><a href="#Conditional-case" class="headerlink" title="Conditional case"></a>Conditional case</h3><p>以上是最原始的GAN，是一种无监督的网络。那么，以MNIST手写体数据库为例，如果我们想得到一个能够生成特定数字的生成器，应该如何做？ 这一问题可以理解为GAN的有监督学习，即conditional GAN。这里插一句，InfoGAN可以在无标签的情况下通过将$z$分解为noise+latent两部分，无监督地学到具有样本的context semantic representations.绝对秒杀原始的GAN。。。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig2.png?raw=true" height="300" width="450">
+</center>
+
+<p>条件GAN的思路是什么呢？如上图所示，从左往右分别是原始的GAN、条件GAN两个网络。conditional GAN在generator和discriminator的输入部分均添加了一个新的变量$y$，即样本的标签，作为一种固定的约束，指导网络学习到样本内部的区别。<strong>但是网络的目标函数和训练过程的变化很小。</strong> 这个思路，和conditional variational auto-encoder非常相似。更新后的目标函数如下所示，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\min\limits_{G}\max\limits_{D} V(D,G) = 
+\mathrm{E}_{x \sim P_\mathrm{data}[\log(D(x|y))]} + \mathrm{E}_{z|y}[1 - \log(D(G(x|y)))]
+\end{equation}</script><h3 id="GAN的TensorFlow实现"><a href="#GAN的TensorFlow实现" class="headerlink" title="GAN的TensorFlow实现"></a>GAN的TensorFlow实现</h3><p>首先吐个槽,GAN的调参真的不是一般的复杂，我发现Generator和Discriminator互搏的时候，经常训着训着，loss就偏了，最后的输出也很诡异。然后是激活函数的选择、dropout的keep_prob，以及z的长度，batch的大小都会有影响，我提供了<a href="">GAN</a>和<a href="">Conditional GAN</a>的notebook，感兴趣可以自己去试试看。。。下面我分步骤介绍一下Conditional GAN的实现。</p>
+<ul>
+<li><p>Initialization</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">64</span></div><div class="line">z_len = <span class="number">100</span></div><div class="line">z_noise = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, z_len], name=<span class="string">'z_noise'</span>)</div><div class="line">y = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">10</span>], name=<span class="string">'y'</span>)</div><div class="line">x_data = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">784</span>], name=<span class="string">'x_data'</span>)</div><div class="line">keep_prob = tf.placeholder(dtype=tf.float32, shape=(), name=<span class="string">'keep_prob'</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p>Generator</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(z_noise, y, keep_prob, namescope=<span class="string">'generator'</span>)</span>:</span></div><div class="line">    <span class="string">"""The generator"""</span></div><div class="line">    <span class="keyword">with</span> tf.name_scope(namescope):</div><div class="line">        net = tf.concat([z_noise, y], axis=<span class="number">1</span>)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">150</span>, activation=tf.nn.relu, name=<span class="string">'g_fc1'</span>)</div><div class="line">        net = tf.nn.dropout(net, keep_prob=keep_prob)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">300</span>, activation=tf.nn.relu, name=<span class="string">'g_fc2'</span>)</div><div class="line">        net = tf.nn.dropout(net, keep_prob=keep_prob)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">784</span>, activation=tf.nn.sigmoid, name=<span class="string">'g_fc3'</span>)</div><div class="line">    <span class="keyword">return</span> net</div></pre></td></tr></table></figure>
+</li>
+<li><p>Discriminator</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">discriminator</span><span class="params">(d_in, y, z_len, keep_prob, namescope=<span class="string">'discriminator'</span>, reuse=True)</span>:</span></div><div class="line">    <span class="string">"""The discriminator"""</span></div><div class="line">    <span class="keyword">with</span> tf.name_scope(namescope):</div><div class="line">        net = tf.concat([d_in, y], axis=<span class="number">1</span>)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">300</span>, activation=tf.nn.relu, name=<span class="string">'d_fc1'</span>, reuse=reuse)</div><div class="line">        net = tf.nn.dropout(net, keep_prob=keep_prob)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">150</span>, activation=tf.nn.relu, name=<span class="string">'d_fc2'</span>, reuse=reuse)</div><div class="line">        net = tf.nn.dropout(net, keep_prob=keep_prob)</div><div class="line">        net = tf.layers.dense(net, units=<span class="number">1</span>, activation=tf.nn.sigmoid, name=<span class="string">'d_fc4'</span>, reuse=reuse)</div><div class="line">        <span class="keyword">return</span> net</div></pre></td></tr></table></figure>
+</li>
+<li><p>Network instance</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># generate the network</span></div><div class="line">x_g = generator(z_noise, y, keep_prob)</div><div class="line">d_g = discriminator(x_g, y, z_len, keep_prob, reuse=<span class="keyword">False</span>)</div><div class="line">d_data = discriminator(x_data, y, z_len, keep_prob)</div></pre></td></tr></table></figure>
+</li>
+<li><p>Loss and optimizer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># get variables</span></div><div class="line">varlist = tf.trainable_variables() <span class="comment"># 查看待训练的参数，为了获取G和D两个网络的参数列表</span></div><div class="line"><span class="comment"># The objective</span></div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"loss"</span>):</div><div class="line">    loss_d = - (tf.reduce_mean(tf.log(<span class="number">1e-8</span> + d_data)) + tf.reduce_mean(tf.log(<span class="number">1e-8</span> + <span class="number">1</span> - d_g)))</div><div class="line">    loss_g = - tf.reduce_mean(tf.log(<span class="number">1e-8</span> + d_g))</div><div class="line">    train_op_g = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(loss_g, var_list=varlist[<span class="number">0</span>:<span class="number">6</span>])</div><div class="line">    train_op_d = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(loss_d, var_list=varlist[<span class="number">6</span>:])</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Conditional-GAN在MNIST上的测试结果"><a href="#Conditional-GAN在MNIST上的测试结果" class="headerlink" title="Conditional GAN在MNIST上的测试结果"></a>Conditional GAN在MNIST上的测试结果</h3><p>针对MNIST手写体数据库，实现了一个可以根据标签生成指定数字的Conditional GAN，网络的配置如下表，参考了这篇<a href="https://blog.csdn.net/sparkexpert/article/details/70147409" target="_blank" rel="external">博客</a>。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Subnet</th>
+<th style="text-align:center">Layer</th>
+<th style="text-align:center">Nodes</th>
+<th style="text-align:center">Activation</th>
+<th style="text-align:center">Dropout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Generator</td>
+<td style="text-align:center">input [z, y]</td>
+<td style="text-align:center">32+10</td>
+<td style="text-align:center">—-</td>
+<td style="text-align:center">—-</td>
+</tr>
+<tr>
+<td style="text-align:left">Generator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">150</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">T</td>
+</tr>
+<tr>
+<td style="text-align:left">Generator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">300</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">T</td>
+</tr>
+<tr>
+<td style="text-align:left">Generator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">784</td>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">F</td>
+</tr>
+<tr>
+<td style="text-align:left">Discriminator</td>
+<td style="text-align:center">input</td>
+<td style="text-align:center">784+10</td>
+<td style="text-align:center">—-</td>
+<td style="text-align:center">—-</td>
+</tr>
+<tr>
+<td style="text-align:left">Discriminator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">300</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">T</td>
+</tr>
+<tr>
+<td style="text-align:left">Discriminator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">150</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">T</td>
+</tr>
+<tr>
+<td style="text-align:left">Discriminator</td>
+<td style="text-align:center">FC</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">F</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>下面贴一下实验结果 (生成的手写体图像，每行对应一个数字)，可以看出，随着迭代次数的增加，生成的数字越来约清晰，且准确性在提升。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig3.png?raw=true" height="500" width="750">
+</center>
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="external">Ian Goodfellow, <em>Generative Adversarial Network</em></a></li>
+<li><a href="https://arxiv.org/abs/1606.03657" target="_blank" rel="external">InfoGAN: Interpretable Representation Learning by Information Maximizing Generative Adversarial Nets</a></li>
+<li><a href="https://blog.csdn.net/sparkexpert/article/details/70147409" target="_blank" rel="external">tensorflow 1.01中GAN(生成对抗网络)手写字体生成例子(MINST)的测试</a></li>
+<li><a href="https://blog.csdn.net/u012223913/article/details/75051516?locationNum=1&amp;fps=1" target="_blank" rel="external">【tensorflow学习】最简单的GAN 实现</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/04/13/variational-autoencoder-and-the-conditional-case/">
+                            Variational autoencoder and the conditional case
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-04-13T09:05:32+08:00">
+	
+		    Apr 13, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。</p>
+<p>传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提取并压缩成一个长度较低的向量；解码器则对这一特征向量进行解码恢复出原始样本信息。通常衡量一个自动编码器好坏的指标 (或目标函数) 为最小均方误差 (mean squared error, MSE)，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    L_{MSE} = \frac{1}{N}\sum^{N}_{i=1}{(X_{\rm in} - X_{\rm out})^2},
+\end{equation}</script><p>其中<script type="math/tex">X_{\rm in}</script> 和 <script type="math/tex">X_{\rm out}</script>表示编码器的输入和解码器的输出。</p>
+<p>传统AE的问题在于，解码器只能根据编码器在样本上提取的特征向量来输出恢复的样本，无法直接通过生成特征向量产生新的样本。所以传统的AE不属于生成模型。</p>
+<p>为了解决这一问题，Kingma &amp; Welling 在<a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external"><em>Auto-Encoding Variational Bayes</em></a>文中提出了变分自动编码器的概念，其最直接的变化是<strong>为解码器提供随机生成的服从标准正态分布的向量便可以生成新的样本。</strong><br>将编码器的输出定义为服从高斯分布的隐变量<script type="math/tex">z</script>，编码器被定义为$P(z|X;\theta)$的概率分布,而解码器则是</p>
+<h4 id="Variational-auto-encoder"><a href="#Variational-auto-encoder" class="headerlink" title="Variational auto-encoder"></a>Variational auto-encoder</h4><p>来推导VAE，</p>
+<h4 id="Conditional-auto-encoder"><a href="#Conditional-auto-encoder" class="headerlink" title="Conditional auto-encoder"></a>Conditional auto-encoder</h4><h4 id="VAE和Conditional的TensorFlow实现"><a href="#VAE和Conditional的TensorFlow实现" class="headerlink" title="VAE和Conditional的TensorFlow实现"></a>VAE和Conditional的TensorFlow实现</h4><h5 id="E-z-Q-log-P-X-z-的不同定义及结果对比"><a href="#E-z-Q-log-P-X-z-的不同定义及结果对比" class="headerlink" title="$E_{z~Q}log(P(X|z))$的不同定义及结果对比"></a>$E_{z~Q}log(P(X|z))$的不同定义及结果对比</h5><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external">Auto-Encoding Variational Bayes</a></li>
+<li><a href="https://arxiv.org/abs/1606.05908" target="_blank" rel="external">Tutorial on Variational Autoencoders</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/04/13/variational-autoencoder-and-the-conditional-case/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/">
                             tf.layers.dense 和 tf.contrib.layers.fully_connected的区别
                         </a>
@@ -887,101 +1123,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/04/a-numpy-matrix-copy-problem/">
-                            Nupy矩阵的复制问题
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-04T10:26:23+08:00">
-	
-		    Mar 04, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用<code>copy</code>方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而<code>copy</code>则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。</p>
-<p>下面看一个例子,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">x = np.arange(<span class="number">9.</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="comment"># copy</span></div><div class="line">y = x.copy()</div><div class="line">y[y&gt;=<span class="number">5</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 赋值法</span></div><div class="line">z = x</div><div class="line">z[z&gt;=<span class="number">5</span>] = <span class="number">0</span></div></pre></td></tr></table></figure></p>
-<p>其输出结果如下,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">6</span>]: y</div><div class="line">Out[<span class="number">6</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">7</span>]: x</div><div class="line">Out[<span class="number">7</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">       [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line"></div><div class="line">In [<span class="number">8</span>]: z</div><div class="line">Out[<span class="number">8</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div><div class="line"></div><div class="line">In [<span class="number">9</span>]: x</div><div class="line">Out[<span class="number">9</span>]: </div><div class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">       [<span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>],</div><div class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]])</div></pre></td></tr></table></figure></p>
-<p>可以看到，采用<code>copy</code>后，对<code>y</code>的操作不会影响到原矩阵<code>x</code>，而采用直接赋值后，对<code>z</code>的操作对<code>x</code>产生了影响。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/04/a-numpy-matrix-copy-problem/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/03/deepcopy-of-list-in-python/">
-                            Python 列表嵌套复制
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-03T12:42:16+08:00">
-	
-		    Mar 03, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
-<p>则<code>y</code>和<code>x</code>变为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">2</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
-<p>list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决方法是用copy库中的<code>deepcopy</code>方法，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</div><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
-<p>此时的<code>x</code>和<code>y</code>为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://www.cnblogs.com/pyramid1001/p/5844905.html" target="_blank" rel="external">Python——列表深浅拷贝</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/03/deepcopy-of-list-in-python/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -993,7 +1134,7 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 6</li>
+        <li class="pagination-number">page 1 of 7</li>
     </ul>
 </div>
 

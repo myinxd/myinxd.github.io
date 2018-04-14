@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>tf.layers.dense 和 tf.contrib.layers.fully_connected的区别 - Jason&#39;s blog</title>
+    <title>Variational autoencoder and the conditional case - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
+    <meta name="description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
 <meta name="keywords" content="deep-learning">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
-<meta property="og:url" content="http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/index.html">
+<meta property="og:title" content="Variational autoencoder and the conditional case">
+<meta property="og:url" content="http://www.mazhixian.me/2018/04/13/variational-autoencoder-and-the-conditional-case/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
+<meta property="og:description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-04-08T14:03:14.759Z">
+<meta property="og:updated_time" content="2018-04-14T16:46:02.303Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
-<meta name="twitter:description" content="TensorFlow的tf.layers和ctf.contrib.layers都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。 今天主要讨论一下tf.layers.dense和tf.contrib.layers.fully_connected的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，  tf.layers">
+<meta name="twitter:title" content="Variational autoencoder and the conditional case">
+<meta name="twitter:description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            tf.layers.dense 和 tf.contrib.layers.fully_connected的区别
+            Variational autoencoder and the conditional case
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-04-08T18:53:03+08:00">
+    <time itemprop="datePublished" datetime="2018-04-13T09:05:32+08:00">
 	
-		    Apr 08, 2018
+		    Apr 13, 2018
     	
     </time>
     
@@ -280,20 +280,18 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>TensorFlow的<code>tf.layers</code>和c<code>tf.contrib.layers</code>都提供了相关用于搭建神经网络的模块，但同一版本额和不同版本之间均存在区别，TF的更新真的是好快。。。</p>
-<p>今天主要讨论一下<code>tf.layers.dense</code>和<code>tf.contrib.layers.fully_connected</code>的区别，二者都可以用于构建全连接层。参考tensorflow的文档，二者的参数如下，</p>
-<ul>
-<li><p>tf.layers.dense</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">tf.layers.dense(</div><div class="line">    inputs,</div><div class="line">    units,</div><div class="line">    activation=<span class="keyword">None</span>,</div><div class="line">    use_bias=<span class="keyword">True</span>,</div><div class="line">    kernel_initializer=<span class="keyword">None</span>,</div><div class="line">    bias_initializer=tf.zeros_initializer(),</div><div class="line">    kernel_regularizer=<span class="keyword">None</span>,</div><div class="line">    bias_regularizer=<span class="keyword">None</span>,</div><div class="line">    activity_regularizer=<span class="keyword">None</span>,</div><div class="line">    kernel_constraint=<span class="keyword">None</span>,</div><div class="line">    bias_constraint=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    name=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
-</li>
-<li><p>tf.contrib.layers.fully-connected</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">fully_connected(</div><div class="line">    inputs,</div><div class="line">    num_outputs,</div><div class="line">    activation_fn=tf.nn.relu,</div><div class="line">    normalizer_fn=<span class="keyword">None</span>,</div><div class="line">    normalizer_params=<span class="keyword">None</span>,</div><div class="line">    weights_initializer=initializers.xavier_initializer(),</div><div class="line">    weights_regularizer=<span class="keyword">None</span>,</div><div class="line">    biases_initializer=tf.zeros_initializer(),</div><div class="line">    biases_regularizer=<span class="keyword">None</span>,</div><div class="line">    reuse=<span class="keyword">None</span>,</div><div class="line">    variables_collections=<span class="keyword">None</span>,</div><div class="line">    outputs_collections=<span class="keyword">None</span>,</div><div class="line">    trainable=<span class="keyword">True</span>,</div><div class="line">    scope=<span class="keyword">None</span></div><div class="line">)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>可以看出，<code>tf.layers.dense</code>相对更简单，没有提供默认的<code>activation</code>和<code>kernel_initializer</code>, 而后者这两个参数都做了默认的初始化。使用时一定要显示说明这些，否则会出现不可控的错误。。。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://www.tensorflow.org/api_docs/python/tf/layers/dense" target="_blank" rel="external">tf.layers.dense</a></li>
-<li><a href="https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/fully_connected" target="_blank" rel="external">tf.contrib.layers.fully_connected</a></li>
+            <p>今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。</p>
+<p>传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提取并压缩成一个长度较低的向量；解码器则对这一特征向量进行解码恢复出原始样本信息。通常衡量一个自动编码器好坏的指标 (或目标函数) 为最小均方误差 (mean squared error, MSE)，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    L_{MSE} = \frac{1}{N}\sum^{N}_{i=1}{(X_{\rm in} - X_{\rm out})^2},
+\end{equation}</script><p>其中<script type="math/tex">X_{\rm in}</script> 和 <script type="math/tex">X_{\rm out}</script>表示编码器的输入和解码器的输出。</p>
+<p>传统AE的问题在于，解码器只能根据编码器在样本上提取的特征向量来输出恢复的样本，无法直接通过生成特征向量产生新的样本。所以传统的AE不属于生成模型。</p>
+<p>为了解决这一问题，Kingma &amp; Welling 在<a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external"><em>Auto-Encoding Variational Bayes</em></a>文中提出了变分自动编码器的概念，其最直接的变化是<strong>为解码器提供随机生成的服从标准正态分布的向量便可以生成新的样本。</strong><br>将编码器的输出定义为服从高斯分布的隐变量<script type="math/tex">z</script>，编码器被定义为$P(z|X;\theta)$的概率分布,而解码器则是</p>
+<h4 id="Variational-auto-encoder"><a href="#Variational-auto-encoder" class="headerlink" title="Variational auto-encoder"></a>Variational auto-encoder</h4><p>来推导VAE，</p>
+<h4 id="Conditional-auto-encoder"><a href="#Conditional-auto-encoder" class="headerlink" title="Conditional auto-encoder"></a>Conditional auto-encoder</h4><h4 id="VAE和Conditional的TensorFlow实现"><a href="#VAE和Conditional的TensorFlow实现" class="headerlink" title="VAE和Conditional的TensorFlow实现"></a>VAE和Conditional的TensorFlow实现</h4><h5 id="E-z-Q-log-P-X-z-的不同定义及结果对比"><a href="#E-z-Q-log-P-X-z-的不同定义及结果对比" class="headerlink" title="$E_{z~Q}log(P(X|z))$的不同定义及结果对比"></a>$E_{z~Q}log(P(X|z))$的不同定义及结果对比</h5><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external">Auto-Encoding Variational Bayes</a></li>
+<li><a href="https://arxiv.org/abs/1606.05908" target="_blank" rel="external">Tutorial on Variational Autoencoders</a></li>
 </ul>
 
             
@@ -316,7 +314,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/13/variational-autoencoder-and-the-conditional-case/" data-tooltip="Variational autoencoder and the conditional case" aria-label="PREVIOUS: Variational autoencoder and the conditional case">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/" data-tooltip="Generative adversarial network and its conditional case" aria-label="PREVIOUS: Generative adversarial network and its conditional case">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -325,7 +323,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/26/range-based-for-loop-by-cpp/" data-tooltip="Range based for loop by cpp" aria-label="NEXT: Range based for loop by cpp">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" data-tooltip="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别" aria-label="NEXT: tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -343,7 +341,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/13/variational-autoencoder-and-the-conditional-case/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -396,7 +394,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/13/variational-autoencoder-and-the-conditional-case/" data-tooltip="Variational autoencoder and the conditional case" aria-label="PREVIOUS: Variational autoencoder and the conditional case">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/" data-tooltip="Generative adversarial network and its conditional case" aria-label="PREVIOUS: Generative adversarial network and its conditional case">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -405,7 +403,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/26/range-based-for-loop-by-cpp/" data-tooltip="Range based for loop by cpp" aria-label="NEXT: Range based for loop by cpp">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" data-tooltip="tf.layers.dense 和 tf.contrib.layers.fully_connected的区别" aria-label="NEXT: tf.layers.dense 和 tf.contrib.layers.fully_connected的区别">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -423,7 +421,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/13/variational-autoencoder-and-the-conditional-case/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -456,7 +454,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/13/variational-autoencoder-and-the-conditional-case/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -514,9 +512,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/';
+                 this.page.url = 'http://www.mazhixian.me/2018/04/13/variational-autoencoder-and-the-conditional-case/';
                  
-                    this.page.identifier = '2018/04/08/difference-between-tf-layers-dense-and-tf-contrib-layers-fully-connected/';
+                    this.page.identifier = '2018/04/13/variational-autoencoder-and-the-conditional-case/';
                  
              };
             (function() {
@@ -527,7 +525,24 @@
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
-        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
     
 
 

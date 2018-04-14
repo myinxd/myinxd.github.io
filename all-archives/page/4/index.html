@@ -263,6 +263,126 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/21/python-decorator/">
+                            python decorator
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
+	
+		    Jan 21, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
+<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
+<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
+<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
+<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
+<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/21/python-decorator/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/">
+                            cpp notebook 1
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-20T10:38:03+08:00">
+	
+		    Jan 20, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>生成CPP应用程序的步骤，</p>
+<ol>
+<li>编写cpp代码；</li>
+<li>使用编译器对代码进行编译，将代码转换为包含在目标文件中的机器语言版本;</li>
+<li>使用链接器链接编译器的输出，生成可执行文件，如.exe</li>
+</ol>
+<p>编译器每次转换一个代码文件，都会生成一个扩展名为<code>.o</code>或<code>.obj</code>的目标文件，忽略这个cpp文件与其他文件中代码的依赖。解析这些依存关系的工作由链接程序负责。</p>
+<p>集成开发环境 (integrated development environment, IDE)<br>Tip:<a href="http://www.tutorialspoing.com/compile_cpp_online.php_" target="_blank" rel="external">online IDE</a></p>
+<p>强烈安利<a href="https://code.visualstudio.com/" target="_blank" rel="external">visual studio code</a>，一个轻量级的IDE，支持多种语言(java, python, c/c++)以及文本编辑器(vim)。</p>
+<p>下面以’Hello World’来入门，并说明VS code的使用步骤，还是有点麻烦的。。。</p>
+<ol>
+<li>MinGW</li>
+<li>GNU C++</li>
+</ol>
+<p>CPP中，一条语句可以跨越多行；还可在一行中包含多条语句，只要每条语句都以;结尾</p>
+<p>预处理器编译指令#include<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;&gt; // 标准头文件</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"..."</span> <span class="comment">// 用户自建的头文件</span></span></div></pre></td></tr></table></figure></p>
+<p>除非明确声明了不返回值，否则函数必须有return语句</p>
+<p>名称空间的概念：给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具。其声明方法是”using namespace”</p>
+<p>C++中的main函数必须返回int，没有void main这种定义方式，<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div></pre></td></tr></table></figure></p>
+<p>定义变量<br>VariableType VariableName;<br>VariableType VariableName = InitialValue;<br>变量类型向编译器指出了变量可存储的数据的性质，编译器将为变量预留必要的空间。</p>
+<p>最高有效位 most significant bit<br>最低有效位 least significant bit</p>
+<h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><p>C++14的<code>chunking separator</code>，即用但引号作为组块分隔符，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x = <span class="number">100'000</span>;</div></pre></td></tr></table></figure></p>
+<p>测试了一下，gcc-7.2支持这一新的标准，但是gcc-5.5还不支持，<strong>Check 一下</strong></p>
+<p>sizeof 用于确定变量的长度，是个运算符。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sizeof(int)</div></pre></td></tr></table></figure></p>
+<p>C++11中引入的列表初始化避免缩窄转换错误，造成执行中隐藏的bug<br>例如，如下的代码，就会有这样的警告，并且无法编译通过，但直接写就不会警告<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">int16__t</span> largeNumber = <span class="number">257</span>;</div><div class="line"><span class="keyword">int8_t</span> smallNumber = largeNumber;  <span class="comment">// No warning</span></div><div class="line"><span class="keyword">int8_t</span> smallNumberList = &#123;largeNumber&#125;; <span class="comment">// warning| narrowing conversion of</span></div></pre></td></tr></table></figure></p>
+<p>auto自动推断类型<br>如果使用的编译器支持C++11或更高的版本，可以不显式地指定变量的类型，即<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> flag = True; <span class="comment">// flag将被设定为bool</span></div></pre></td></tr></table></figure></p>
+<p>注意：使用auto时，必须对变量进行初始化。</p>
+<p>使用typeof替换变量类型<br>C_++允许将变量类型替换为认为方便的名称，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> STRICTLY__POSITIVE_INTEGER;</div><div class="line">STRICTLY_POSITIVE_INTEGER num = <span class="number">1234</span>;</div></pre></td></tr></table></figure></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
                             Adjustable learning rate for deep learning by TensorFlow
                         </a>
@@ -731,101 +851,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/">
-                            Ubuntu 16.10 launch user script when log in
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-25T10:44:11+08:00">
-	
-		    Dec 25, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Ubuntu自启动用户脚本的问题，流行的两种方法可以参考文末的References，此处讨论的是在user的start up里添加自定义脚本。</p>
-<h5 id="Step1-prepare-your-script"><a href="#Step1-prepare-your-script" class="headerlink" title="Step1 prepare your script"></a>Step1 prepare your script</h5><p>准备待执行的脚本并修改权限为可执行，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/<span class="built_in">local</span>/</div><div class="line">$ touch myscript.sh</div><div class="line">$ vim myscript.sh <span class="comment"># Add the lines you want to execute...</span></div><div class="line">$ chmod +x myscript.sh <span class="comment"># Change mode to executable</span></div></pre></td></tr></table></figure></p>
-<h5 id="Step2-configure-the-conf-file"><a href="#Step2-configure-the-conf-file" class="headerlink" title="Step2 configure the .conf file"></a>Step2 configure the .conf file</h5><p>编写配置文件，放入<code>~/.config/upstart/</code>中，例如<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.config/upstart</div><div class="line">$ touch myscript.conf</div><div class="line">$ vim myscript.conf</div><div class="line"><span class="comment">#### configurations to be added.</span></div><div class="line">start on startup</div><div class="line">task</div><div class="line"><span class="built_in">exec</span> /home/usrname/<span class="built_in">local</span>/myscript.sh</div></pre></td></tr></table></figure></p>
-<h5 id="Step3-log-out-and-relogin"><a href="#Step3-log-out-and-relogin" class="headerlink" title="Step3 log out and relogin"></a>Step3 log out and relogin</h5><p>重新登录，检验是否实现<code>myscript.sh</code>的自启动</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
-<li><a href="http://blog.csdn.net/upshi/article/details/53884770" target="_blank" rel="external">Ubuntu添加开机启动执行脚本</a></li>
-<li><a href="http://askubuntu.com/questions/814/how-to-run-scripts-on-start-up" target="_blank" rel="external">How to run scripts on start up</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/25/Ubuntu1610-launch-user-script-when-log-in/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML-2/">
-                            HTML notebook2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-24T21:47:18+08:00">
-	
-		    Dec 24, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p>
-<p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p>
-<p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/24/Learning-HTML-2/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -844,7 +869,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
             </a>
           </li>
         
-        <li class="pagination-number">page 4 of 6</li>
+        <li class="pagination-number">page 4 of 7</li>
     </ul>
 </div>
 

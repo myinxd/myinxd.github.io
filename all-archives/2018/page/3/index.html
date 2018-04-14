@@ -263,6 +263,106 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/31/transpose-convolution-by-tensorflow/">
+                            Transpose convolution by tensorflow--odd kernel shape
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-31T10:07:44+08:00">
+	
+		    Jan 31, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-connected layers, i.e., DNN, but which is not that clear in CNN. </p>
+<p>For convolution case, the layer in the decoder maintains the shape and kernel configurations for its symmetric layer in the encoder, thus the deconvolution, or <a href="deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">transpose convolution</a> operation will be used instead of the convolution operation.</p>
+<p>TensorFlow provides a method namedly <code>conv2d_transpose</code> in both <code>tf.nn</code> module and <code>tf.contrib.layers</code> module, which are very convenient. However, for <code>tf.contrib.layers.conv2d_transpose</code>, if the output shape of the transpose convolutution is odd when convolution stride setting as 2, it cannot control the output shape to desired one. </p>
+<p>For example, denote a [None, 9, 9, 1] 4D-tensor $X$, convolved by a kernel of size [3, 3] with a 2 step stride and halp padding (SAME), the output 4D tensor $y$ will be [None, 5, 5, 1]. However, the transpose convolution from y by the same parameters setting generates $x’$ into a [None, 10, 10, 1] tensor, not [None, 9, 9, 1].  </p>
+<p>To handle this, I provide a naive but effective way, see as follows,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>])</div><div class="line">y = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">1</span>])</div><div class="line">kernel_size = [<span class="number">3</span>, <span class="number">3</span>]</div><div class="line">stride = <span class="number">2</span></div><div class="line"></div><div class="line">x_r = layers.conv2d_transpose(</div><div class="line">        inputs=x,</div><div class="line">        num_outputs=x.get_shape().as_list()[<span class="number">1</span>],</div><div class="line">        kernel_size=kenerl_size,</div><div class="line">        padding=<span class="string">'SAME'</span>,</div><div class="line">        stride=stride,</div><div class="line">        scope=<span class="string">'conv2d_transpose'</span></div><div class="line">        )</div><div class="line"></div><div class="line">x_r = x_r[:, <span class="number">0</span>:<span class="number">-1</span>, <span class="number">0</span>:<span class="number">-1</span>, :]</div></pre></td></tr></table></figure>
+<p>Above solution played well in my code, though ths crop may introduce bias..</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/31/transpose-convolution-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/">
+                            Upsampling for 2D convolution by tensorflow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-27T16:56:22+08:00">
+	
+		    Jan 27, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>A convolutional auto-encoder is usually composed of two sysmmetric parts, i.e., the encoder and decoder. By TensorFlow, it is easy to build the encoder part using modules like <a href="https://www.tensorflow.org/versions/r1.1/api_docs/python/tf/contrib/layers" target="_blank" rel="external">tf.contrib.layers</a> or <a href="https://www.tensorflow.org/api_docs/python/tf/nn" target="_blank" rel="external">tf.nn</a>, which encapsulate methods for convolution, downsampling, and dense operations. </p>
+<p>However, as for the decoder part, TF does not provide method like <strong>upsampling</strong>, which is the reverse operation of downsampling (<code>avg_pool2, max_pool2</code>). This is because <strong>max pooling</strong> is applied more frequently than <strong>average pooling</strong>, while recover an image from max-pooled matrix is difficult for lossing of locations of the max points. </p>
+<p>For the average-pooled feature maps, there is a simple way to realize upsampling without high-level API like <a href="https://keras.io" target="_blank" rel="external">keras</a>, but with basic functions of TF itself.</p>
+<p>Now, suppose the input is a 4-D tenser whose shape is <code>[1, 4, 4, 1]</code> and sampling rate is <code>[1, 2, 2, 1]</code>, then the upsampled matrix is also a 4-D tenser of shape <code>[1, 8, 8, 1]</code>. Following lines can realize this operation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">x = tf.ones([<span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>])</div><div class="line">k = tf.ones([<span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>]) <span class="comment"># note k.shape = [rows, cols, depth_in, depth_output]</span></div><div class="line">output_shape=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>]</div><div class="line">y = tf.nn.conv2d_transpose(</div><div class="line">    value=x,</div><div class="line">    filter=k,</div><div class="line">    output_shape=output_shape,</div><div class="line">    strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],</div><div class="line">    padding=<span class="string">'SAME'</span></div><div class="line">        )</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    print(sess.run(y))</div></pre></td></tr></table></figure>
+<p>Then, y is the upsampled matrix.</p>
+<p>You may also realize upsampling by the <code>resize_images</code> function of module<code>tf.image</code>, which is,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">y = tf.image.resize_images(</div><div class="line">    images=x,</div><div class="line">    size=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>],</div><div class="line">    method=ResizeMethod.NEAREST_NEIGHBOR</div><div class="line">        )</div></pre></td></tr></table></figure></p>
+<p>Enjoy yourself.</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic" target="_blank" rel="external">Transposed convolution arithmetic</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/27/upsampling-for-2D-convolution-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/27/resnet-with-tensorflow-2/">
                             Residual network II -- realization by tensorflow
                         </a>
@@ -833,126 +933,6 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}
                     
                         <p>
                             <a href="/2018/01/21/resnet-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/21/python-decorator/">
-                            python decorator
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-21T13:04:21+08:00">
-	
-		    Jan 21, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下python修饰符<code>@</code>的理解和使用方法，一直没好好理解，现在卡住了。。。参考<a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">wiki</a>的定义, A decorator is any callable Python object that is used to <strong>modify a function, method or class defination</strong>. The decorator syntax is pure syntactic sugar, using <code>@</code> as the keyword.即python修饰符作为一种python对象，用来修饰函数、方法或者类。</p>
-<p>参考Wiki，我们简单实现一个修饰符的样例，</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculator</span><span class="params">(f)</span>:</span></div><div class="line">    print(<span class="string">"Begin..."</span>)</div><div class="line">    a = <span class="number">3.0</span></div><div class="line">    b = <span class="number">2.0</span></div><div class="line">    f(a,b)</div><div class="line">    print(<span class="string">"End"</span>)</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_add</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f + %.2f = %.2f"</span> % (a,b,a+b))</div><div class="line"></div><div class="line"><span class="meta">@calculator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_minus</span><span class="params">(a,b)</span>:</span></div><div class="line">    print(<span class="string">"%.2f - %.2f = %.2f"</span> % (a,b,a-b))</div></pre></td></tr></table></figure>
-<p>在ipython环境下执行，有如下结果，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> + <span class="number">2.00</span> = <span class="number">5.00</span></div><div class="line">End</div><div class="line">Begin...</div><div class="line"><span class="number">3.00</span> - <span class="number">2.00</span> = <span class="number">1.00</span></div><div class="line">End</div></pre></td></tr></table></figure></p>
-<p>所以，修饰符的用途，等价于如下情形，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">3.0</span>, b = <span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_add(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Begin..."</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>calc_minus(a,b)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"End"</span>)</div></pre></td></tr></table></figure></p>
-<p>最直观的理解就是decorator简化了<code>calculator()</code>中的部分代码。正如wiki中的解释：Decorators are a form of metaprogramming; they enhance the action of the function or method they decorate. </p>
-<p>这篇<a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">博客</a>还分析了修饰符嵌套的执行顺序问题，感兴趣可以参考一下。</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators" target="_blank" rel="external">Python syntax and semantics#Decorators</a><br>[2] <a href="http://blog.csdn.net/972301/article/details/59537712" target="_blank" rel="external">Python修饰符 （一）—— 函数修饰符 “@”</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/21/python-decorator/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/">
-                            cpp notebook 1
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-20T10:38:03+08:00">
-	
-		    Jan 20, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>生成CPP应用程序的步骤，</p>
-<ol>
-<li>编写cpp代码；</li>
-<li>使用编译器对代码进行编译，将代码转换为包含在目标文件中的机器语言版本;</li>
-<li>使用链接器链接编译器的输出，生成可执行文件，如.exe</li>
-</ol>
-<p>编译器每次转换一个代码文件，都会生成一个扩展名为<code>.o</code>或<code>.obj</code>的目标文件，忽略这个cpp文件与其他文件中代码的依赖。解析这些依存关系的工作由链接程序负责。</p>
-<p>集成开发环境 (integrated development environment, IDE)<br>Tip:<a href="http://www.tutorialspoing.com/compile_cpp_online.php_" target="_blank" rel="external">online IDE</a></p>
-<p>强烈安利<a href="https://code.visualstudio.com/" target="_blank" rel="external">visual studio code</a>，一个轻量级的IDE，支持多种语言(java, python, c/c++)以及文本编辑器(vim)。</p>
-<p>下面以’Hello World’来入门，并说明VS code的使用步骤，还是有点麻烦的。。。</p>
-<ol>
-<li>MinGW</li>
-<li>GNU C++</li>
-</ol>
-<p>CPP中，一条语句可以跨越多行；还可在一行中包含多条语句，只要每条语句都以;结尾</p>
-<p>预处理器编译指令#include<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;&gt; // 标准头文件</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"..."</span> <span class="comment">// 用户自建的头文件</span></span></div></pre></td></tr></table></figure></p>
-<p>除非明确声明了不返回值，否则函数必须有return语句</p>
-<p>名称空间的概念：给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具。其声明方法是”using namespace”</p>
-<p>C++中的main函数必须返回int，没有void main这种定义方式，<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div></pre></td></tr></table></figure></p>
-<p>定义变量<br>VariableType VariableName;<br>VariableType VariableName = InitialValue;<br>变量类型向编译器指出了变量可存储的数据的性质，编译器将为变量预留必要的空间。</p>
-<p>最高有效位 most significant bit<br>最低有效位 least significant bit</p>
-<h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><p>C++14的<code>chunking separator</code>，即用但引号作为组块分隔符，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x = <span class="number">100'000</span>;</div></pre></td></tr></table></figure></p>
-<p>测试了一下，gcc-7.2支持这一新的标准，但是gcc-5.5还不支持，<strong>Check 一下</strong></p>
-<p>sizeof 用于确定变量的长度，是个运算符。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sizeof(int)</div></pre></td></tr></table></figure></p>
-<p>C++11中引入的列表初始化避免缩窄转换错误，造成执行中隐藏的bug<br>例如，如下的代码，就会有这样的警告，并且无法编译通过，但直接写就不会警告<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">int16__t</span> largeNumber = <span class="number">257</span>;</div><div class="line"><span class="keyword">int8_t</span> smallNumber = largeNumber;  <span class="comment">// No warning</span></div><div class="line"><span class="keyword">int8_t</span> smallNumberList = &#123;largeNumber&#125;; <span class="comment">// warning| narrowing conversion of</span></div></pre></td></tr></table></figure></p>
-<p>auto自动推断类型<br>如果使用的编译器支持C++11或更高的版本，可以不显式地指定变量的类型，即<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> flag = True; <span class="comment">// flag将被设定为bool</span></div></pre></td></tr></table></figure></p>
-<p>注意：使用auto时，必须对变量进行初始化。</p>
-<p>使用typeof替换变量类型<br>C_++允许将变量类型替换为认为方便的名称，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> STRICTLY__POSITIVE_INTEGER;</div><div class="line">STRICTLY_POSITIVE_INTEGER num = <span class="number">1234</span>;</div></pre></td></tr></table></figure></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
