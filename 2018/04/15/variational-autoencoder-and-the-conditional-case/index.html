@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Jason&#39;s blog">
+    <title>Variational autoencoder and the conditional case - Jason&#39;s blog</title>
+    <meta name="author" content="Jason Ma">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
+<meta name="keywords" content="deep-learning">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Variational autoencoder and the conditional case">
+<meta property="og:url" content="http://www.mazhixian.me/2018/04/15/variational-autoencoder-and-the-conditional-case/index.html">
+<meta property="og:site_name" content="Jason&#39;s blog">
+<meta property="og:description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/myinxd/conditional_vae/blob/master/images/fig1.png?raw=true">
+<meta property="og:image" content="https://github.com/myinxd/conditional_vae/blob/master/images/fig2.png?raw=true">
+<meta property="og:updated_time" content="2018-04-15T08:52:37.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Variational autoencoder and the conditional case">
+<meta name="twitter:description" content="今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。 传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提">
+<meta name="twitter:image" content="https://github.com/myinxd/conditional_vae/blob/master/images/fig1.png?raw=true">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="http://www.mazhixian.me/assets/images/profile.jpg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-pz4cc6y13wt2trzqa8l3n9v0yykr0sstdaheem7qj628nhjmhp9pfawvqawz.min.css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-112822605-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?20f3bcc8683b066ff79f4e36134e3982";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+    <body>
+        <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">Jason&#39;s blog</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">Jason Ma</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>We are in the same story.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/myinxd" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:zx@mazhixian.me" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/404.html"
+                            
+                            title="Naive"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-hourglass-start" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Naive</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Variational autoencoder and the conditional case
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time itemprop="datePublished" datetime="2018-04-15T09:05:32+08:00">
+	
+		    Apr 15, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>今天讨论一下变分自动编码器 (Variational Auto-Encoder, VAE)及添加了条件约束的conditional VAE，包括其与传统AE的区别、推导思路和基于TensorFlow的实现。</p>
+<p>传统的自动编码器主要用于特征提取、降维和压缩，是一种无监督的机器学习工具。其由编码器 (encoder)和解码器 (decoder)组成。编码器类似于分类问题中的特征提取模块，对样本进行特征提取并压缩成一个长度很小的向量；解码器则对这一特征向量进行解码以恢复出原始样本信息。通常衡量一个自动编码器好坏的指标 (或目标函数) 为最小均方误差 (mean squared error, MSE)，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+    L_{MSE} = \frac{1}{N}\sum^{N}_{i=1}{(X_\mathrm{in} - X_\mathrm{out})^2},
+\end{equation}</script><p>其中<script type="math/tex">X_\mathrm{in}</script> 和 <script type="math/tex">X_\mathrm{out}</script>表示编码器的输入和解码器的输出。</p>
+<p>传统AE的问题在于，解码器只能根据编码器在样本上提取的特征向量来输出恢复的样本，很难直接通过生成特征向量产生新的样本 (当然特征是可以通过类似Monte Carlo模拟或者GMM等模型来生成的，感兴趣可以看我的这个<a href="https://github.com/myinxd/dnnae-gmm" target="_blank" rel="external">repo</a>) ，所以传统的AE不完全是生成模型。</p>
+<p>为了解决这一问题，Kingma &amp; Welling 在<a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external"><em>Auto-Encoding Variational Bayes</em></a>文中提出了变分自动编码器的概念。虽然与AE的组成类似，但二者是完全不同的，<strong>VAE是基于Bayes理论的，利用编解码器来抽象参数的非线性，最大化解码器输出相对于输入样本的似然性。</strong> 简而言之，就是试图获取数据本身的分布，从这个分布产生新的样本。</p>
+<center>
+<img src="https://github.com/myinxd/conditional_vae/blob/master/images/fig1.png?raw=true" height="320" width="640">
+</center>
+
+<h3 id="Variational-auto-encoder"><a href="#Variational-auto-encoder" class="headerlink" title="Variational auto-encoder"></a>Variational auto-encoder</h3><p>VAE首先定义一个称为latent variable的高维随机变量<script type="math/tex">z</script> (z的维数远小于<script type="math/tex">X</script>)，其分布为<script type="math/tex">P(z)</script>。然后定义映射<script type="math/tex">f: z\times \theta -> X</script>，即由参数<script type="math/tex">\theta</script>约束的映射<script type="math/tex">f</script>在服从<script type="math/tex">P(z)</script>分布的<script type="math/tex">z</script>的作用下能够近似真实样本<script type="math/tex">X</script> (如公式2，其中<script type="math/tex">P(X|z;\theta)</script>表示<script type="math/tex">f(z|\theta)</script>的概率分布)。通过<script type="math/tex">z</script>便可以刻画样本<script type="math/tex">x</script>。而由于<script type="math/tex">z</script>是无法直接观测的，所以称为隐变量。</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+P(X) = \int{P(X|z;\theta)P(z)dz}.
+\end{equation}</script><p>VAE假设<script type="math/tex">P(z)</script>~<script type="math/tex">N(0, I)</script>的标准正态分布，通过对参数<script type="math/tex">\theta</script>进行估计，最大化公式(2)。<strong>因此，VAE网络实际上是用来求解<script type="math/tex">P(X|z;\theta)</script>这个分布的，与传统意义上的AE的理解是不同的。</strong>正如Tutorial on Variational Autoencoder里提到的，<em>They are called “autoencoders” only because the final training objective that derives from this setup does have an encoder and a decoder, and resembles a traditional autoencoder.</em> </p>
+<p>VAE的Encoder可以理解为<script type="math/tex">P(z|X)</script>，而Decoder理解为<script type="math/tex">P(X|z)</script>，其目标便是最大化Decoder的输出<script type="math/tex">P(X|z)</script>或者<script type="math/tex">log(P(X|z))</script>. 由于<script type="math/tex">z</script>是无法观测的，分布<script type="math/tex">P(z|X)</script>无法直接求解，VAE巧妙地利用了变分的方法，定义分布<script type="math/tex">Q(z|X)</script>来近似<script type="math/tex">P(z|X)</script>。最终有<script type="math/tex">Q(z|X)</script>为Encoder，而<script type="math/tex">E_{z\sim Q}{P(X|z)}</script>表示Decoder。</p>
+<p>通常用KL divergence来描述两个分布之间的相似程度，KL散度越接近于零，二者越相似。定义<script type="math/tex">\mathrm{KL}(Q(z)||P(z|X))</script>,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathrm{KL}(Q(z|X)||P(z|X)) = E_{z\sim Q}\left({Q(z|X)\log{\frac{Q(z)}{P(z|X)}}}\right)
+\end{equation}</script><p>利用Bayes定理，<script type="math/tex">P(z|X) = P(X|z)P(z)/P(x)</script>，推导得到 (具体过程参考文献2)，</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\log{P(X)} - \mathrm{KL}(Q(z|X)||P(z|X)) = E_{z \sim Q}\log{P(X|z)} - \mathrm{KL}(Q(z|X)||P(z))
+\end{equation}</script><p>因为有<script type="math/tex">\mathrm{KL}(Q(z|X)||P(z|X))\leq 0</script>，所以上式定义了<script type="math/tex">logP(X)</script>的下界，即</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\log{P(X)} \leq E_{z\sim Q}\log{P(X|z)} - \mathrm{KL}(Q(z|X)||P(z))
+\end{equation}</script><p>显然，公式(3)的右边两项分别对应VAE中Decoder和Encoder的损失函数，也即要最大化的目标，这与GAN网络的思路非常类似。<script type="math/tex">E_{z\sim Q}logP(X|z)</script> 通常可以用最小均方误差定义，也可以用交叉熵来描述。这里详细推导一下<script type="math/tex">\mathrm{KL}(Q(z|X)||P(z))</script>，以帮助其在TensorFlow下的实现。这里假设<script type="math/tex">Q(z|X)</script>服从正态分布<script type="math/tex">N(\mu_Q, \sigma_Q\times I)</script>, <script type="math/tex">P(z)</script>是服从标准正态分布的。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathrm{KL}\left(Q(z|X)||P(z)\right) &= \int{Q(z|X)\log{\frac{Q(z|X)}{P(z)}}dz} \notag \\
+&= \int{Q(z|X)\log{\frac{\frac{1}{\sqrt{2\pi}\sigma_Q}e^{-\frac{(X-\mu_Q)^2}{2\sigma^2_Q}}}{\frac{1}{\sqrt{2\pi}\sigma_P}e^{-\frac{(X-\mu_P)^2}{2\sigma^2_P}}}}}dz \notag \\
+&= \int{Q(z|X)}\left(\log{\frac{\sigma_P}{\sigma_Q}}-\frac{(X-\mu_Q)^2}{2\sigma^2_Q} + \frac{(X-\mu_P)^2}{2\sigma^2_P} \right)dz \notag \\
+&= \log{\sigma_P} - \log{\sigma_Q} - 0.5 + \int{Q(z|X)}\frac{(X-\mu_Q + \mu_Q - \mu_P)^2}{2\sigma^2_P}dz \notag \\
+&= \log{\sigma_P} - \log{\sigma_Q} - 0.5 + \notag \\
+& \frac{1}{2\sigma^2_P}\int{Q(z|X)}\left[(x-\mu_Q)^2 + (\mu_Q - \mu_P)^2 -2(x-\mu_Q)(\mu_Q-\mu_P)\right]dz \notag \\
+& = \log{\sigma_P} - \log{\sigma_Q} - 0.5  + \frac{\sigma^2_Q}{2\sigma^2_P} + \frac{(\mu_Q - \mu_P)^2}{2\sigma^2_P} \notag \\
+& = -0.5 - \log{\sigma_Q} + \frac{\sigma^2_Q}{2} + \frac{(\mu_Q - \mu_P)^2}{2} \\
+\end{align}</script><h3 id="Conditional-Variational-auto-encoder"><a href="#Conditional-Variational-auto-encoder" class="headerlink" title="Conditional Variational auto-encoder"></a>Conditional Variational auto-encoder</h3><p>VAE只能生成服从样本分布的模拟，而对于MNIST这类样本有明确的标签的情形，能否通过设定某种条件，让VAE生成指定类别的手写体图像呢？基于这个motivation,人们提出了conditional VAE。假定样本的标签为<script type="math/tex">Y</script>，以<script type="math/tex">Y</script>作为Encoder和Decoder额外的约束 (如图1(c))，即可实现以上要求。相应的，条件变分自动编码器的似然函数变为,</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\log{P(X|Y)} - \mathrm{KL}(Q(z|X,Y)||P(z|X,Y)) = E_{z\sim Q}\log P(X|z,Y) - \mathrm{KL}(Q(z|X,Y)||P(z)) \notag
+\end{equation}</script><p>Conditional VAE的约束与VAE基本相同，依然可以分为针对Encoder和Decoder的两个部分。</p>
+<h4 id="VAE和Conditional的TensorFlow实现"><a href="#VAE和Conditional的TensorFlow实现" class="headerlink" title="VAE和Conditional的TensorFlow实现"></a>VAE和Conditional的TensorFlow实现</h4><p>简单介绍一下VAE的TensorFlow实现，具体的Notebook参考<a href="https://github.com/myinxd/conditional_vae" target="_blank" rel="external">这里</a>。</p>
+<ul>
+<li><p>Init</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">64</span></div><div class="line">X_in = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">784</span>], name=<span class="string">'X_in'</span>)</div><div class="line">X_out = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">784</span>], name=<span class="string">'X_out'</span>)</div><div class="line">keep_prob = tf.placeholder(dtype=tf.float32, shape=(), name=<span class="string">'keep_prob'</span>)</div><div class="line">n_latent = <span class="number">32</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>Encoder</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">encoder</span><span class="params">(X_in, keep_prob)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">"encoder"</span>, reuse=<span class="keyword">None</span>):</div><div class="line">        x = tf.layers.dense(X_in, units=<span class="number">128</span>, activation=tf.nn.relu)</div><div class="line">        x = tf.nn.dropout(x, keep_prob)        </div><div class="line">        x = tf.layers.dense(x, units=<span class="number">64</span>, activation=tf.nn.relu)</div><div class="line">        x = tf.nn.dropout(x, keep_prob)        </div><div class="line">        <span class="comment"># The latent layer</span></div><div class="line">        mu = tf.layers.dense(x, units=n_latent)</div><div class="line">        sigma = <span class="number">1e-6</span> + tf.nn.softplus(tf.layers.dense(x, units=n_latent)) <span class="comment"># softplus to avoid negative sigma</span></div><div class="line">        <span class="comment"># reparameterization</span></div><div class="line">        epsilon = tf.random_normal(tf.shape(mu))</div><div class="line">        z  = mu + tf.multiply(epsilon, sigma)        </div><div class="line">        <span class="keyword">return</span> z, mu, sigma</div></pre></td></tr></table></figure>
+</li>
+<li><p>Decoder</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decoder</span><span class="params">(z, keep_prob)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">"decoder"</span>, reuse=<span class="keyword">None</span>):</div><div class="line">        x = tf.layers.dense(z, units=<span class="number">64</span>, activation=tf.nn.relu)</div><div class="line">        x = tf.nn.dropout(x, keep_prob)</div><div class="line">        x = tf.layers.dense(x, units=<span class="number">128</span>, activation=tf.nn.relu)</div><div class="line">        x = tf.nn.dropout(x, keep_prob)</div><div class="line">        x = tf.layers.dense(x, units=<span class="number">784</span>, activation=tf.nn.sigmoid) </div><div class="line">        <span class="comment"># sigmoid to contrain the output to [0,1)</span></div><div class="line">        <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+</li>
+<li><p>Network instance</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">z, mu, sigma = encoder(X_in, keep_prob)</div><div class="line">dec = decoder(z, keep_prob)</div></pre></td></tr></table></figure>
+</li>
+<li><p>Loss function</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">loss_d = - tf.reduce_sum(</div><div class="line">    X_out * tf.log(<span class="number">1e-8</span>+dec) + (<span class="number">1.0</span> - X_out) * tf.log(<span class="number">1e-8</span>+ <span class="number">1.0</span> - dec), <span class="number">1</span>)</div><div class="line">loss_e = <span class="number">0.5</span> * tf.reduce_sum(</div><div class="line">    tf.square(mu) + tf.square(sigma) - tf.log(<span class="number">1e-8</span> + tf.square(sigma)) - <span class="number">1</span>, <span class="number">1</span>)</div><div class="line"><span class="comment"># 注意这里的符号。。。</span></div><div class="line">loss = tf.reduce_mean(loss_d + loss_e)</div><div class="line">optimizer = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(loss)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="E-z-sim-Q-log-P-X-z-的不同定义及结果对比"><a href="#E-z-sim-Q-log-P-X-z-的不同定义及结果对比" class="headerlink" title="E_{z\sim Q}log(P(X|z))的不同定义及结果对比"></a><script type="math/tex">E_{z\sim Q}log(P(X|z))</script>的不同定义及结果对比</h4><p>最后贴一个结果，我对比了一下采用交叉熵和均方误差两种损失函数表述<script type="math/tex">E_{z\sim Q}log(P(X|z))</script>的结果，在参数相同的情况下，看起来MSE效果好一些，如下图。</p>
+<center>
+<img src="https://github.com/myinxd/conditional_vae/blob/master/images/fig2.png?raw=true" height="300" width="600">
+</center>
+
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://arxiv.org/abs/1312.6114" target="_blank" rel="external">Auto-Encoding Variational Bayes</a></li>
+<li><a href="https://arxiv.org/abs/1606.05908" target="_blank" rel="external">Tutorial on Variational Autoencoders</a></li>
+<li><a href="https://blog.csdn.net/qq_39388410/article/details/79129197" target="_blank" rel="external">Variational Autoencoder（变分自编码）</a></li>
+</ul>
+
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/" data-tooltip="Generative adversarial network and its conditional case" aria-label="NEXT: Generative adversarial network and its conditional case">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/15/variational-autoencoder-and-the-conditional-case/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/14/generative-adversarial-network-and-its-conditional-case/" data-tooltip="Generative adversarial network and its conditional case" aria-label="NEXT: Generative adversarial network and its conditional case">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/15/variational-autoencoder-and-the-conditional-case/" title="Share on Weibo">
+                    <i class="fa fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/15/variational-autoencoder-and-the-conditional-case/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/profile.jpg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">Jason Ma</h4>
+        
+            <div id="about-card-bio"><p>We are in the same story.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Astronomer? Software engineer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Shanghai
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-peofhqjkzcghmndknakluequy1y6owxdwpaqyju9ntl9zxnk7rdolb3rjjoj.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://www.mazhixian.me/2018/04/15/variational-autoencoder-and-the-conditional-case/';
+                 
+                    this.page.identifier = '2018/04/15/variational-autoencoder-and-the-conditional-case/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'mazhixian';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+
+
+    </body>
+</html>
