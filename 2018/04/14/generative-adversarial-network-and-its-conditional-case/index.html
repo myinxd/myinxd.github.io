@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig1.png?raw=true">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig2.png?raw=true">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig3.png?raw=true">
-<meta property="og:updated_time" content="2018-04-14T16:59:41.902Z">
+<meta property="og:updated_time" content="2018-04-15T05:19:39.457Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Generative adversarial network and its conditional case">
 <meta name="twitter:description" content="本来想讨论InfoGAN的，先留个坑吧。今天先讨论标准的GAN，即生成对抗网络。GAN最先由Ian Goodfellow在2014年提出，跟Variational Auto-Encoder (VAE)的时间差不多，二者都是非常好的生成网络，在无监督学习中发挥了重要的作用。 Basic theory生成对抗网络属于一个minmax game，其目标是Learn a generator, whose">
@@ -322,7 +322,7 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
 \begin{equation}
 \min\limits_{G}\max\limits_{D} V(D,G) = 
 \mathrm{E}_{x \sim P_\mathrm{data}[\log(D(x|y))]} + \mathrm{E}_{z|y}[1 - \log(D(G(x|y)))]
-\end{equation}</script><h3 id="GAN的TensorFlow实现"><a href="#GAN的TensorFlow实现" class="headerlink" title="GAN的TensorFlow实现"></a>GAN的TensorFlow实现</h3><p>首先吐个槽,GAN的调参真的不是一般的复杂，我发现Generator和Discriminator互搏的时候，经常训着训着，loss就偏了，最后的输出也很诡异。然后是激活函数的选择、dropout的keep_prob，以及z的长度，batch的大小都会有影响，我提供了<a href="">GAN</a>和<a href="">Conditional GAN</a>的notebook，感兴趣可以自己去试试看。。。下面我分步骤介绍一下Conditional GAN的实现。</p>
+\end{equation}</script><h3 id="GAN的TensorFlow实现"><a href="#GAN的TensorFlow实现" class="headerlink" title="GAN的TensorFlow实现"></a>GAN的TensorFlow实现</h3><p>首先吐个槽,GAN的调参真的不是一般的复杂，我发现Generator和Discriminator互搏的时候，经常训着训着，loss就偏了，最后的输出也很诡异。然后是激活函数的选择、dropout的keep_prob，以及z的长度，batch的大小都会有影响，我提供了<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-mnist-gan.ipynb" target="_blank" rel="external">GAN</a>和<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-mnist-gan-condtional.ipynb" target="_blank" rel="external">Conditional GAN</a>的notebook，感兴趣可以自己去试试看。。。下面我分步骤介绍一下Conditional GAN的实现。</p>
 <ul>
 <li><p>Initialization</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">64</span></div><div class="line">z_len = <span class="number">100</span></div><div class="line">z_noise = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, z_len], name=<span class="string">'z_noise'</span>)</div><div class="line">y = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">10</span>], name=<span class="string">'y'</span>)</div><div class="line">x_data = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, <span class="number">784</span>], name=<span class="string">'x_data'</span>)</div><div class="line">keep_prob = tf.placeholder(dtype=tf.float32, shape=(), name=<span class="string">'keep_prob'</span>)</div></pre></td></tr></table></figure>
@@ -414,7 +414,7 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
 </div>
 <p>下面贴一下实验结果 (生成的手写体图像，每行对应一个数字)，可以看出，随着迭代次数的增加，生成的数字越来约清晰，且准确性在提升。</p>
 <center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig3.png?raw=true" height="500" width="750">
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180415/fig3.png?raw=true" height="450" width="700">
 </center>
 
 <h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
