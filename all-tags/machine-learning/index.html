@@ -420,9 +420,9 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
 </li>
 <li><p>F1-score<br>F1-score是对精确度和敏感性的结合，因为这两者本质上是矛盾的，通常敏感性越高则精确度会较低。F1-score的表达式为, <script type="math/tex">\mathrm{F1} = (2 \times \mathrm{pre} \times \mathrm{sen}) / (\mathrm{pre} + \mathrm{sen})</script>.</p>
 </li>
-<li><p>特异性 (specificity)<br>特异性是实际标注为反例的样本经过分类器预测正确的样本的比例，即<script type="math/tex">\mathrm{spe} = S_\mathrm{TN} / (S_\mathrm{FN} + S_\mathrm{TN})</script>.</p>
+<li><p>特异性 (specificity)<br>特异性是实际标注为反例的样本经过分类器预测正确的样本的比例，即<script type="math/tex">\mathrm{spe} = S_\mathrm{TN} / (S_\mathrm{FP} + S_\mathrm{TN})</script>.</p>
 </li>
-<li><p>假正率 (fasle positive rate)<br>假正率表示分类器预测为反例的样本中实际为反例的样本的比例，即<script type="math/tex">\mathrm{fpr} = S_\mathrm{TN} / (S_\mathrm{FP} + S_\mathrm{TN})</script>.</p>
+<li><p>假正率 (fasle positive rate)<br>假正率表示分类器预测为反例的样本中实际为反例的样本的比例，即<script type="math/tex">\mathrm{fpr} = S_\mathrm{TN} / (S_\mathrm{FN} + S_\mathrm{TN})</script>.</p>
 </li>
 </ul>
 <p>对于这些评估指标，我的理解见下表，</p>

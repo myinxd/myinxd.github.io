@@ -263,6 +263,122 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/07/write-a-blog-by-hexo/">
+                            Write a blog by Hexo
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-07T22:30:21+08:00">
+	
+		    Feb 07, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>写之前吐个槽，连续的熬夜加酗酒，要跪。。。睡前写个hexo相关的教程，基于hexo如何撰写和发布一篇博客。主要分为两步，(1) 掌握markdown语法和git相关指令; (2) 利用hexo命令初始和编译文章。</p>
+<h4 id="Markdown语法和git相关指令"><a href="#Markdown语法和git相关指令" class="headerlink" title="Markdown语法和git相关指令"></a>Markdown语法和git相关指令</h4><p>Markdown的基本语法可以参考<a href="http://blog.sina.com.cn/s/blog_9b6253b10102x998.html" target="_blank" rel="external">这篇文章</a>，在博客中主要会用到三种语法结构，</p>
+<ul>
+<li>标题控制 用#，#号数量越多，标题级别越低;</li>
+<li>超链接： 形如<code>[name](address)</code>;</li>
+<li>图像: 形如<code>![name](address)</code> 注意感叹号。</li>
+</ul>
+<p>而git相关的指令，用于上传图片，作为图床。主要指令有，</p>
+<ul>
+<li>git add xxx : 添加一个需要push的文件;</li>
+<li>git commit -m “xxx”: 给这次push添加commitp;</li>
+<li>git push： 将commit的文件推送到git仓库中。</li>
+</ul>
+<h4 id="利用Hexo命令初始、编译和发布文章"><a href="#利用Hexo命令初始、编译和发布文章" class="headerlink" title="利用Hexo命令初始、编译和发布文章"></a>利用Hexo命令初始、编译和发布文章</h4><p>Hexo 的安装和配置参考<a href="http://www.mazhixian.me/2017/08/23/Build-your-blog/">这篇文章</a>，这里只介绍新文章的生成过程。</p>
+<ol>
+<li><p>新建一篇名为xxx的文章，此时在blog/source/_posts路径下会生成名为’xxx.md’的文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> blog</div><div class="line">$ hexo new <span class="string">"xxx"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>编写文章</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ./<span class="built_in">source</span>/_posts</div><div class="line">$ vim xxx.md</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>或者可以利用markdown相关的编辑器，如<a href="http://pad.haroopress.com/user.html" target="_blank" rel="external">haroopad</a>，这是一款非常好用的编辑器。</p>
+<ol>
+<li>编译、预览和发布文章<br>利用如下命令可以编译、预览和发布文章，<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo g <span class="comment"># 编译</span></div><div class="line">$ hexo s <span class="comment"># 预览，此时在浏览器输入 localhost:4000</span></div><div class="line">$ hexo d <span class="comment"># 发布文章到github</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Enjoy it~~</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/07/write-a-blog-by-hexo/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/02/04/train-selected-variables-in-tensorflow-graph/">
+                            Train selected variables in tensorflow graph
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-04T02:02:44+08:00">
+	
+		    Feb 04, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>写之前吐个槽，我又把<code>tf.nn.softmax_cross_entropy_with_logits</code>的参数赋反了，折腾了一晚上。。。这篇文章主要讨论TensorFlow中训练指定变量的问题。这篇<a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">博客</a>给了个非常巧妙的方法，简单记录一下。</p>
+<h4 id="1-查看可训练的参数及其index"><a href="#1-查看可训练的参数及其index" class="headerlink" title="1. 查看可训练的参数及其index"></a>1. 查看可训练的参数及其index</h4><p>在<code>tf.trainiable_variables</code>里存储了可以用于训练的变量，利用如下方法可以打印出它们的信息，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">variables_names = [v.name <span class="keyword">for</span> v <span class="keyword">in</span> tf.trainable_variables()]</div><div class="line">values = sess.run(variables_names)</div><div class="line">i = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> zip(variables_names, values):</div><div class="line">    print(i, <span class="string">"Variable: "</span>, k)</div><div class="line">    print(<span class="string">"Shape: "</span>, v.shape)</div><div class="line">    i += <span class="number">1</span></div></pre></td></tr></table></figure></p>
+<h4 id="2-建立train-options，并为其提供不同的trainable-lists"><a href="#2-建立train-options，并为其提供不同的trainable-lists" class="headerlink" title="2. 建立train options，并为其提供不同的trainable lists"></a>2. 建立train options，并为其提供不同的trainable lists</h4><p>假设有两个loss function，分别对应网络中不同区域的变量，为了实现梯度的有效传递，可以利用如下方法，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">loss1 = ...</div><div class="line">loss2 = ...</div><div class="line">var_list1 = tf.trainable_variables()[<span class="number">0</span>:<span class="number">10</span>]</div><div class="line">var_list2 = tf.trainable_variables()[<span class="number">10</span>:]</div><div class="line">train_op1 = tf.train.AdamOptimizer(learning_rate).minimize(loss1, var_list=var_list1)</div><div class="line">train_op2 = tf.train.AdamOptimizer(learning_rate).minimize(lose2, var_list=var_list2)</div></pre></td></tr></table></figure></p>
+<h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><p>[1] <a href="http://blog.csdn.net/shwan_ma/article/details/78881961" target="_blank" rel="external">[tensorflow] 在不同层上设置不同的学习率，fine-tuning</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/04/train-selected-variables-in-tensorflow-graph/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/31/transpose-convolution-by-tensorflow/">
                             Transpose convolution by tensorflow--odd kernel shape
                         </a>
@@ -741,198 +857,6 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
                     
                         <p>
                             <a href="/2018/01/23/batch-normalization-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/">
-                            Hexo-- deploy google analytics to your website
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-22T14:17:32+08:00">
-	
-		    Jan 22, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>写之前吐槽一下百度的<a href="https://ziyuan.baidu.com/" target="_blank" rel="external">站长平台</a>，添加新站搜索必须要备案，然后就放弃了。。。转到谷歌的<a href="https://analytics.google.com/" target="_blank" rel="external">Google Analytics, GA</a>，可以统计网站的访问数据。搜索了一下，多数<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>模板都嵌入了google analytics相关的ejs，添加起来还是比较方便的。</p>
-<p>下面以我用的模板<a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">tranquilpeak</a>为例，介绍一下添加的步骤，</p>
-<h4 id="1-注册GA账户并添加网站"><a href="#1-注册GA账户并添加网站" class="headerlink" title="1. 注册GA账户并添加网站"></a>1. 注册GA账户并添加网站</h4><p>首先利用谷歌帐号登录Google Analytics，设置关联，而后添加网站信息，如下图所示，</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180122/fig1.png?raw=true" height="600" width="600">
-</center>
-
-<h4 id="2-获取UA"><a href="#2-获取UA" class="headerlink" title="2. 获取UA"></a>2. 获取UA</h4><p>添加好网站信息以后，GA会提供一个名为<code>UA</code>的ID (例如 UA-xxxxxx-x) 以及用于添加进网站页面的<code>gtga.js</code>段代码，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;!-- Global site tag (gtag.js) - Google Analytics --&gt;</div><div class="line">&lt;script async src=<span class="string">"https://www.googletagmanager.com/gtag/js?id=UA-xxxxx-x"</span>&gt;&lt;/script&gt;</div><div class="line">&lt;script&gt;</div><div class="line">  window.dataLayer = window.dataLayer || [];</div><div class="line">  <span class="keyword">function</span> <span class="function"><span class="title">gtag</span></span>()&#123;dataLayer.push(arguments);&#125;</div><div class="line">  gtag(<span class="string">'js'</span>, new Date());</div><div class="line"></div><div class="line">  gtag(<span class="string">'config'</span>, <span class="string">'UA-xxxxx-x'</span>);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<h4 id="3-在模板中添加GA支持"><a href="#3-在模板中添加GA支持" class="headerlink" title="3. 在模板中添加GA支持"></a>3. 在模板中添加GA支持</h4><p>对于<code>tranquilpeak</code>模板，配置<code>google-analytics</code>是比较简单的，只需要修改<code>theme/tranquilpeal/_config.yml</code>文件中的<code>google-analytics-id</code>部分，如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Your Google analystics web property ID : UA-XXXXX-X</span></div><div class="line">google_analytics_id: UA-xxxx-x</div></pre></td></tr></table></figure></p>
-<p>同样的，相应的<code>google-analytics.ejs</code>文件可以在<code>theme/tranquilpeak/layout/_partial</code>中找到, 其代码如下所示，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;% <span class="keyword">if</span> (theme.google_analytics_id) &#123; %&gt;</div><div class="line">    &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</div><div class="line">        (<span class="keyword">function</span>(i,s,o,g,r,a,m)&#123;i[<span class="string">'GoogleAnalyticsObject'</span>]=r;i[r]=i[r]||<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        (i[r].q=i[r].q||[]).push(arguments)&#125;,i[r].l=1*new Date();a=s.createElement(o),</div><div class="line">        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)</div><div class="line">        &#125;)(window,document,<span class="string">'script'</span>,<span class="string">'//www.google-analytics.com/analytics.js'</span>,<span class="string">'ga'</span>);</div><div class="line"></div><div class="line">        ga(<span class="string">'create'</span>, <span class="string">'&lt;%= theme.google_analytics_id %&gt;'</span>, <span class="string">'auto'</span>);</div><div class="line">        ga(<span class="string">'send'</span>, <span class="string">'pageview'</span>);</div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;% &#125; %&gt;</div></pre></td></tr></table></figure></p>
-<p>其中的<code>theme.google_analytics_id</code>便对应刚刚我们添加的<code>UA-xxxx-x，该文件不需要修改。当然也可以尝试将GA提供的基于</code>gtag.js<code>代码替换到</code>google-analysis.ejs`中，感兴趣可以试试看。</p>
-<h4 id="4-编译并部署"><a href="#4-编译并部署" class="headerlink" title="4. 编译并部署"></a>4. 编译并部署</h4><p>最后，利用<code>hexo g</code>重新编译相关文件，在每一个<code>.html</code>页面中加入<code>GA</code>相关的内容，谷歌的分析服务便可以发挥作用。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak" target="_blank" rel="external">hexo-theme-tranquilpeak</a><br>[2] <a href="https://www.cnblogs.com/zhcncn/p/4097881.html" target="_blank" rel="external">Hexo搭建Github静态博客</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/22/hexo-deploy-google-analytics-to-your-website/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/21/resnet-with-tensorflow/">
-                            Residual network I -- block and bottleneck
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-21T14:15:00+08:00">
-	
-		    Jan 21, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>ResNet (Residual Neural Network)由何凯明等在15年提出，这里做个笔记，参考了<a href="https://www.amazon.cn/dp/B06X8Z4BS9/" target="_blank" rel="external">TensorFlow 实战</a>的6.4节。ResNet的结构能加速超深神经网络的训练，能有效避免过拟合，而且推广性非常好。</p>
-<p>深度神经网络存在<code>Degradation</code>的问题，即随着网络层数的增加，其准确率会从逐渐提升到饱和，进而下降。这一问题在我们近期的工作也出现了，我们在增加了一层全连接后，网络的准确率反而下降了。为了解决这一问题，ResNet提出了一种新的网络思路，<strong>即允许原始输入信息直接传输到后面的层中</strong>。假定某段网络的输入是<script type="math/tex">\mathrm{x}</script>，期望输出是<script type="math/tex">H(\mathrm{x})</script>，如果直接将<script type="math/tex">\mathrm{x}</script>传到输出作为初始结果，那么目标函数变为</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}
-\end{equation}</script><p>如下图所示为一个ResNet的残差学习单元，即将学习目标从<script type="math/tex">H(\mathrm{x})</script>改为期望与输入的残差。这种结构也被称为<code>shortcut</code>或<code>skip connections</code>.</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig3.png?raw=true" height="200" width="300">
-</center>
-
-<p>考虑到神经网络相当于对原始数据进行了压缩，存在信息损失的问题，而ResNet结构将部分输入信息直接传递到输出端，可以保留部分的信息。并且ResNet的训练误差会随着层数增加而逐渐减少，并且在测试集上也有很好的表现。</p>
-<p>引自TensorFlow实战，在ResNet的第二篇论文<em>Identity mapping in deep residual networks</em>中，提出了ResNet V2。想对于ResNet V1, 将激活函数<code>ReLU</code>改为了<code>Identity mapping</code>，即y=x。同时，ResNet V2在每一层都使用了Batch Normalization，提升网络的范化能力。</p>
-<h3 id="ResNet的block的理解"><a href="#ResNet的block的理解" class="headerlink" title="ResNet的block的理解"></a>ResNet的block的理解</h3><p>在ResNet的实现中，包含多个<code>block</code>，每个<code>block</code>又由多个<code>bottleneck</code>组成，称为<strong>残差学习单元</strong>，ResNet的残差运算即在每个bottleneck内实现。因为要获取输入<script type="math/tex">\mathrm{x}</script>与block输出的残差，每个<code>bottleneck</code>虽然做了多次卷积和激活运算，但其输出的<code>shape</code>应该保持不变，因此内部的卷积运算的<code>stride</code>和<code>padding</code>都有特殊的设置 (数学推导可以参考<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html" target="_blank" rel="external">此文</a>)。以ResNet-50的第二个block为例，假设该block内包含两个bottleneck单元，则有，</p>
-<h5 id="Bottleneck-One"><a href="#Bottleneck-One" class="headerlink" title="Bottleneck One"></a>Bottleneck One</h5><div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Layer</th>
-<th style="text-align:center">Input</th>
-<th style="text-align:center">Kernel</th>
-<th style="text-align:center">Stride</th>
-<th style="text-align:center">Padding</th>
-<th style="text-align:center">Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Conv1,1</td>
-<td style="text-align:center">56x56x64</td>
-<td style="text-align:center">1x1x64</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center">56x56x64</td>
-</tr>
-<tr>
-<td style="text-align:center">Conv1,2</td>
-<td style="text-align:center">56x56x64</td>
-<td style="text-align:center">3x3x64</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center">56x56x64</td>
-</tr>
-<tr>
-<td style="text-align:center">Conv1,3</td>
-<td style="text-align:center">56x56x64</td>
-<td style="text-align:center">1x1x256</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center">56x56x256</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h5 id="Bottleneck-Two"><a href="#Bottleneck-Two" class="headerlink" title="Bottleneck Two"></a>Bottleneck Two</h5><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th style="text-align:center">Input</th>
-<th style="text-align:center">Kernel</th>
-<th style="text-align:center">Stride</th>
-<th style="text-align:center">Padding</th>
-<th style="text-align:center">Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Conv2,1</td>
-<td style="text-align:center">56x56x256</td>
-<td style="text-align:center">1x1x64</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center">56x56x64</td>
-</tr>
-<tr>
-<td>Conv2,2</td>
-<td style="text-align:center">56x56x64</td>
-<td style="text-align:center">3x3x64</td>
-<td style="text-align:center"><em>2</em></td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center">28x28x64</td>
-</tr>
-<tr>
-<td>Conv2,3</td>
-<td style="text-align:center">28x28x64</td>
-<td style="text-align:center">1x1x256</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">SAME</td>
-<td style="text-align:center"><em>28x28x256</em></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>注意<code>Bottleneck Two</code>的<code>Conv2,3</code>层的<code>stride</code>为2,因此输出的尺度大小相当于做了factor为2的降采样，因此该bottleneck不做残差的运算，其输出直接作为下一个block的输入。</p>
-<p>ResNet-V2相对于ResNet-V1增加了<code>Batch Normalization</code>和<code>L2</code>正则，如何在block中体现？ 且听下回分解。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/21/resnet-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

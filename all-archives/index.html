@@ -672,6 +672,56 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/">
+                            Configure permalinks in wordpress with nginx and avoid 404
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-25T15:18:36+08:00">
+	
+		    Mar 25, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件</p>
+<h4 id="wordpress静态链接的配置"><a href="#wordpress静态链接的配置" class="headerlink" title="wordpress静态链接的配置"></a>wordpress静态链接的配置</h4><p>Wordpress可供配置的静态链接很多</p>
+<h4 id="自定义链接插件"><a href="#自定义链接插件" class="headerlink" title="自定义链接插件"></a>自定义链接插件</h4><p>custom permalinks plugin</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol>
+<li><a href="https://blog.csdn.net/hanshileiai/article/details/45580457" target="_blank" rel="external">ubuntu 下 wordpress 设置 Permalink 为 自定义结构后出现404页面 nginx - 404 not found page for permalinks</a></li>
+<li><a href="https://wordpress.org/plugins/custom-permalinks/" target="_blank" rel="external">Custom Permalinks plugin</a></li>
+<li><a href="http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/">multiple websites with nginx</a></li>
+</ol>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/">
                             Confusion matrix and generation with TensorFlow
                         </a>
@@ -706,6 +756,67 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
                     
                         <p>
                             <a href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/03/17/install-macOS-10-12-with-virtualbox/">
+                            Install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-17T14:07:15+08:00">
+	
+		    Mar 17, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>首先，建议不要作死，还是去买mac吧，太折腾人了！！然后进入正题，如何在Ubuntu 17.10上利用virtualbox 5.1安装MacOS 10.9虚拟机。涉及CPUID问题、vdmk转vdi，vdi的resize，以及EFI的问题。好几点都不太懂，慢慢摸索吧。 </p>
+<p>再吐个槽，不要随意自己更新virtualbox，因为如果是UEFI安装的ubuntu，是没法将Virtualbox的modprov部署进系统image的，然后virtualbox就彻底挂了。。。解决方法是升级系统或者重装。</p>
+<h4 id="镜像去哪里找"><a href="#镜像去哪里找" class="headerlink" title="镜像去哪里找"></a>镜像去哪里找</h4><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>具体的配置参考文献里有很多，我就不赘述了。。。这里主要说明一下CPUID的问题。。。我的CPU是i3 7100，按道理说其架构不适合装黑苹果，不过可以通过修改虚拟机的cpuid来解决这个问题。。。网上的方法太坑爹了，固定了cpuid，其实这个要自己去查的，每一代intel架构不太一样。查询方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">VBoxManage list hostcpuids</div><div class="line"><span class="comment"># It will print</span></div><div class="line">Host CPUIDs:</div><div class="line"></div><div class="line">Leaf no.  EAX      EBX      ECX      EDX</div><div class="line">00000000  00000016 756e6547 6c65746e 49656e69</div><div class="line">00000001  000906e9 00100800 7ffafbbf bfebfbff</div><div class="line">00000002  76036301 00f0b5ff 00000000 00c30000</div><div class="line">00000003  00000000 00000000 00000000 00000000</div><div class="line">00000004  1c004121 01c0003f 0000003f 00000000</div><div class="line"><span class="comment"># 找到00000001这一行，</span></div><div class="line">替换到xxx.vbox中</div></pre></td></tr></table></figure></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">VBoxManage modifyvm <span class="string">"macOS"</span> --cpuidset 00000001 000306a9 00100800 3d9ae3bf bfebfbff</div><div class="line">VBoxManage setextradata <span class="string">"macOS"</span> <span class="string">"VBoxInternal/Devices/efi/0/Config/DmiSystemProduct"</span> <span class="string">"iMac11,3"</span></div><div class="line">VBoxManage setextradata <span class="string">"macOS"</span> <span class="string">"VBoxInternal/Devices/efi/0/Config/DmiSystemVersion"</span> <span class="string">"1.0"</span></div><div class="line">VBoxManage setextradata <span class="string">"macOS"</span> <span class="string">"VBoxInternal/Devices/efi/0/Config/DmiBoardProduct"</span> <span class="string">"Iloveapple"</span></div><div class="line">VBoxManage setextradata <span class="string">"macOS"</span> <span class="string">"VBoxInternal/Devices/smc/0/Config/DeviceKey"</span> <span class="string">"ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"</span></div><div class="line">VBoxManage setextradata <span class="string">"macOS"</span> <span class="string">"VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC"</span> 1</div></pre></td></tr></table></figure>
+<p>更新以后如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBoardProduct&quot; value=&quot;Iloveapple&quot;/&gt;</div><div class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; value=&quot;iMac11,3&quot;/&gt;</div><div class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemVersion&quot; value=&quot;1.0&quot;/&gt;</div><div class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/DeviceKey&quot; value=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;/&gt;</div><div class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; value=&quot;1&quot;/&gt;</div><div class="line"></div><div class="line">&lt;CPU&gt;</div><div class="line">    &lt;PAE enabled=&quot;true&quot;/&gt;</div><div class="line">    &lt;LongMode enabled=&quot;true&quot;/&gt;</div><div class="line">    &lt;HardwareVirtExLargePages enabled=&quot;false&quot;/&gt;</div><div class="line">    &lt;CpuIdTree&gt;</div><div class="line">    &lt;CpuIdLeaf id=&quot;1&quot; eax=&quot;591593&quot; ebx=&quot;34605056&quot; ecx=&quot;2147154879&quot; edx=&quot;3219913727&quot;/&gt;</div><div class="line">    &lt;/CpuIdTree&gt;</div><div class="line">&lt;/CPU&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="resize"><a href="#resize" class="headerlink" title="resize"></a>resize</h3><p>VBoxManage clonehd “MavericksInstaller.vmdk” “MavericksInstaller.vdi” —format vdi<br>VBoxManage list hdds<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">UUID:           501b0eed-167e-4b38-96ff-93efa707b5fc</div><div class="line">Parent UUID:    base</div><div class="line">State:          created</div><div class="line">Type:           normal (base)</div><div class="line">Location:       xxx/macOS/MavericksInstaller.vdi</div><div class="line">Storage format: vdi</div><div class="line">Capacity:       10240 MBytes</div><div class="line">Encryption:     disabled</div></pre></td></tr></table></figure></p>
+<p>VBoxManage modifyhd 501b0eed-167e-4b38-96ff-93efa707b5fc —resize 40960<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">UUID:           501b0eed-167e-4b38-96ff-93efa707b5fc</div><div class="line">Parent UUID:    base</div><div class="line">State:          created</div><div class="line">Type:           normal (base)</div><div class="line">Location:       xxx/macOS/MavericksInstaller.vdi</div><div class="line">Storage format: vdi</div><div class="line">Capacity:       40960 MBytes</div><div class="line">Encryption:     disabled</div></pre></td></tr></table></figure></p>
+<h3 id="解决mediakit-报告设备上的空间不足以执行"><a href="#解决mediakit-报告设备上的空间不足以执行" class="headerlink" title="解决mediakit 报告设备上的空间不足以执行"></a>解决mediakit 报告设备上的空间不足以执行</h3><p>最简单粗暴的方法，重新挂载一个vdi，利用磁盘工具，抹掉，然后就行了。。。</p>
+<h3 id="分辨率调整"><a href="#分辨率调整" class="headerlink" title="分辨率调整"></a>分辨率调整</h3><p>VBoxManage setextradata “macOS” VBoxInternal2/EfiGopMode 3</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://www.cnblogs.com/liming2017/p/7566953.html" target="_blank" rel="external">https://www.cnblogs.com/liming2017/p/7566953.html</a></li>
+<li><a href="https://jingyan.baidu.com/article/1876c85274dcca890a13767a.html" target="_blank" rel="external">https://jingyan.baidu.com/article/1876c85274dcca890a13767a.html</a></li>
+<li><a href="https://techsviewer.com/install-macos-sierra-virtualbox-windows/" target="_blank" rel="external">https://techsviewer.com/install-macos-sierra-virtualbox-windows/</a></li>
+<li><a href="https://www.youtube.com/watch?v=pVc6rxk3OUM" target="_blank" rel="external">https://www.youtube.com/watch?v=pVc6rxk3OUM</a></li>
+<li><a href="https://www.virtualbox.org/wiki/Download_Old_Builds_5_0" target="_blank" rel="external">https://www.virtualbox.org/wiki/Download_Old_Builds_5_0</a></li>
+<li><a href="https://forums.virtualbox.org/viewtopic.php?f=6&amp;t=53880" target="_blank" rel="external">https://forums.virtualbox.org/viewtopic.php?f=6&amp;t=53880</a></li>
+<li><a href="https://www.cnblogs.com/platero/p/4105808.html" target="_blank" rel="external">https://www.cnblogs.com/platero/p/4105808.html</a></li>
+<li><a href="https://stackoverflow.com/questions/12349757/change-macos-x-guest-screen-resolution-for-virtualbox" target="_blank" rel="external">https://stackoverflow.com/questions/12349757/change-macos-x-guest-screen-resolution-for-virtualbox</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/17/install-macOS-10-12-with-virtualbox/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
@@ -955,227 +1066,6 @@ P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta
                     
                         <p>
                             <a href="/2018/03/13/expectation-maximization-algorithm/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/11/understanding-of-auc-curve/">
-                            二分类及AUC的理解
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-11T13:36:59+08:00">
-	
-		    Mar 11, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>在机器学习中，二分类 (binary classification) 问题是最常出现且最经典的问题。本文首先解释二分类的样本标签问题，包括正例 (Positive)/反例 (Negative) 和真例 (True)/假例 (False) 这两组集合；紧接着介绍几种常用的分类器评估指标，例如精确度 (precision)、准确率 (accuracy)、敏感性 (sensitivity)、特异性 (specificity)等；最后，讨论对ROC曲线及其衍生的AUC指标的理解，并给出样例。</p>
-<h4 id="二分类标签"><a href="#二分类标签" class="headerlink" title="二分类标签"></a>二分类标签</h4><p>应用于二分类的样本通常用正例 (Positive, P) 和反例 (Negative, N) 进行标注，作为实际标签。而经过分类器估计后的输出，根据其结果的正确与否，划分为真例 (True, T) 和假 (False, F)两个集合。因此，需要注意的是<code>T</code>和<code>F</code>两个集合均包含正例和反例样本。</p>
-<p>根据实际标签和预测结果进行两两组合，得到四个子集，分别为真正率 (True positive, TP)、真反例 (True negative, TN)、假正率 (False positive, FP) 和假反例 (False negative, FN)，如下表所示。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">预测正例</th>
-<th style="text-align:center">预测反例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">实际正例</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FN</td>
-</tr>
-<tr>
-<td style="text-align:center">实际反例</td>
-<td style="text-align:center">FP</td>
-<td style="text-align:center">TN</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>通过对这四个子集样本的组合，可以得到一些评估指标，用于评价分类器的表现。这里我想强调一下对FN和FP的理解，其中FN指的是<em>实际为反例，但被分类器判断为正例</em>，而FP指的是<em>实际为正例，但被分类器判断为反例</em>，二者的合集为<code>F</code>。</p>
-<h4 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h4><p>下面讨论常用的二分类器的评估指标 (index or measure)。定义<script type="math/tex">S</script>为所有的样本数量，<script type="math/tex">S_{P}</script>和<script type="math/tex">S_{N}</script>对应实际标注为正例和反例的样本数；<script type="math/tex">S_{T}</script>和<script type="math/tex">S_{F}</script>表示分类器估计的标签中正确和错误的样本数。相应的，定义<script type="math/tex">S_{\mathrm{TP}}</script>、<script type="math/tex">S_{\mathrm{TN}}</script>、<script type="math/tex">S_{\mathrm{FP}}</script>和<script type="math/tex">S_{\mathrm{FN}}</script>为TP、TN、FP、FN样本的数目。因此，定义如下的评估指标</p>
-<ul>
-<li><p>准确率 (accuracy)<br>准确率为分类器预测结果中判断正确的样本占所有样本的比例，即<script type="math/tex">\mathrm{acc} = S_{T}/S = (S_{\mathrm{TP}} + S_\mathrm{TN}) / S</script>.</p>
-</li>
-<li><p>精确度 (precision)<br>精确度又称为查准率，衡量分类器预测为正的样本中实际为正例的样本比例，即 <script type="math/tex">\mathrm{pre} = S_{\mathrm{TP}} / (S_{\mathrm{TP}} + S_{\mathrm{FP}})</script>.</p>
-</li>
-<li><p>敏感性 (sensitivity)<br>敏感性又称为召回率或真正率，衡量实际为正例的样本经过分类器预测后标记正确的样本所占比例，即<script type="math/tex">\mathrm{sen} = S_{\mathrm{TP}} / (S_{\mathrm{TP}} + S_{\mathrm{FN}})</script>.</p>
-</li>
-<li><p>F1-score<br>F1-score是对精确度和敏感性的结合，因为这两者本质上是矛盾的，通常敏感性越高则精确度会较低。F1-score的表达式为, <script type="math/tex">\mathrm{F1} = (2 \times \mathrm{pre} \times \mathrm{sen}) / (\mathrm{pre} + \mathrm{sen})</script>.</p>
-</li>
-<li><p>特异性 (specificity)<br>特异性是实际标注为反例的样本经过分类器预测正确的样本的比例，即<script type="math/tex">\mathrm{spe} = S_\mathrm{TN} / (S_\mathrm{FN} + S_\mathrm{TN})</script>.</p>
-</li>
-<li><p>假正率 (fasle positive rate)<br>假正率表示分类器预测为反例的样本中实际为反例的样本的比例，即<script type="math/tex">\mathrm{fpr} = S_\mathrm{TN} / (S_\mathrm{FP} + S_\mathrm{TN})</script>.</p>
-</li>
-</ul>
-<p>对于这些评估指标，我的理解见下表，</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">评估指标</th>
-<th style="text-align:center">意义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">准确率</td>
-<td style="text-align:center">衡量了分类器总体上的准确性，不考虑样本的实际类别.</td>
-</tr>
-<tr>
-<td style="text-align:center">精确度</td>
-<td style="text-align:center">衡量了正例的分类准确性，通常比准确率要高.</td>
-</tr>
-<tr>
-<td style="text-align:center">敏感性</td>
-<td style="text-align:center">衡量了分类器对正例的泛化能力，在异常检测中应用较多.</td>
-</tr>
-<tr>
-<td style="text-align:center">特异性</td>
-<td style="text-align:center">衡量了分类器对反例的分类准确性.</td>
-</tr>
-<tr>
-<td style="text-align:center">假正率</td>
-<td style="text-align:center">与敏感性类似，衡量分类器对反例的泛化能力.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h4 id="ROC和AUC"><a href="#ROC和AUC" class="headerlink" title="ROC和AUC"></a>ROC和AUC</h4><p>以上的评估指标均要求分类器的输出为确定的标签，而分类器通常输出的是样本被判断为正例的概率，为了得到标签，需要设定概率的门限，即大于该门限的概率对应的样本判断为正例，否则为反例。门限的设定，影响分类器的泛化能力。</p>
-<p>因此，人们提出了receiver operating characteristic (ROC) 的概念，最早出现二战时检测敌机的雷达分析技术。在信号处理中，有这样一组指标，即捕获率 (catch rate) 和追踪率 (follow rate)，前者衡量了系统对于目标信号的捕获能力，后者衡量系统在捕获信号后继续追踪的能力。这两个指标，对应到二分类问题中就是敏感性或真正率 (truu positive rate, TPR)和假正率。</p>
-<p>通过TPR和FRP即可求解ROC曲线。对分类器输出的样本概率进行排序，设定概率门限<code>thrs</code>，将高于该门限的样本判断为正例，反之判断为反例。而后，与实际的样本标签进行比较，计算对应该门限的TPR和FPR。记录不同门限处的TPR和FRP，则得到了该分类器的ROC曲线。</p>
-<p>如下为ROC曲线的求解算法，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Step1. input labels and probs estimated by classifier;</div><div class="line">Step2. set thresholding step</div><div class="line">Step3. for thrs = 1.0 : step : 0.0</div><div class="line">		labels_est = zeros(size(labels))</div><div class="line">        labels_Est[probs &gt; thrs] = 1</div><div class="line">        calculate fpr and tpr w.r.t. thrs</div><div class="line">Step4. Draw the ROC curve</div></pre></td></tr></table></figure></p>
-<p>针对不同的分类器，若某个分类器的ROC曲线整体在其他分类器的上方，则可认为该分类器最优。但往往存在ROC曲线交叉的情形，此时通过计算ROC曲线下方的面积，即AUC (area under curve)值来进行对比，AUC数值越大，分类器的分类效果越好，泛化能力越强。</p>
-<p>给出一个ROC曲线和AUC的求解样例，具体的代码实现见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-roc-auc.ipynb" target="_blank" rel="external">这里</a>.</p>
-<p>首先，设样本的标签和二分类器输出的概率为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">labels = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]</div><div class="line">probs = [<span class="number">0.5</span>, <span class="number">0.6</span>, <span class="number">0.2</span>, <span class="number">0.9</span>, <span class="number">0.5</span>, <span class="number">0.3</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, <span class="number">0.3</span>, <span class="number">0.9</span>, <span class="number">0.5</span>]</div></pre></td></tr></table></figure></p>
-<p>设定thrs的步长为0.1，则求解的TPR和FPR分别为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tpr = [<span class="number">0.0</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.6</span>, <span class="number">0.8</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>]</div><div class="line">fpr = [<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.33</span>, <span class="number">0.33</span>, <span class="number">0.67</span>, <span class="number">0.83</span>, <span class="number">1.0</span>]</div></pre></td></tr></table></figure></p>
-<p>最后，求解得到auc=0.967. 下图为该样例的ROC曲线，</p>
-<center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_roc.png?raw=true" height="250" width="360">
-</center>
-
-<p><a href="https://www.scikit-learn.org" target="_blank" rel="external">scikit-learn</a>也提供了求解auc的函数，其用法如下，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> metrics</div><div class="line">fpr, tpr, thresholds = metrics.roc_curve(labels+<span class="number">1</span>, p, pos_label=<span class="number">2</span>)</div><div class="line">auc = metrics.auc(fpr, tpr)</div></pre></td></tr></table></figure></p>
-<p>在我的notebook中，分别给出了我的实现和sklearn.metrics.auc的实现，二者结果相同。最后吐个槽，因为haroopad的bug，这篇是我重新写的！！！</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] 周志华，机器学习，2017 清华大学出版社<br>[2] <a href="https://www.zhihu.com/question/39840928" target="_blank" rel="external">机器学习和统计里面的auc怎么理解？</a><br>[3] <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html" target="_blank" rel="external">sklearn.metrics.auc</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/11/understanding-of-auc-curve/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/">
-                            SVM hyperplane visualization based on libsvm
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-06T09:24:10+08:00">
-	
-		    Mar 06, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Support vector machine (SVM), as a shallow model, has been widely applied for classification tasks. To solve the model, groups of super vectors (SVs) of corresponding classes are extracted, so as to calculate a hyperplane as the classification boarder.</p>
-<h3 id="A-brief-review"><a href="#A-brief-review" class="headerlink" title="A brief review"></a>A brief review</h3><p>Denote <script type="math/tex">\mathbf{x} = \{\mathbf{x_1},~\mathbf{x_2},~\dots,~\mathbf{x_N}\}</script> as the samples to be classified, and $y = \{y_1,~y_2,~\dots,~y_N\}$ are the corresponding labels. Take binary classification as an example, </p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
-\end{equation}</script><p>where <script type="math/tex">\mathbf{w}</script> are the coefficients w.r.t. features in <script type="math/tex">\mathbf{x}</script>, b is the bias.</p>
-<p>The the problem becomes an optimization task, where the object is,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{cases}
-    \min\limits_{w}\frac{\left \| \mathbf{w} \right \|}{2}, \\
-    \mathrm{s.t.}~y_i(\mathbf{w}\cdot\mathbf{x_i}+b) \geq 1, i = 1,~2,~\dots,~N,
-\end{cases}
-\end{equation}</script><p>which shall be calculated with Lagrange equation,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(\mathbf{w}\cdot\mathbf{x_i}+b)-1\}}.
-\end{equation}</script><p>To save time, it usually selects a subset of <script type="math/tex">\mathbf{x}</script> namely super vectors to optimize above equation, instead of all of the samples. Those SVs are samples that stand close to the classification hyperplane, i.e., the boarders of different types. They are considered on behalf of the classes they belonging to.</p>
-<p>By solving the Lagrange equation, we obtain the <script type="math/tex">\mathbf{\lambda}</script>, as well as <script type="math/tex">\mathbf{w}</script> and $b$.</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\begin{cases}
-    \mathbf{w} = \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \mathbf{x_i}}, \\
-    b = - \frac{1}{2}\mathbf{w}\cdot(\mathbf{x_{c1}}+\mathbf{x_{c2}}),
-\end{cases}
-\end{equation}</script><p>where <script type="math/tex">\mathbf{x_c1}</script> and <script type="math/tex">\mathbf{x_c2}</script> are arbitrary super vectors of class one and two, respectively.</p>
-<p>The dicision function based on those parameters are,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i (\mathbf{x_i}\cdot\mathbf{x_s}) + b} \right],
-\end{equation}</script><p>here <script type="math/tex">\rm{sgn}</script> is the sign function.</p>
-<p>For non-linear classification, which is more general than linear case, the dot product between <script type="math/tex">\mathbf{x_i}</script> and <script type="math/tex">\mathbf{x_s}</script> are replaced by non-linear kernel functions $\Phi(\cdot)$, i.e.,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-    f(\mathbf{x_s}) = \rm{sgn}\left[ \sum^{N_\rm{SV}}_{i=1}{\lambda_i y_i \Phi(\mathbf{x_i},\mathbf{x_s})+b} \right].
-\end{equation}</script><h3 id="Realization-and-visualization"><a href="#Realization-and-visualization" class="headerlink" title="Realization and visualization"></a>Realization and visualization</h3><p>With the help of <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, it is easy to realize SVM based classification. What I want to say in this blog is how to visualize or replicate the prediction stage of the <code>svmtrain</code> function. Some comments are as follows,</p>
-<ul>
-<li>After training the SVM with <code>svmtrain</code>, a <code>model</code> will be generated;</li>
-<li>In the <code>model</code>, super vectors, parameters like weights and bias, are archived;</li>
-<li><strong>To save space, the support vectors are saved as sparse matrix.</strong></li>
-<li>For multi-class classification, it can be transformed to multiple binary-classification tasks.</li>
-</ul>
-<p>Here is a naive two-dimensional three-type classification example (<a href="https://github.com/myinxd/svm-toy/blob/master/demos/DrawSepLine3C.m" target="_blank" rel="external">code</a> is available). I divided three-class task into three binary classifications. The linear kernel function was used, thus the classification hyperplanes were also linear.</p>
-<p><center>
-<img src="https://github.com/myinxd/svm-toy/raw/master/images/fig_3c.png?raw=true" height="280" width="600">
-</center><br>In the right figure, only support vector points are plotted. It can be found that the SVs are those points stand at the boarder between different categories.</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/06/svm-hyperplane-visualization-based-on-libsvm/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

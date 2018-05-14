@@ -6,27 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Confusion matrix and generation with TensorFlow - Jason&#39;s blog</title>
+    <title>Configure permalinks in wordpress with nginx and avoid 404 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。 Confusion matrix混淆矩阵通过比较分类器的预测和真实标签，评估分类器效果，通常用于多分类问题。TF的audio recognition tutorial里对混淆矩阵的评价是, This matrix can be more useful th">
-<meta name="keywords" content="deep-learning">
+    <meta name="description" content="简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件 wordpress静态链接的配置Wordpress可供配置的静态链接很多 自定义链接插件custom permalin">
+<meta name="keywords" content="nginx">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Confusion matrix and generation with TensorFlow">
-<meta property="og:url" content="http://www.mazhixian.me/2018/03/17/confusion-matrix-and-generation-with-tensorflow/index.html">
+<meta property="og:title" content="Configure permalinks in wordpress with nginx and avoid 404">
+<meta property="og:url" content="http://www.mazhixian.me/2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。 Confusion matrix混淆矩阵通过比较分类器的预测和真实标签，评估分类器效果，通常用于多分类问题。TF的audio recognition tutorial里对混淆矩阵的评价是, This matrix can be more useful th">
+<meta property="og:description" content="简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件 wordpress静态链接的配置Wordpress可供配置的静态链接很多 自定义链接插件custom permalin">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-confmat.png?raw=true">
-<meta property="og:updated_time" content="2018-03-17T07:41:02.795Z">
+<meta property="og:updated_time" content="2018-04-25T07:25:46.887Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Confusion matrix and generation with TensorFlow">
-<meta name="twitter:description" content="简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。 Confusion matrix混淆矩阵通过比较分类器的预测和真实标签，评估分类器效果，通常用于多分类问题。TF的audio recognition tutorial里对混淆矩阵的评价是, This matrix can be more useful th">
-<meta name="twitter:image" content="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-confmat.png?raw=true">
+<meta name="twitter:title" content="Configure permalinks in wordpress with nginx and avoid 404">
+<meta name="twitter:description" content="简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件 wordpress静态链接的配置Wordpress可供配置的静态链接很多 自定义链接插件custom permalin">
     
     
         
@@ -264,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Confusion matrix and generation with TensorFlow
+            Configure permalinks in wordpress with nginx and avoid 404
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-03-17T14:45:29+08:00">
+    <time itemprop="datePublished" datetime="2018-04-25T15:18:36+08:00">
 	
-		    Mar 17, 2018
+		    Apr 25, 2018
     	
     </time>
     
@@ -282,15 +280,14 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。</p>
-<h4 id="Confusion-matrix"><a href="#Confusion-matrix" class="headerlink" title="Confusion matrix"></a>Confusion matrix</h4><p>混淆矩阵通过比较分类器的<strong>预测</strong>和<strong>真实</strong>标签，评估分类器效果，通常用于多分类问题。TF的<a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">audio recognition tutorial</a>里对混淆矩阵的评价是, <em>This matrix can be more useful than just a single accuracy score because it gives a good summary of what mistakes the network is making.</em> 即混淆矩阵可以帮助分析分类器在哪些类上的表现最差。相对于单一的准确率这种衡量指标，更加直观。</p>
-<p>混淆矩阵是一个二维的方阵，横轴代表真实标签，枞轴代表预测标签，其中的元素<script type="math/tex">CM_{ij}</script>代表实际为第<script type="math/tex">i</script>，被分成第<script type="math/tex">j</script>类的样本数目。<strong>显然矩阵的非零元素集中在对角线时，分类器的表现更优异。</strong></p>
-<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><p>下面给出一个样例，这是一个六分类的问题，结果来自我们近期的工作。其中A的样本量约1000, B的样本量约10000，A random是随机产生预测标签的CM矩阵。如下所示，A的CM map中，多数样本集中在对角线；B的表现也不错，但(6,6)的色块显然淡了很多，说明分类器对第六类的分类效果不好；而A random，因为是随机生成的，其CM的各个元素的样本数比较均衡，因此分类准确率也非常差。</p>
-<center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-confmat.png?raw=true" height="200" width="720">
-</center>
-
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">Simple Audio Recognition</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/confusion_matrix" target="_blank" rel="external">tf.confusion_matrix</a></p>
+            <p>简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件</p>
+<h4 id="wordpress静态链接的配置"><a href="#wordpress静态链接的配置" class="headerlink" title="wordpress静态链接的配置"></a>wordpress静态链接的配置</h4><p>Wordpress可供配置的静态链接很多</p>
+<h4 id="自定义链接插件"><a href="#自定义链接插件" class="headerlink" title="自定义链接插件"></a>自定义链接插件</h4><p>custom permalinks plugin</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol>
+<li><a href="https://blog.csdn.net/hanshileiai/article/details/45580457" target="_blank" rel="external">ubuntu 下 wordpress 设置 Permalink 为 自定义结构后出现404页面 nginx - 404 not found page for permalinks</a></li>
+<li><a href="https://wordpress.org/plugins/custom-permalinks/" target="_blank" rel="external">Custom Permalinks plugin</a></li>
+<li><a href="http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/">multiple websites with nginx</a></li>
+</ol>
 
             
 
@@ -301,7 +298,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/all-tags/deep-learning/">deep-learning</a>
+    <a class="tag tag--primary tag--small t-link" href="/all-tags/nginx/">nginx</a>
 
             </div>
         
@@ -311,8 +308,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/" data-tooltip="Configure permalinks in wordpress with nginx and avoid 404" aria-label="PREVIOUS: Configure permalinks in wordpress with nginx and avoid 404">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -321,7 +317,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/install-macOS-10-12-with-virtualbox/" data-tooltip="Install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710" aria-label="NEXT: Install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/17/install-macOS-10-12-with-virtualbox/" data-tooltip="install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710" aria-label="NEXT: install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -339,7 +335,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -391,8 +387,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/" data-tooltip="Configure permalinks in wordpress with nginx and avoid 404" aria-label="PREVIOUS: Configure permalinks in wordpress with nginx and avoid 404">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -401,7 +396,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/03/17/install-macOS-10-12-with-virtualbox/" data-tooltip="Install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710" aria-label="NEXT: Install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/17/install-macOS-10-12-with-virtualbox/" data-tooltip="install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710" aria-label="NEXT: install macOS 10.9 with virtualbox-5.1 on Unbuntu 1710">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -419,7 +414,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/17/confusion-matrix-and-generation-with-tensorflow/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -452,7 +447,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/03/17/confusion-matrix-and-generation-with-tensorflow/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -510,9 +505,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/03/17/confusion-matrix-and-generation-with-tensorflow/';
+                 this.page.url = 'http://www.mazhixian.me/2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/';
                  
-                    this.page.identifier = '2018/03/17/confusion-matrix-and-generation-with-tensorflow/';
+                    this.page.identifier = '2018/04/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/';
                  
              };
             (function() {
