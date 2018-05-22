@@ -262,6 +262,69 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/05/22/configure-https-with-caddy/">
+                            Configure https with Caddy
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-05-22T16:01:38+08:00">
+	
+		    May 22, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>最近在尝试配置网站的https，师兄推荐了<a href="https://caddyserver.com/" target="_blank" rel="external">Caddy</a>来替换nginx，作为web server。Caddy采用<code>golang</code>语言编写，很容易安装，而且能自动帮助用户注册用于https的证书。</p>
+<p>关于Caddy的安装和配置，<a href="https://lengzzz.com/note/caddy-http-2-web-server-guide-for-beginners" target="_blank" rel="external">这篇博客</a>做了非常详细的介绍。我会按照我的配置重新复述一下，并且重点强调配置<code>caddy.service</code>服务时要注意的权限问题。</p>
+<h4 id="Caddy-安装"><a href="#Caddy-安装" class="headerlink" title="Caddy 安装"></a>Caddy 安装</h4><p><a href="https://caddyserver.com/download" target="_blank" rel="external">Caddy官网</a>提供了自定义安装组件的方式，用户可以通过定制<code>platform</code>,<code>plugins</code>,<code>telemetry</code>和<code>license</code>来生成caddy安装文件并下载。这里不建议采用<code>curl -s https://getcaddy.com | bash</code>脚本方式安装，因为会提示用户没有选择<code>license</code>。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180522/fig-caddy.png?raw=true" height="400" width="640">
+</center>
+
+<p>下载完成后，采用如下方式安装到系统的<code>/usr/local/bin</code>目录下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ mkdir caddy</div><div class="line">$ <span class="built_in">cd</span> caddy</div><div class="line">$ tar -xvf ../caddy_v0.10.12_linux_amd64_custom_personal.tar.gz</div><div class="line">$ sudo cp caddy /usr/<span class="built_in">local</span>/bin/</div></pre></td></tr></table></figure></p>
+<h4 id="Caddyfile"><a href="#Caddyfile" class="headerlink" title="Caddyfile"></a>Caddyfile</h4><p>与nginx类似，Caddy也需要采用配置文件的方式读取server的信息，这里默认的配置文件名为<code>Caddyfile</code>。针对单host和多host，会有细微的区别，下面我分别列出配置文件的写法，</p>
+<h6 id="Single-host"><a href="#Single-host" class="headerlink" title="Single host"></a>Single host</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">xxx.com</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/xxx/</div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="Multiple-hosts"><a href="#Multiple-hosts" class="headerlink" title="Multiple hosts"></a>Multiple hosts</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">xxx.com &#123;</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/xxx/</div><div class="line"></div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line"></div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;&#125;</div><div class="line"></div><div class="line">yyy.com &#123;</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/yyy/</div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，如果要配置多个hosts，在每一个host的名称后用<code>{}</code>包含配置信息即可，其目的是让<code>Caddy</code>能区分不同的host.</p>
+<h4 id="配置candy-service"><a href="#配置candy-service" class="headerlink" title="配置candy.service"></a>配置candy.service</h4><p>通常我们会将web server配置成系统的服务程序，运行在后台，<code>Caddy</code>也提供了相应的<code>caddy.service</code>的脚本，其下载和添加方法为，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo curl -s https://raw.githubusercontent.com/mholt/caddy/master/dist/init/linux-systemd/caddy.service -o /etc/systemd/system/caddy.service</div></pre></td></tr></table></figure></p>
+<p>打开<code>caddy.service</code>，其存储路径为<code>/etc/systemd/system/</code>，其中有几个部分需要注意和修改，例如执行该服务的用户及用户组，<code>Caddyfile</code>配置文件的路径，以及ssl证书的存储路径等。如果没有配置好，caddy服务会无法正常运行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">; User and group the process will run as.</div><div class="line">User=root  # 原文为 www-data</div><div class="line">Group=root  # 原文为 www-data</div><div class="line"></div><div class="line">; Letsencrypt-issued certificates will be written to this directory.</div><div class="line">Environment=CADDYPATH=/etc/ssl/caddy</div><div class="line"></div><div class="line">; Always set &quot;-root&quot; to something safe in case it gets forgotten in the Caddyfile.</div><div class="line">ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp</div><div class="line">ExecReload=/bin/kill -USR1 $MAINPID</div></pre></td></tr></table></figure></p>
+<p>根据<code>caddy.service</code>文件的要求，我们需要新建一系列的文件夹，用于存放caddy生成的文件。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo mkdir /etc/caddy</div><div class="line">$ sudo cp &lt;path of the Caddyfile&gt; /etc/caddy/Caddyfile</div><div class="line">$ sudo mkdir /etc/ssl/caddy</div></pre></td></tr></table></figure></p>
+<p>完成以上操作以后，即可运行并查看<code>Caddy</code>的运行状态，运行前要记得<strong>关闭nginx</strong>服务，否则会提示80端口被占用。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo systemd daemon-reload <span class="comment"># 重新加载systemd</span></div><div class="line">$ sudo systemd <span class="built_in">enable</span> caddy.service</div><div class="line">$ sudo systemd status caddy.service <span class="comment"># 查看caddy运行状态</span></div></pre></td></tr></table></figure></p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>最后，打开浏览器，输入<code>https://xxx.com</code>，便可以查看是否配置成功。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://caddyserver.com/tutorial/caddyfile" target="_blank" rel="external">Caddy tutorial</a></li>
+<li><a href="https://lengzzz.com/note/caddy-http-2-web-server-guide-for-beginners" target="_blank" rel="external">Caddy - 方便够用的 HTTPS server 新手教程</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/05/22/configure-https-with-caddy/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/04/15/variational-autoencoder-and-the-conditional-case/">
                             Variational autoencoder and the conditional case
                         </a>
@@ -962,109 +1025,6 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
                     
                         <p>
                             <a href="/2018/03/15/recurrent-neural-network-and-lstm/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/13/expectation-maximization-algorithm/">
-                            Expectation maximization algorithm
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-13T15:16:35+08:00">
-	
-		    Mar 13, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>回顾一下GMM以及HMM等模型的求解方法，即著名的Expectation Maximization (EM) 算法。参考李航老师的《统计学习方法》，EM算法是一种迭代算法，用于含有隐含变量的概率模型参数的极大似然估计（MLE），或极大后验概率估计 (MPE).</p>
-<h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><p>定义<script type="math/tex">Y</script>为观测随机变量，<script type="math/tex">Z</script>为隐含随机变量，则<script type="math/tex">Y</script>和<script type="math/tex">Z</script>一起构成完全数据 (complete-data)。假设待估计的概率模型参数为<script type="math/tex">\theta</script>，则观测数据的概率分布为<script type="math/tex">P(Y|\theta)</script>, 即为其似然函数，对应的对数似然函数为<script type="math/tex">L(\theta) = \log{P(Y|\theta)}</script>. 设<script type="math/tex">Y</script>和<script type="math/tex">Z</script>Z的联合概率分布为<script type="math/tex">P(Y,Z|\theta)</script>，那么完全数据的对数似然函数为<script type="math/tex">\log{P(Y,Z|\theta)}</script>.</p>
-<p>EM算法的目的就是求解参数<script type="math/tex">\theta</script>，极大化观测量的对数似然函数<script type="math/tex">L(\theta)</script>。因为包含隐含量，所以采用迭代的方法，分为E (期望) 和M (极大化)两步，求解算法如下。</p>
-<ol>
-<li><p>初始化参数<script type="math/tex">\theta^{(0)}</script>;</p>
-</li>
-<li><p>E step: 记<script type="math/tex">\theta^{(i)}</script>为第<script type="math/tex">i</script>次迭代参数<script type="math/tex">\theta</script>的估计值，则第<script type="math/tex">i+1</script>次迭代，计算如下期望.</p>
-<script type="math/tex; mode=display">
-\begin{align}
-Q(\theta,\theta^{(i)}) &= E_{z}[\log{P(Y,Z|\theta)}|Y,\theta^{(i)}] \notag \\
-&=\sum_{z}{\log{P(Y,Z|\theta)P(Z|Y,\theta^{(i)})}},
-\end{align}</script><p>其中<script type="math/tex">P(Z|Y,\theta^{(i)})</script>是在给定观测数据<script type="math/tex">Y</script>和当前估计的参数$\theta^{(i)}$下隐含变量<script type="math/tex">Z</script>的条件概率分布；<script type="math/tex">Q(\theta,\theta^{(i)})</script>定义为完全数据的对数似然函数在给定观测数据和当前参数下对隐含数据<script type="math/tex">Z</script>的条件概率分布<script type="math/tex">P(Z|Y,\theta^{(i)})</script>的期望，即<script type="math/tex">\log{P(Y|\theta)}</script>。</p>
-</li>
-<li><p>M step: 求使<script type="math/tex">Q(\theta, \theta^{(i)})</script>极大化的参数<script type="math/tex">\theta</script>，以确定第<script type="math/tex">i+1</script>次迭代的参数的估计值<script type="math/tex">\theta^{(i+1)}</script>, 即计算</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\theta^{(i+1)} = \mathrm{arg}\max\limits_{\theta}{Q(\theta,\theta^{(i)})}
-\end{align}</script></li>
-<li><p>重复E和M两步，直到收敛. </p>
-</li>
-</ol>
-<p>李航老师也强调了一点：<strong>EM算法与初值的选择有关，选择不同的初值可能得到不同的参数估计值。</strong> 我在这个<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-expectation-maximum-three-coiins.ipynb" target="_blank" rel="external">notebook</a>里给了一个样例，即“三硬币模型”。</p>
-<h3 id="高斯混合模型的求解"><a href="#高斯混合模型的求解" class="headerlink" title="高斯混合模型的求解"></a>高斯混合模型的求解</h3><p>EM算法最经典的应用就是高斯混合模型的参数估计，该模型是语音信号处理的基础模型之一，其定义如下，</p>
-<script type="math/tex; mode=display">
-\begin{align}
-P(\mathbf{y}|\mathbf{\theta}) = \sum_{k=1}^{K}{c_k\phi(\mathbf{y}|\mathbf{\theta_k)}}
-\end{align}</script><p>其中，<script type="math/tex">c_k</script>是系数，<script type="math/tex">c_k\geq0</script>, <script type="math/tex">\sum_{k=1}^{K}{c_k=1}</script>; <script type="math/tex">\phi(\mathbf{y}|\mathbf{\theta_k})</script>是高斯分布，<script type="math/tex">\mathbf{\theta_k} = (\mathbf{\mu_k},\Sigma_k^2)</script>,</p>
-<script type="math/tex; mode=display">
-\begin{equation}
-\phi(\mathbf{y}|\mathbf{\theta_k}) = \frac{1}{(2\pi)^{M/2}|\Sigma_k|}{-\exp{(\mathbf{y}-\mathbf{\mu_k})^{T}{\Sigma_{k}}^{-1}(\mathbf{y}-\mathbf{\mu_k})}}.
-\end{equation}</script><p>在GMM模型中有，</p>
-<ul>
-<li>观测变量：<script type="math/tex">\mathbf{Y}</script>，</li>
-<li>隐含变量：<script type="math/tex">\gamma_k\in{0,1}, k=1,~2,~,\cdots,~K</script>，表示<script type="math/tex">\mathbf{y}</script>是否来自第<script type="math/tex">k</script>个高斯分量</li>
-<li>模型参数：<script type="math/tex">\mathbf{\theta} = {c_k, \mathbf{\theta_k}}, k=1,~2,~,\cdots,~K</script>.</li>
-</ul>
-<p>详细的推导见《统计学习方法》，这里给出GMM模型的E和M步骤.<br>设观测数据<script type="math/tex">\mathbf{Y} = \{\mathbf{y1},~\mathbf{y2},~\cdots,~\mathbf{y_N}\}</script></p>
-<ul>
-<li><p>E step</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\hat{\gamma_{jk}} = \frac{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}{\sum_{k=1}^{K}{c_k\phi(\mathbf{y_j}|\mathbf{\theta_k})}} 
-\end{align}</script><p>其中<script type="math/tex">j=1,~2,~\cdots,~,N, k=1,~2,~\cdots,~K</script>.</p>
-</li>
-<li><p>M step</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\hat{\mu}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}y_{jm}}/{\sum^{N}_{j=1}{\hat{\gamma}_{jk}}} 
-\notag \\
-\hat{\sigma}^{2}_{km} &= \sum_{j=1}^{N}{\hat{\gamma}_{jk}(y_{jm}-\mu_{km})^2}/{\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} \notag \\
-\hat{c}_{k} &= {\sum_{j=1}^{N}{\hat{\gamma}_{jk}}} / N
-\end{align}</script><p>其中<script type="math/tex">m=1,~2,~\cdots,~,M, k=1,~2,~\cdots,~K</script>.</p>
-</li>
-</ul>
-<p>最后，给出一个样例，简单的二维GMM，如下图，notebook见<a href="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/notebook-EM-GMM-2D.ipynb" target="_blank" rel="external">这里</a>.</p>
-<center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/machinelearning/fig_gmm_2d.png?raw=true" height="600" width="600">
-</center>
-
-<p>可以看出，EM的估计效果还是不错的，并且提供初始化参数值的结果 (左下) 比随机初始化 (右下) 的结果要好。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] 李航，统计学系方法，2012 清华大学出版社<br>[2] <a href="https://stats.stackexchange.com/questions/70855/generating-random-variables-from-a-mixture-of-normal-distributions" target="_blank" rel="external">Generating random variables from a mixture of Normal distributions</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/13/expectation-maximization-algorithm/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

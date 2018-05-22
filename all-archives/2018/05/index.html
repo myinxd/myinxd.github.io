@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives: 2018 - Jason&#39;s blog</title>
+    <title>Archives: 2018/5 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/page/5/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/05/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -263,15 +263,15 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
-                        <a class="link-unstyled" href="/2018/01/03/monte-carlo-simulation/">
-                            monte carlo simulation
+                        <a class="link-unstyled" href="/2018/05/22/configure-https-with-caddy/">
+                            Configure https with Caddy
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-03T20:24:28+08:00">
+    <time itemprop="datePublished" datetime="2018-05-22T16:01:38+08:00">
 	
-		    Jan 03, 2018
+		    May 22, 2018
     	
     </time>
     
@@ -280,8 +280,27 @@
             </div>
             
                 <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="To-be-continue…"><a href="#To-be-continue…" class="headerlink" title="To be continue…"></a>To be continue…</h2><p>蒙特卡罗方法帮助产生服从样本分布的新样本，并且实现参数的估计，是一种基于贝叶斯统计的算法。机器学习中的许多重要工具都基于从某种分布中采样，以及用这些样本对目标量做一个蒙特卡罗估计。</p>
-<h3 id="Why-sampling-and-Monte-Carlo"><a href="#Why-sampling-and-Monte-Carlo" class="headerlink" title="Why sampling and Monte Carlo?"></a>Why sampling and Monte Carlo?</h3><p>当无法精确计算和或积分时，通常可以使用蒙特卡罗采样来近似。这种想法把和或积分视作某分布下的期望，然后通过估计对应的平均值来近似这个期望。而这里的估计用到了中心极限定理，即$\hat{s}_n$收敛到以s为均值，以$Var[f(x)]/n$为方差的正态分布。而马尔可夫链蒙特卡罗方法(MCMC)，就是用一种方式构建一个收敛到目标分布的估计序列。</p>
+                    <p>最近在尝试配置网站的https，师兄推荐了<a href="https://caddyserver.com/" target="_blank" rel="external">Caddy</a>来替换nginx，作为web server。Caddy采用<code>golang</code>语言编写，很容易安装，而且能自动帮助用户注册用于https的证书。</p>
+<p>关于Caddy的安装和配置，<a href="https://lengzzz.com/note/caddy-http-2-web-server-guide-for-beginners" target="_blank" rel="external">这篇博客</a>做了非常详细的介绍。我会按照我的配置重新复述一下，并且重点强调配置<code>caddy.service</code>服务时要注意的权限问题。</p>
+<h4 id="Caddy-安装"><a href="#Caddy-安装" class="headerlink" title="Caddy 安装"></a>Caddy 安装</h4><p><a href="https://caddyserver.com/download" target="_blank" rel="external">Caddy官网</a>提供了自定义安装组件的方式，用户可以通过定制<code>platform</code>,<code>plugins</code>,<code>telemetry</code>和<code>license</code>来生成caddy安装文件并下载。这里不建议采用<code>curl -s https://getcaddy.com | bash</code>脚本方式安装，因为会提示用户没有选择<code>license</code>。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180522/fig-caddy.png?raw=true" height="400" width="640">
+</center>
+
+<p>下载完成后，采用如下方式安装到系统的<code>/usr/local/bin</code>目录下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ mkdir caddy</div><div class="line">$ <span class="built_in">cd</span> caddy</div><div class="line">$ tar -xvf ../caddy_v0.10.12_linux_amd64_custom_personal.tar.gz</div><div class="line">$ sudo cp caddy /usr/<span class="built_in">local</span>/bin/</div></pre></td></tr></table></figure></p>
+<h4 id="Caddyfile"><a href="#Caddyfile" class="headerlink" title="Caddyfile"></a>Caddyfile</h4><p>与nginx类似，Caddy也需要采用配置文件的方式读取server的信息，这里默认的配置文件名为<code>Caddyfile</code>。针对单host和多host，会有细微的区别，下面我分别列出配置文件的写法，</p>
+<h6 id="Single-host"><a href="#Single-host" class="headerlink" title="Single host"></a>Single host</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">xxx.com</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/xxx/</div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="Multiple-hosts"><a href="#Multiple-hosts" class="headerlink" title="Multiple hosts"></a>Multiple hosts</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">xxx.com &#123;</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/xxx/</div><div class="line"></div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line"></div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;&#125;</div><div class="line"></div><div class="line">yyy.com &#123;</div><div class="line">gzip</div><div class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/caddy/xxx.log</div><div class="line">root /home/wwwroot/yyy/</div><div class="line"><span class="comment"># PHP backend</span></div><div class="line">fastcgi / 127.0.0.1:2345 php &#123;</div><div class="line">    index index.php index.html</div><div class="line">&#125;</div><div class="line">rewrite &#123;</div><div class="line">    to &#123;path&#125; &#123;path&#125;/ /index.php?&#123;query&#125;</div><div class="line">&#125;&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，如果要配置多个hosts，在每一个host的名称后用<code>{}</code>包含配置信息即可，其目的是让<code>Caddy</code>能区分不同的host.</p>
+<h4 id="配置candy-service"><a href="#配置candy-service" class="headerlink" title="配置candy.service"></a>配置candy.service</h4><p>通常我们会将web server配置成系统的服务程序，运行在后台，<code>Caddy</code>也提供了相应的<code>caddy.service</code>的脚本，其下载和添加方法为，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo curl -s https://raw.githubusercontent.com/mholt/caddy/master/dist/init/linux-systemd/caddy.service -o /etc/systemd/system/caddy.service</div></pre></td></tr></table></figure></p>
+<p>打开<code>caddy.service</code>，其存储路径为<code>/etc/systemd/system/</code>，其中有几个部分需要注意和修改，例如执行该服务的用户及用户组，<code>Caddyfile</code>配置文件的路径，以及ssl证书的存储路径等。如果没有配置好，caddy服务会无法正常运行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">; User and group the process will run as.</div><div class="line">User=root  # 原文为 www-data</div><div class="line">Group=root  # 原文为 www-data</div><div class="line"></div><div class="line">; Letsencrypt-issued certificates will be written to this directory.</div><div class="line">Environment=CADDYPATH=/etc/ssl/caddy</div><div class="line"></div><div class="line">; Always set &quot;-root&quot; to something safe in case it gets forgotten in the Caddyfile.</div><div class="line">ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp</div><div class="line">ExecReload=/bin/kill -USR1 $MAINPID</div></pre></td></tr></table></figure></p>
+<p>根据<code>caddy.service</code>文件的要求，我们需要新建一系列的文件夹，用于存放caddy生成的文件。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo mkdir /etc/caddy</div><div class="line">$ sudo cp &lt;path of the Caddyfile&gt; /etc/caddy/Caddyfile</div><div class="line">$ sudo mkdir /etc/ssl/caddy</div></pre></td></tr></table></figure></p>
+<p>完成以上操作以后，即可运行并查看<code>Caddy</code>的运行状态，运行前要记得<strong>关闭nginx</strong>服务，否则会提示80端口被占用。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo systemd daemon-reload <span class="comment"># 重新加载systemd</span></div><div class="line">$ sudo systemd <span class="built_in">enable</span> caddy.service</div><div class="line">$ sudo systemd status caddy.service <span class="comment"># 查看caddy运行状态</span></div></pre></td></tr></table></figure></p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>最后，打开浏览器，输入<code>https://xxx.com</code>，便可以查看是否配置成功。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://caddyserver.com/tutorial/caddyfile" target="_blank" rel="external">Caddy tutorial</a></li>
+<li><a href="https://lengzzz.com/note/caddy-http-2-web-server-guide-for-beginners" target="_blank" rel="external">Caddy - 方便够用的 HTTPS server 新手教程</a></li>
+</ul>
 
                     
                         
@@ -289,68 +308,7 @@
                     
                     
                         <p>
-                            <a href="/2018/01/03/monte-carlo-simulation/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/02/libsvm-for-python/">
-                            Libsvm for python
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-02T22:50:08+08:00">
-	
-		    Jan 02, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>Happy new year!! Feel blue but still have to work. </p>
-<p>I am gonna introduce the application of a famous package namely <a href="https://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">libsvm</a>, which realizes the <a href="https://en.wikipedia.org/wiki/Support_vector_machine" target="_blank" rel="external">support vector machin (SVM)</a> based algorithms and supports multiple programming languages. I have designed SVM based approaches for machine-learning tasks on MATLAB by the libsvm, which is very awsome. Now, it’s time to try it on python, though it has been encapsulated in the <a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>.</p>
-<p>To use libsvm on python, you may follow the coming steps.</p>
-<ol>
-<li><p>Download the <a href="http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz" target="_blank" rel="external">package</a> </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ wget -O libsvm.tar.gz http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>unzip the package</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tar -xvf libsvm.tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>Installization</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> libsvm-3.22</div><div class="line">$ make</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>If it generates four <code>svm-</code> prefixed files as well as the library <code>libsvm.so.2</code>, then the installization is completed.</p>
-<p>Now you can take a trial with provided python based utilities in the folder <code>./python</code>. For instance,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> svmutil <span class="keyword">import</span> *</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y, x = svm_read_problem(<span class="string">'../heart_scale'</span>) <span class="comment"># load data </span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>m = svm_train(y[:<span class="number">200</span>], x[:<span class="number">200</span>], <span class="string">'-c 4'</span>) <span class="comment"># train a SVM model</span></div><div class="line"><span class="comment"># This will output like,</span></div><div class="line">*.*</div><div class="line">optimization finished, <span class="comment">#iter = 257</span></div><div class="line">nu = <span class="number">0.351161</span></div><div class="line">obj = <span class="number">-225.628984</span>, rho = <span class="number">0.636110</span></div><div class="line">nSV = <span class="number">91</span>, nBSV = <span class="number">49</span></div><div class="line">Total nSV = <span class="number">91</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>p_label, p_acc, p_val = svm_predict(y[<span class="number">200</span>:], x[<span class="number">200</span>:], m) <span class="comment"># make a test</span></div><div class="line">Accuracy = <span class="number">84.2857</span>% (<span class="number">59</span>/<span class="number">70</span>) (classification)</div></pre></td></tr></table></figure></p>
-<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><p>As introduced by the <code>README</code> in the <code>./python</code> folder, two <code>.py</code> scripts are provided, of which <code>svm.py</code> and <code>svmutil.py</code> are corresponding to low-level and high-level use of the interface. In my opinion, I suggest the users to directly use <code>svmutil.py</code>.</p>
-<p>In addition, the python scripts rely on the <code>libsvm.so.2</code>, which should be added into the <code>LD_LIBRARY_PATH</code> or a <code>package not find</code> exception will be raised when import svm.</p>
-<p>Now, time to do your machine learning work.</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/02/libsvm-for-python/#post-footer" class="postShorten-excerpt_link link">
+                            <a href="/2018/05/22/configure-https-with-caddy/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
@@ -364,15 +322,8 @@
     <div class="pagination-bar">
     <ul class="pagination">
         
-          <li class="pagination-prev">
-            <a class="btn btn--default btn--small" href="/all-archives/2018/page/4/">
-              <i class="fa fa-angle-left text-base icon-mr"></i>
-              <span>NEWER POSTS</span>
-            </a>
-          </li>
         
-        
-        <li class="pagination-number">page 5 of 5</li>
+        <li class="pagination-number">page 1 of 1</li>
     </ul>
 </div>
 
