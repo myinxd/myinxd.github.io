@@ -407,7 +407,7 @@ P(X) = \int{P(X|z;\theta)P(z)dz}.
 <script type="math/tex; mode=display">
 \begin{equation}
 D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
-\end{equation}</script><p>可以看出，当P<em>{G}(x)与P</em>\mathrm{data}(x)接近时，$D(x) \sim 1/2$，即discriminator无法判断其输入来自真实样本还是伪造的样本。因此<script type="math/tex">G(x)</script>与<script type="math/tex">D(x)</script>构成了一对相互对抗的网络，即生成对抗。相应的目标函数为，</p>
+\end{equation}</script><p>可以看出，当<script type="math/tex">P_{G}(x)</script>与<script type="math/tex">P_\mathrm{data}(x)</script>接近时，<script type="math/tex">D(x) \sim 1/2</script>，即discriminator无法判断其输入来自真实样本还是伪造的样本。因此<script type="math/tex">G(x)</script>与<script type="math/tex">D(x)</script>构成了一对相互对抗的网络，即生成对抗。相应的目标函数为，</p>
 <script type="math/tex; mode=display">
 \begin{equation}
 \min\limits_{G}\max\limits_{D} V(D,G) = 

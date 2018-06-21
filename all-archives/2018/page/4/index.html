@@ -263,6 +263,138 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/24/tensorflow-graph-and-tensorboard/">
+                            TensorFlow graph and TensorBoard
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-24T14:55:13+08:00">
+	
+		    Jan 24, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>继续挖坑，因为Batch normalization的inference还没有解决，不知道怎么在tf.Tensor中更新数值，参考<a href="https://www.tensorflow.org/api_docs/python/tf/layers/BatchNormalization" target="_blank" rel="external">tf.layer.BatchNormalization</a>的思路，需要利用<code>is_training</code>来选择feed给BN的<code>mean</code>和<code>variance</code>。因此，需要理解TensorFlow的<strong>graph</strong>概念。除此之外，TF提供了<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard</a>作为计算图可视化的工具，也是值得借鉴的。</p>
+<h3 id="计算图—Graph"><a href="#计算图—Graph" class="headerlink" title="计算图—Graph"></a>计算图—Graph</h3><p>TensorFlow是一个通过计算图的形式来表达张量之间通过计算相互转化的过程[1]。作为TensoFlow的基本概念，TF中的所有计算都会转化为计算图上的节点，节点之间的边用于描述计算之间的依赖关系。TF中不同的计算图之间维护的节点和边是独立的。通过tf.GraphKeys可以对图进行维护，稍后会介绍。</p>
+<p>利用<code>tf.Graph</code>类实例化计算图，有如下的样例，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">g1 = tf.Graph()</div><div class="line"><span class="keyword">with</span> g1.as_default():</div><div class="line">	v = tf.get_variable&#123;<span class="string">"v"</span>, initializer=tf.zeros_initializer(shape=[<span class="number">1</span>])&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="TensorBoard-可视化"><a href="#TensorBoard-可视化" class="headerlink" title="TensorBoard 可视化"></a>TensorBoard 可视化</h3><p>TensorBoard可以有效地展示TF在运行过程中的计算图、各种指标随时间的变化趋势以及训练中使用的图像等信息，其利用TF运行过程中输出的<strong>日志文件</strong>可视化程序的运行状态。TensorBoard和TensorFlow运行在不同的进程中，TB会自动读取TF的日志文件，并呈现当前的运行状态。根据TensorBoard的<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">官方文档</a>，其实现过程有如下步骤，</p>
+<h4 id="1-搭建网络"><a href="#1-搭建网络" class="headerlink" title="1. 搭建网络"></a>1. 搭建网络</h4><p><em>First, create the TensorFlow graph that you’d like to collect summary data from, and decide which nodes you would like to annotate with summary operations.</em></p>
+<p>利用TensorFlow搭建网络，例如基于MLP的手写体识别网络，提供一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_deep_mnist_for_experts_tf.ipynb" target="_blank" rel="external">样例</a>，可以参考。</p>
+<h4 id="2-Select-variables-to-be-summarized"><a href="#2-Select-variables-to-be-summarized" class="headerlink" title="2. Select variables to be summarized"></a>2. Select variables to be summarized</h4><p>通常我们关注训练过程中待学习的参数 (如weights, biases等) 的变化和收敛情况，通过<code>tf.summary.scalar</code>和<code>tf.summary.histogram</code>可以很方便地收集这些数据。下面给出一个样例，参考了[3]，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">variable_summaries</span><span class="params">(var)</span>:</span></div><div class="line">  <span class="string">"""Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""</span></div><div class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">    mean = tf.reduce_mean(var)</div><div class="line">    tf.summary.scalar(<span class="string">'mean'</span>, mean)</div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'stddev'</span>):</div><div class="line">      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))</div><div class="line">    tf.summary.scalar(<span class="string">'stddev'</span>, stddev)</div><div class="line">    tf.summary.scalar(<span class="string">'max'</span>, tf.reduce_max(var))</div><div class="line">    tf.summary.scalar(<span class="string">'min'</span>, tf.reduce_min(var))</div><div class="line">    tf.summary.histogram(<span class="string">'histogram'</span>, var)</div></pre></td></tr></table></figure></p>
+<p>而对于单个<code>Variable</code>，可以用<code>tf.summary.scalar(name,variable)</code>的形式进行收集。</p>
+<h4 id="3-Merge-summary-data"><a href="#3-Merge-summary-data" class="headerlink" title="3. Merge summary data"></a>3. Merge summary data</h4><p>定义好要收集的信息，需要对他们进行汇总，此时用<code>tf.summary.merge_all</code>进行汇总，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">merged = tf.summary.merge_all()</div></pre></td></tr></table></figure></p>
+<h4 id="4-FileWriter-for-saving-the-log"><a href="#4-FileWriter-for-saving-the-log" class="headerlink" title="4. FileWriter for saving the log"></a>4. FileWriter for saving the log</h4><p>为了将训练中收集的数据保存到日志中，可以用<code>tf.summary.FileWriter</code>来实现，此时需要提供存放日志的文件夹位置，即<code>logdir</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">logdir = <span class="string">'./log'</span></div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(logdir):</div><div class="line">    os.mkdir(logdir)</div><div class="line">train_writer = tf.summary.FileWriter(logdir + <span class="string">'/train'</span>,</div><div class="line">                                      sess.graph)</div><div class="line">test_writer = tf.summary.FileWriter(logdir + <span class="string">'/test'</span>)</div></pre></td></tr></table></figure></p>
+<p>此时，利用<code>sess.run(tf.global_variables_initializer())</code>初始化所有Tensor和Variable,便可以开始训练网络。</p>
+<h4 id="5-Running"><a href="#5-Running" class="headerlink" title="5. Running"></a>5. Running</h4><p><code>merged</code>的类型为<code>tensorflow.python.framework.ops.Tensor</code>，属于tf.Graph的一部分。因此也需要在<code>session</code>中运行，并且要提供<code>feed_dict</code>。相应的python实现如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">summary, _ = sess.run(</div><div class="line">                [merged, train_step], </div><div class="line">                feed_dict=feed_dict)</div><div class="line">train_writer.add_summary(summary)</div></pre></td></tr></table></figure></p>
+<h4 id="6-利用TensorBoard可视化"><a href="#6-利用TensorBoard可视化" class="headerlink" title="6. 利用TensorBoard可视化"></a>6. 利用TensorBoard可视化</h4><p>TensorFlow提供了<code>tensorboard.py</code>脚本用于可视化。利用如下指令启动并运行TensorBoard, 其默认端口为6006，这里利用<code>--port</code>显式表达</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tensorboard --logdir=<span class="string">'./log --port=6006'</span></div></pre></td></tr></table></figure>
+<p>注：在执行此条指令的时候，可能会报错<em>command not found: tensorboard</em>，解决方法参考<a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">本文</a></p>
+<p>以下给出运行的样例，我写了一个<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook-tensorboard-mlp.ipynb" target="_blank" rel="external">notebook</a>，欢迎来PR :)</p>
+<ul>
+<li>Graph及FC1和train节点</li>
+</ul>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_graph.png?raw=true" height="360" width="450">
+</center>
+
+<ul>
+<li>Scalars and histograms</li>
+</ul>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_scalars.png?raw=true" height="450" width="800">
+</center>
+
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.amazon.cn/dp/B06WGP12TV/" target="_blank" rel="external">TensorFlow实战Google深度学习框架</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/summary/FileWriter" target="_blank" rel="external">tf.summary.FileWriter</a><br>[3] <a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" target="_blank" rel="external">TensorBoard: Visualizing Learning</a><br>[3] <a href="http://blog.csdn.net/uestc_c2_403/article/details/73457368" target="_blank" rel="external">tensorboard在linux下的启动问题</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/24/tensorflow-graph-and-tensorboard/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
+                        <a class="link-unstyled" href="/2018/01/23/multiple-websites-with-nginx/">
+                            multiple websites with nginx
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-23T22:31:05+08:00">
+	
+		    Jan 23, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>前面写过<a href="http://www.mazhixian.me/2018/01/22/hexo-deploy-google-analytics-to-your-website/">文章</a>讨论如何在Hexo搭建的网站里添加Google Analytics, 想着把百度的分析也用起来，顺便去百度站长看了一下网站的检索情况，然后就发现github把百度的爬虫给墙了，返回的都是403。解决方法有以下几种，</p>
+<ol>
+<li>利用gitcafe作为github的镜像，再利用dnspod将国内访问解析到gitcafe上，国外域名解析到github上</li>
+<li>自己利用vps搭服务器，同样用dnspod进行解析。</li>
+</ol>
+<p>我准备尝试后者。</p>
+<p>考虑到已经在vps上挂了一个网站，此刻如果镜像github的网站，就得让nginx部署两个网站，即虚拟服务器，参考了几篇博客，记录一下配置的过程。</p>
+<h4 id="1-定位nginx的配置文件"><a href="#1-定位nginx的配置文件" class="headerlink" title="1. 定位nginx的配置文件"></a>1. 定位nginx的配置文件</h4><p>如果是用<a href="https://lnmp.org" target="_blank" rel="external">lnmp</a>安装的nginx,其配置文件在<code>/usr/local/nginx/conf/nginx.conf</code>中，可以通过cat查看，应该是默认配置了一个default服务器。</p>
+<h4 id="2-修改-vhost-conf，添加多个网站配置"><a href="#2-修改-vhost-conf，添加多个网站配置" class="headerlink" title="2. 修改./vhost/*.conf，添加多个网站配置"></a>2. 修改./vhost/*.conf，添加多个网站配置</h4><p>参考[2]，按照如下过程配置，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx/cong/vhost</div><div class="line">$ sudo vim vhost_myweb.conf</div></pre></td></tr></table></figure></p>
+<p>添加如下行，以网站路径为/home/wwwroot/myweb为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">server</div><div class="line">    &#123;</div><div class="line">	listen 80;</div><div class="line">	server_name xxx.xxx.xxx;</div><div class="line">	index index.html;</div><div class="line">	root /home/wwwroot/myweb;</div><div class="line">	<span class="comment">#php</span></div><div class="line">	location ~ /.php$ &#123;</div><div class="line">		include fastcgi_params;</div><div class="line">		fastcgi_pass 127.0.0.1:9000;</div><div class="line">		fastcgi_index index.php;</div><div class="line">		fastcgi_param SCRIPT_FILENAME /home/wwwroot/myweb<span class="variable">$fastcgi_script_name</span>;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着，修改<code>/usr/local/php/etc/php-fpm.conf</code>为<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[www]</div><div class="line"><span class="comment"># listen = /tmp/php-cgi.sock</span></div><div class="line">listen = 127.0.0.1:9000</div></pre></td></tr></table></figure></p>
+<p>最后重启php和nginx服务，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sudo killall php-fpm</div><div class="line">$ sudo systemctl start php-fpm.service</div><div class="line">$ sudo /etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>到此便配置完毕。</p>
+<h4 id="502-bad-gateway-问题"><a href="#502-bad-gateway-问题" class="headerlink" title="502 bad gateway 问题"></a>502 bad gateway 问题</h4><p>在配置过程中碰到了<strong>502 bad gateway</strong>的问题，引起502的可能因素很多，其中对于lnmp常见的就是nginx和php通信的问题。常用的通信方法有两种，分别是socket和ip:port。这里我采用的是ip:port。详细的解释可以参考<a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.zhihu.com/question/30898326" target="_blank" rel="external">如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题？</a><br>[2] <a href="https://www.cnblogs.com/Erick-L/p/7066564.html" target="_blank" rel="external">在Nginx上配置多个站点</a><br>[3] <a href="http://blog.csdn.net/wzqzhq/article/details/53320533" target="_blank" rel="external">nginx502错误和错误日志级别</a><br>[4] <a href="http://www.linuxidc.com/Linux/2015-11/125068.htm" target="_blank" rel="external">LNMP 常见502 Bad Gateway问题汇总</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/23/multiple-websites-with-nginx/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/23/batch-normalization-with-tensorflow/">
                             Batch normalization with TensorFlow
                         </a>
@@ -817,145 +949,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
                     
                         <p>
                             <a href="/2018/01/15/configure-rtl1868-wireless-ethernet-card-on-ubuntu1610/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/14/install-and-configure-debian-test/">
-                            Install and configure debian test
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-14T16:58:02+08:00">
-	
-		    Jan 14, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>美好的周日贡献给重装系统了，因为又手残了。既上周日删除了自己的home目录以后，这周直接把系统的权限折腾乱了，起因是我用了<code>sudo chown -R</code>，系统真的有提示我的。。。所以是我的锅。</p>
-<p>近期使用的系统是Ubuntu-16.10，考虑到<a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown-Spectre</a>漏洞的补丁还不支持，想着换个系统算了，就入了debian的坑。。。嗯，这个坑更大！！！</p>
-<p>于是，一边填坑，一边记录一下步骤，有种预感最近还是会折腾系统。</p>
-<h3 id="debian系统安装"><a href="#debian系统安装" class="headerlink" title="debian系统安装"></a>debian系统安装</h3><p>debian-testing的iso下载路径，可以在USTC的<a href="https://mirrors.ustc.edu.cn" target="_blank" rel="external">镜像站</a>找，我尝试安装debian-9，可能刻录的时候有问题，无法安装，所以改用了<code>network install</code>的版本。使用了<a href="https://cn.ultraiso.net/" target="_blank" rel="external">UltraISO</a>烧写到U盘里，他们的试用版功能已经足够了。烧写好以后开始安装，按流程走就行。这里要注意的地方是： <strong>挂载/目录的分区需要格式化，否则无法安装</strong>。主要原因是与原有的<code>ubuntu</code>系统文件存在冲突。</p>
-<h4 id="多系统引导"><a href="#多系统引导" class="headerlink" title="多系统引导"></a>多系统引导</h4><p>Debian采用grub引导多系统，我是在<code>win10</code>基础上安装Linux系统的，并通过<code>debian</code>引导<code>windows</code>。在重装的过程中，碰到了windows分区没有被读出并列在引导列表中的情形，有一个简答的解决方法，更新一下grub配置, 即<code>update-grub</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo update-grub</div></pre></td></tr></table></figure></p>
-<p>一般更新后的列表后会出现对应<code>windows</code>的分区和条目。当然这个是运气，如果碰到其他问题，建议问谷歌。。。</p>
-<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><p>我选择了<code>gnome</code>桌面环境，系统本身还是很好看的，但也有一些bug，比如<code>gnome-terminal</code>就很丑。。。除此之外，debian比ubuntu预装的软件少很多，例如常用<code>sudo</code>，<code>locate</code>等都需要自己安装，对新手来说比较坑。下面说一下我的配置过程，</p>
-<h4 id="terminal-shortcuts"><a href="#terminal-shortcuts" class="headerlink" title="terminal shortcuts"></a>terminal shortcuts</h4><p>Ubuntu默认的<code>terminal</code>快捷键是<code>Ctrl+Alt+T</code>，debian是没有这个快捷键的，需要自己添加。具体的思路是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">system setting -&gt; devices -&gt; keyboard -&gt; &quot;+&quot; -&gt; add a new shortcut</div></pre></td></tr></table></figure></p>
-<p>Terminal默认的shell通常为<code>bash</code>，如果要更换为其他的，例如<a href="http://ohmyz.sh/" target="_blank" rel="external">zsh</a>, 则执行如下指令即可<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ chsh -s /usr/bin/zsh</div></pre></td></tr></table></figure></p>
-<p>此处会提示用户输入密码。</p>
-<h4 id="sudoer-及-sudo安装"><a href="#sudoer-及-sudo安装" class="headerlink" title="sudoer 及 sudo安装"></a>sudoer 及 sudo安装</h4><p>打开terminal以后，便可以安装和配置软件，此时需要<code>sudo</code>来临时使用<code>root</code>权限，debian默认不将用户添加到<code>sudoer</code>列表里，因此需要手动添加，步骤如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">首先按Ctrl+Alt+F3，进入console，以root身份登录，在安装系统时会要求设置root的密码</div><div class="line">进入以后，执行如下步骤</div><div class="line">1. 添加user到root的group里</div><div class="line"><span class="comment"># usermod -G root user</span></div><div class="line">2. 修改sudoers文件为可写</div><div class="line"><span class="comment"># chmod +w /etc/sudoers</span></div><div class="line">3. 编辑sudoers文件，添加用户</div><div class="line"><span class="comment"># vim /etc/sudoers</span></div><div class="line"><span class="comment"># user ALL=(ALL:ALL) ALL</span></div><div class="line">4. 修改sudoers文件为只读</div><div class="line"><span class="comment"># chmod -w /etc/sudoers</span></div></pre></td></tr></table></figure></p>
-<p>再按<code>Ctrl+Alt+F1</code>回到图形界面，此时便可以用root权限安装<code>sudo</code>，并进一步安装其他软件了。</p>
-<h4 id="系统语言及locale配置"><a href="#系统语言及locale配置" class="headerlink" title="系统语言及locale配置"></a>系统语言及locale配置</h4><p>由于要使用中文，我通常会用中文安装系统，再修改系统为英文。在Ubuntu中，直接在设置中设置语言即可;在debian中会更纯粹一些，即设置系统语言并调整<code>locale</code>的配置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/locale.gen</div><div class="line"><span class="comment"># 将需要的语言反注释掉，如 en-US.UTF-8</span></div></pre></td></tr></table></figure></p>
-<p>再在system setting中调整语言支持即可,或者执行如下指令进行设置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo dkpg-reconfigure locale</div></pre></td></tr></table></figure></p>
-<h4 id="时区调整"><a href="#时区调整" class="headerlink" title="时区调整"></a>时区调整</h4><p>改变语言为英文后，系统会采用UTC时间，此时会出现即使时区选择为<code>Asia/Shanghai</code>，依然与北京时间相差八个小时的情况，这也说明系统与Network Time没有同步，解决方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt install ntpdate</div><div class="line">$ sudo ntpdate time.windows.com</div></pre></td></tr></table></figure></p>
-<p>即将系统时间与<code>windows</code>提供的网络时间同步，这样便会根据系统时区找到对应的时间了。</p>
-<h4 id="Genome-窗口调整问题"><a href="#Genome-窗口调整问题" class="headerlink" title="Genome 窗口调整问题"></a>Genome 窗口调整问题</h4><p>gnome默认的窗口控件没有最大化和最小化，刚转过来会不习惯，解决方法是在<code>genome-tweak-tool</code>的<code>windows</code>选项中进行设置。</p>
-<h4 id="gnome-terminal-无法正常运行"><a href="#gnome-terminal-无法正常运行" class="headerlink" title="gnome-terminal 无法正常运行"></a>gnome-terminal 无法正常运行</h4><p>这个通常与调整了系统语言相关，即locale的语言设置与系统语言冲突，或未设置，导致genome-terminal无法初始化窗口，解决方法是，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># echo "LANG=zh-CN.UTF-8" &gt;&gt; /etc/locale.conf</span></div></pre></td></tr></table></figure></p>
-<h4 id="系统切换以后block-size的问题"><a href="#系统切换以后block-size的问题" class="headerlink" title="系统切换以后block size的问题"></a>系统切换以后block size的问题</h4><p>这个情况比较特殊，实验室可能只有我碰到过。在一块SSD上安装了windows和linux双系统，并且上一次运行的系统是windows, 则开机后因为<code>ext4</code>分区的block错误，导致无法引导进入Linux，目前有两个指令可以解决这一问题，并且要求有<strong>livecd USB</strong>，即能独立引导的最小化系统。可用的指令分别为<code>fsck</code>和<code>e2fsck</code>，二者的区别，我争取专门写一篇，目前还不太理解。</p>
-<p>首先用<code>sudo fdisk -l</code>查看文件格式为<code>ext3/ext4</code>的分区，着重关注包含有<code>Linux</code>系统的主分区，然后修复<code>block</code>的问题。</p>
-<ol>
-<li><p>fsck</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fsck -t ext4 /dev/sda1</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>e2fsck</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># e2fsck -b 32768 /dev/sda1</span></div><div class="line">-b 表示 superblock，具体的解释&lt;TODO&gt;...</div></pre></td></tr></table></figure>
-</li>
-</ol>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/14/install-and-configure-debian-test/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/12/capture-video-flow-from-firefox/">
-                            Capture video flow from firefox
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-12T13:17:08+08:00">
-	
-		    Jan 12, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>今天讨论网页视频流抓取问题，针对Firefox浏览器，有两种方法。</p>
-<ol>
-<li>直接从Firefox的缓存中获取;</li>
-<li>利用flash流的进程号，在系统/proc下抓取缓存的数据流。</li>
-</ol>
-<h3 id="Firefox-缓存提取"><a href="#Firefox-缓存提取" class="headerlink" title="Firefox 缓存提取"></a>Firefox 缓存提取</h3><p>Firefox的缓存保存在如下的路径中，其中<code>f176xa6s.default</code>不同的用户会不同，其他路径成分基本相同。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~/.cache/mozilla/firefox/fl76xa6s.default/cache2/entries</div></pre></td></tr></table></figure></p>
-<p>进入缓存文件夹后，便可以根据时间和文件大小搜索缓存文件。因为文件名是16进制编码的，无法体现文件内容，所以不考虑。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ls -lSt</div></pre></td></tr></table></figure></p>
-<p>其中<code>-S</code>表示按文件大小排序，<code>-t</code>表示按时间先后排序。</p>
-<p>通常视频文件大小为<code>MB</code>量级，所以一般排序在前的几个文件会是缓存的视频。</p>
-<h3 id="Firefox-flash-flow-抓取"><a href="#Firefox-flash-flow-抓取" class="headerlink" title="Firefox flash flow 抓取"></a>Firefox flash flow 抓取</h3><p>从Firefox网页抓取flash插件播放的视频流的步骤分为三步，(1) 打开视频、(2) 获取flash播放进程ID、(3) 视频流转存。</p>
-<h4 id="Step1-打开视频"><a href="#Step1-打开视频" class="headerlink" title="Step1 打开视频"></a>Step1 打开视频</h4><p>在浏览器播放视频，此处需要firefox支持flash，或者安装adobe flash插件。</p>
-<h4 id="Step2-获取flash播放进程ID"><a href="#Step2-获取flash播放进程ID" class="headerlink" title="Step2 获取flash播放进程ID"></a>Step2 获取flash播放进程ID</h4><p>利用<code>lsof</code>抓取正在运行的<code>Flash</code>进程，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ lsof | grep Flash</div></pre></td></tr></table></figure></p>
-<p>会输出如下类似的结果，其中<code>31346</code>即为目标ID.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">plugin-co 31346 user 26u REG 8,5  4561004  787806 /tmp/FlashXXJa3CWn (deleted)</div></pre></td></tr></table></figure></p>
-<h4 id="Step3-视频流转存"><a href="#Step3-视频流转存" class="headerlink" title="Step3 视频流转存"></a>Step3 视频流转存</h4><p>参考<a href="http://www.cpplive.com/html/1424.html" target="_blank" rel="external">博客</a>: Linux下的浏览器播放flv视频都是采用的Flash播放器，而Flash播放器在播放每个视频的时候都会在/tmp目录下创建以“Flash”字样开头做标识的缓存文件，但是如果我们进入到/tmp目录下察看所有文件，却找不到正在播放的缓存文件，因为这些视频缓存文件只有系统可见，对用户是隐藏的。因此，我们可以根据Flash进程的ID，进入系统进程文件<code>/proc</code>下，获取缓存的视频流。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ls /proc/31346/fd</div><div class="line"><span class="comment"># 找到类似如下的行，其中 26 便是视频流缓存</span></div><div class="line">lrwx------ 1 user user 64 Jan  12 12:07 26 -&gt; /tmp/FlashXXJa3CWn (deleted)</div></pre></td></tr></table></figure>
-<p>利用<code>cat</code>和<code>管道</code>,将数据流输入到<code>.flv</code>文件中。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat /proc/31346/fd/26 &gt; ~/Desktop/test1.flv</div></pre></td></tr></table></figure></p>
-<h3 id="视频格式转换"><a href="#视频格式转换" class="headerlink" title="视频格式转换"></a>视频格式转换</h3><p>利用<code>mencoder</code>可以对视频文件进行格式转换，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mencoder -ovc lavc -lavcopts vcodec=mpeg4 -oac mp3lame source.flv -o dest.mp4</div></pre></td></tr></table></figure></p>
-<p>其中参数含义如下，参考了<a href="https://www.cnblogs.com/jdksummer/articles/2561461.html" target="_blank" rel="external">此文</a></p>
-<ul>
-<li><p>-ovc lavc：（output video codec）指定输出视频文件的视频编码类型，此处选择的是 Libavcodec 的视频编码；</p>
-</li>
-<li><p>-lavcopts vcodec=mpeg4：（Libavcodec options）指定视频编码的设置，由于 Libavcodec 包含了多种视频编码，所以用 vcodec=mpeg4 来指定具体的使用 MPEG-4 编码；</p>
-</li>
-<li><p>-oac mp3lame：（output audio codec）指定输出媒体文件的音频编码类型，此处选择的是 mp3lame；</p>
-</li>
-</ul>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="http://www.cpplive.com/html/1424.html" target="_blank" rel="external">Linux下提取保存浏览器中的视频</a><br>[2] <a href="https://www.cnblogs.com/jdksummer/articles/2561461.html" target="_blank" rel="external">linux下视频格式转换工具</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/12/capture-video-flow-from-firefox/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

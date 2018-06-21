@@ -263,6 +263,56 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/06/13/boosting-and-the-adaboost-algorithm/">
+                            Boosting and the AdaBoost Algorithm
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-06-13T09:12:04+08:00">
+	
+		    Jun 13, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>记录一下对AdaBoost的理解，参考了李航大大的《统计学习方法》。</p>
+<p>Boost通过改变训练样本的权重，学习多个分类器，并将这些分类器进行线性组合，提高分类器性能。<br>提升方法是从弱学习算法出发，反复学习，得到一系列弱分类器 (又称为基本分类器)，然后组合这些弱分类器，构成一个强分类器。</p>
+<p>大多数的提升方法都是改变训练数据的概率分布 (训练数据的权值分布)。</p>
+<ol>
+<li>每一轮训练时如何改变训练数据的权值活概率分布;</li>
+<li>如何将弱分类器组合成一个强分类器。</li>
+</ol>
+<p>针对问题1,AdaBoost通过提高前一轮弱分类器错误分类样本的权值，来提升此类样本的关注程度;针对问题2,AdaBoost采用加权多数表决的方法，即加大分类误差小的弱分类器的权值，减小分类误差大的弱分类器的权值。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/06/13/boosting-and-the-adaboost-algorithm/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/13/expectation-maximization-algorithm/">
                             Expectation maximization algorithm
                         </a>
