@@ -263,6 +263,62 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/06/26/fix-font-display-of-matplotlib/">
+                            Ubuntu matplotlib中文显示乱码的问题
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-06-26T11:05:32+08:00">
+	
+		    Jun 26, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下matplotlib显示中文乱码的问题，参考了<a href="https://blog.csdn.net/u012150360/article/details/72921855" target="_blank" rel="external">这篇</a>博客。解决方法有两种，其中方法一成功了，第二种还是有点问题。。。</p>
+<h5 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h5><p>首先，查看已经安装的中文字体，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">fc</span>-list :lang=zh</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK TC:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/STXINGKA.TTF: STXingkai,华文行楷:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/STCAIYUN.TTF: STCaiyun,华文彩云:style=Regular</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK JP:style=Regular</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK KR:style=Regular</div><div class="line">/usr/share/fonts/X11/misc/wenquanyi_10pt.pcf: WenQuanYi Bitmap Song:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/msjhl.ttc: Microsoft JhengHei,微軟正黑體,微軟正黑體 Light,Microsoft JhengHei Light:style=Light,Regular</div></pre></td></tr></table></figure></p>
+<p>这里我从Windows下复制了一些字体过来，安装方法比较简答，可以去Google一下。。。</p>
+<p>查看字体以后，便可以通过设置<code>FongProperties</code>来实例化用于pyplot显示的字体，这里我选择了微软雅黑。后续在应用时，给出现中文的方法提供<code>fontproperties</code>值，便可以正常显示中文了。当然，其他的罗马字母的字体也会被修改。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib.font_manager <span class="keyword">import</span> *  </div><div class="line">myfont = FontProperties(fname=<span class="string">'/usr/share/fonts/WinFonts/msyhbd.ttc'</span>)  </div><div class="line">...</div><div class="line">plt.title(<span class="string">"中文"</span>,fontproperties=myfont)</div></pre></td></tr></table></figure></p>
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>第二种方法是将中文字体添加到matplotlib的font中，根据安装位置的不同，可能出现在如下两个位置</p>
+<ol>
+<li>/usr/share/matplotlib/mpl-data/fonts</li>
+<li>~/.local/lib/python3.6/site-packages/matplotlib/mpl-data/fonts</li>
+</ol>
+<p>将字体文件复制到该路径下，并将字体名添加到<code>matplotlibrc</code>文件的<code>sans-serif</code>行，如下所示<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#font.sans-serif: Microsoft YaHei, DejaVu Sans, Bitstream Vera Sans, Computer Modern Sans Serif, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif</span></div></pre></td></tr></table></figure></p>
+<p>最后，在应用时，设定rcParams[‘font.sans-serif’]为<code>Microsoft Yahei</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'Microsoft Yahei'</span>]   </div><div class="line">plt.rcParams[<span class="string">'font.family'</span>]=<span class="string">'sans-serif'</span></div></pre></td></tr></table></figure></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a href="https://blog.csdn.net/u012150360/article/details/72921855" target="_blank" rel="external">彻底解决matplotlib中文乱码问题</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/06/26/fix-font-display-of-matplotlib/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/06/13/boosting-and-the-adaboost-algorithm/">
                             Boosting and the AdaBoost Algorithm
                         </a>
@@ -930,48 +986,6 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
                     
                         <p>
                             <a href="/2018/03/17/install-macOS-10-12-with-virtualbox/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/17/simple-speech-recognition-example-by-tensorflow/">
-                            A simple audio recognition example by tensorflow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-17T11:17:02+08:00">
-	
-		    Mar 17, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/17/simple-speech-recognition-example-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

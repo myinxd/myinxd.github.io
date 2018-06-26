@@ -263,6 +263,58 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/02/26/Curve-fitting-by-scipy/">
+                            Curve fitting by SciPy
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-02-26T10:09:33+08:00">
+	
+		    Feb 26, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下利用python的<a href="https://www.scipy.org" target="_blank" rel="external">SciPy</a>库进行曲线拟合的方法，主要分为三个步骤，(1) 获取待拟合数据; (2) 定义函数描述待拟合曲线; （3）利用<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html" target="_blank" rel="external">Scipy.optimize.curve_fit</a>模块进行拟合。</p>
+<p>获取数据的步骤不再赘述，这里从步骤二开始。以泊松分布为例，首先定义函数<code>poisson_func</code>，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">poisson_func</span><span class="params">(k, l, c)</span>:</span></div><div class="line">	<span class="string">"""Poisson function</span></div><div class="line"><span class="string">    inputs</span></div><div class="line"><span class="string">    ======</span></div><div class="line"><span class="string">    k: np.ndarray</span></div><div class="line"><span class="string">       number of accidents, i.e., the x axis;</span></div><div class="line"><span class="string">    l: double</span></div><div class="line"><span class="string">       the lambda parameter of Poisson distribution</span></div><div class="line"><span class="string">    c: double</span></div><div class="line"><span class="string">       a constant for release the optimization</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">    output</span></div><div class="line"><span class="string">    ======</span></div><div class="line"><span class="string">    the fitted result according to l and c w.r.t. k</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">    note</span></div><div class="line"><span class="string">    ====</span></div><div class="line"><span class="string">    l and c are the parametres to be estimated.</span></div><div class="line"><span class="string">    """</span></div><div class="line">    k_mat = np.ones(k.shape)</div><div class="line">    <span class="keyword">for</span> x, i <span class="keyword">in</span> enumerate(k):</div><div class="line">        k_mat[i] = math.factorial(x) </div><div class="line">    <span class="keyword">return</span> l**k / k_mat*np.exp(-l) + c</div></pre></td></tr></table></figure></p>
+<p>紧接着，根据待拟合的数据，对参数进行估计，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scipy.optimize <span class="keyword">import</span> curve_fit</div><div class="line"></div><div class="line">popt, pcov = curve_fit(poisson_func, x, y)</div><div class="line">perr = np.sqrt(np.diag(pcov))</div></pre></td></tr></table></figure></p>
+<p>其中<code>popt</code>为估计的参数，<code>pcov</code>为对应的相关矩阵，其对角线为方差，可用于计算拟合参数的误差perr。</p>
+<p>下图为我的测试样例，图中橙色三角为待拟合样本点，蓝色实线为拟合结果。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180226/fig1.png?raw=true" height="300" width="430">
+</center>
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html" target="_blank" rel="external">Scipy.optimize.curve_fit</a><br>[2] <a href="https://en.wikipedia.org/wiki/Poisson_distribution" target="_blank" rel="external">Poisson distribution</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/02/26/Curve-fitting-by-scipy/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/02/21/interview-hw-multimedia/">
                             菊花场机器学习面试记录
                         </a>
@@ -785,57 +837,6 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
                     
                         <p>
                             <a href="/2018/01/25/how-to-apply-the-batch-normalized-net/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/">
-                            An interesting usage of excel sumif function
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-24T20:25:52+08:00">
-	
-		    Jan 24, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>新开一个Tag,关于Excel的，突然有去学VBA的想法了。。。然而作为码农，有了python和pandas，为什么还要用VBA。。。言归正传，描述一下问题，如图所示，</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180124/fig_excel.png?raw=true" height="200" width="300">
-</center>
-
-<p>已知A列和B列，其中A列对应ID,B列对应该ID的数值。设C列某一行为<strong>R</strong>,统计A列A2:AR中出现ID=AR的元素的行号，将B列中相应行的值相加，输出到CR单元格中。用如下算法表示，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">R &lt;-- ROW(CR)</div><div class="line">Rows &lt;-- FIND(A2:AR, AR) </div><div class="line">CR &lt;-- SUM(B(Rows))</div></pre></td></tr></table></figure></p>
-<p>利用Excel自带的公式<code>SUMIF</code>可以实现以上算法，其核心是固定A2,用<code>A$2</code>表示，相应的公式则为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">=SUMIF(A$2:A2, A2, B$2:B2)</div></pre></td></tr></table></figure></p>
-<p>最后，再利用excel单元格的自动填充功能，获取CR对应的运算结果。</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://baike.baidu.com/item/SUMIF%E5%87%BD%E6%95%B0/6894362" target="_blank" rel="external">SUMIF函数</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/24/an-interesting-usage-of-excel-sumif-function/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
