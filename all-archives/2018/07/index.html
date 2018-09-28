@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Tag: python - Jason&#39;s blog</title>
+    <title>Archives: 2018/7 - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-tags/python/page/2/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-archives/2018/07/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -257,21 +257,21 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
-                        <a class="link-unstyled" href="/2017/09/08/matplotlib-tips-I/">
-                            matplotlib tips I
+                        <a class="link-unstyled" href="/2018/07/06/read-stacked-tiff-slices-with-skimage/">
+                            Read stacked tiff slices with skimage
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-09-08T23:00:34+08:00">
+    <time itemprop="datePublished" datetime="2018-07-06T09:44:23+08:00">
 	
-		    Sep 08, 2017
+		    Jul 06, 2018
     	
     </time>
     
@@ -279,50 +279,25 @@
 
             </div>
             
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>感冒差不多好了，又可以出去跑步啦！下周要开学了，路上看到好多新生。从他们身边路过，感觉离他们的世界好远，好像自己是隐身的，祝他们能找到自己想要过的生活吧。言归正传，睡前还是要水一篇博客的，虽然是周五，虽然明天还是要加班。。。今天的主题是matplotlib.pyplot做图的tips，准备写成一个系列，先开个头。积少成多吧。<br>
-                    
-                        <a href="/2017/09/08/matplotlib-tips-I/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/08/24/matplotlib-AxesGrid/">
-                            matplotlib AxesGrid
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-08-24T17:31:16+08:00">
-	
-		    Aug 24, 2017
-    	
-    </time>
-    
-</div>
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>简单记录一下python读入tiff多通道图像的方法。尝试了<code>scipy.misc.imread</code>、<code>cv2.imread</code>等都没有成功，最后找到了用skimage读取的方法。</p>
+<p>样例如下，我的图片是一个512x512x30的stack,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</div><div class="line">img = io.imread(imgpath)</div><div class="line">img.shape</div><div class="line"></div><div class="line">(<span class="number">30</span>, <span class="number">512</span>, <span class="number">512</span>)</div></pre></td></tr></table></figure></p>
+<h4 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h4><p>在安装Opencv3的过程中，找到了一个比较简单的方法。。。也可能是已经进入python的库了吧。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3 install opencv-python</div></pre></td></tr></table></figure></p>
+<p>以前为什么那么麻烦。。。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://stackoverflow.com/questions/37722139/load-a-tiff-stack-in-a-numpy-array-with-python" target="_blank" rel="external">Load a tiff stack in a numpy array with python</a>.</li>
+</ul>
 
-            </div>
-            
-                <div class="postShorten-excerpt" itemprop="articleBody">
-                    <p>今天花了一天的时间帮同学做图，又体验了一遍matplotlib的复杂！之所以用AxesGrid,是因为yt的锅，同学（妹子）对yt的评价是，“他们的帮助文档太难读，完全不友好！！” 其实yt在处理Gadget仿真的数据时非常给力，而且作出来的图很好看，可以直接用到论文中。所以这篇博客简单记录一下我的心得，有空会继续增加对matplotlib的理解。<br>
                     
-                        <a href="/2017/08/24/matplotlib-AxesGrid/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
                         
+
+                    
+                    
+                        <p>
+                            <a href="/2018/07/06/read-stacked-tiff-slices-with-skimage/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
                     
                 </div>
             
@@ -333,19 +308,13 @@
     <div class="pagination-bar">
     <ul class="pagination">
         
-          <li class="pagination-prev">
-            <a class="btn btn--default btn--small" href="/all-tags/python/">
-              <i class="fa fa-angle-left text-base icon-mr"></i>
-              <span>NEWER POSTS</span>
-            </a>
-          </li>
         
-        
-        <li class="pagination-number">page 2 of 2</li>
+        <li class="pagination-number">page 1 of 1</li>
     </ul>
 </div>
 
 </section>
+
 
 
                 <footer id="footer" class="main-content-wrap">

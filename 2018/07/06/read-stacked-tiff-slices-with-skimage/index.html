@@ -6,25 +6,25 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Ubuntu matplotlib中文显示乱码的问题 - Jason&#39;s blog</title>
+    <title>Read stacked tiff slices with skimage - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="简单记录一下matplotlib显示中文乱码的问题，参考了这篇博客。解决方法有两种，其中方法一成功了，第二种还是有点问题。。。 方法一首先，查看已经安装的中文字体，如下12345678$ fc-list :lang=zh/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK TC:style=Regular/u">
+    <meta name="description" content="简单记录一下python读入tiff多通道图像的方法。尝试了scipy.misc.imread、cv2.imread等都没有成功，最后找到了用skimage读取的方法。 样例如下，我的图片是一个512x512x30的stack,12345from skimage import ioimg = io.imread(imgpath)img.shape(30, 512, 512) Tip在安装Openc">
 <meta name="keywords" content="python">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Ubuntu matplotlib中文显示乱码的问题">
-<meta property="og:url" content="http://www.mazhixian.me/2018/06/26/fix-font-display-of-matplotlib/index.html">
+<meta property="og:title" content="Read stacked tiff slices with skimage">
+<meta property="og:url" content="http://www.mazhixian.me/2018/07/06/read-stacked-tiff-slices-with-skimage/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
-<meta property="og:description" content="简单记录一下matplotlib显示中文乱码的问题，参考了这篇博客。解决方法有两种，其中方法一成功了，第二种还是有点问题。。。 方法一首先，查看已经安装的中文字体，如下12345678$ fc-list :lang=zh/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK TC:style=Regular/u">
+<meta property="og:description" content="简单记录一下python读入tiff多通道图像的方法。尝试了scipy.misc.imread、cv2.imread等都没有成功，最后找到了用skimage读取的方法。 样例如下，我的图片是一个512x512x30的stack,12345from skimage import ioimg = io.imread(imgpath)img.shape(30, 512, 512) Tip在安装Openc">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-26T05:20:16.286Z">
+<meta property="og:updated_time" content="2018-07-06T01:49:21.899Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ubuntu matplotlib中文显示乱码的问题">
-<meta name="twitter:description" content="简单记录一下matplotlib显示中文乱码的问题，参考了这篇博客。解决方法有两种，其中方法一成功了，第二种还是有点问题。。。 方法一首先，查看已经安装的中文字体，如下12345678$ fc-list :lang=zh/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK TC:style=Regular/u">
+<meta name="twitter:title" content="Read stacked tiff slices with skimage">
+<meta name="twitter:description" content="简单记录一下python读入tiff多通道图像的方法。尝试了scipy.misc.imread、cv2.imread等都没有成功，最后找到了用skimage读取的方法。 样例如下，我的图片是一个512x512x30的stack,12345from skimage import ioimg = io.imread(imgpath)img.shape(30, 512, 512) Tip在安装Openc">
     
     
         
@@ -262,14 +262,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title" itemprop="headline">
-            Ubuntu matplotlib中文显示乱码的问题
+            Read stacked tiff slices with skimage
         </h1>
     
     
         <div class="post-meta">
-    <time itemprop="datePublished" datetime="2018-06-26T11:05:32+08:00">
+    <time itemprop="datePublished" datetime="2018-07-06T09:44:23+08:00">
 	
-		    Jun 26, 2018
+		    Jul 06, 2018
     	
     </time>
     
@@ -280,19 +280,12 @@
     
     <div class="post-content markdown" itemprop="articleBody">
         <div class="main-content-wrap">
-            <p>简单记录一下matplotlib显示中文乱码的问题，参考了<a href="https://blog.csdn.net/u012150360/article/details/72921855" target="_blank" rel="external">这篇</a>博客。解决方法有两种，其中方法一成功了，第二种还是有点问题。。。</p>
-<h5 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h5><p>首先，查看已经安装的中文字体，如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">fc</span>-list :lang=zh</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK TC:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/STXINGKA.TTF: STXingkai,华文行楷:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/STCAIYUN.TTF: STCaiyun,华文彩云:style=Regular</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK JP:style=Regular</div><div class="line">/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc: Noto Serif CJK KR:style=Regular</div><div class="line">/usr/share/fonts/X11/misc/wenquanyi_10pt.pcf: WenQuanYi Bitmap Song:style=Regular</div><div class="line">/usr/share/fonts/WinFonts/msjhl.ttc: Microsoft JhengHei,微軟正黑體,微軟正黑體 Light,Microsoft JhengHei Light:style=Light,Regular</div></pre></td></tr></table></figure></p>
-<p>这里我从Windows下复制了一些字体过来，安装方法比较简答，可以去Google一下。。。</p>
-<p>查看字体以后，便可以通过设置<code>FongProperties</code>来实例化用于pyplot显示的字体，这里我选择了微软雅黑。后续在应用时，给出现中文的方法提供<code>fontproperties</code>值，便可以正常显示中文了。当然，其他的罗马字母的字体也会被修改。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib.font_manager <span class="keyword">import</span> *  </div><div class="line">myfont = FontProperties(fname=<span class="string">'/usr/share/fonts/WinFonts/msyhbd.ttc'</span>)  </div><div class="line">...</div><div class="line">plt.title(<span class="string">"中文"</span>,fontproperties=myfont)</div></pre></td></tr></table></figure></p>
-<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>第二种方法是将中文字体添加到matplotlib的font中，根据安装位置的不同，可能出现在如下两个位置</p>
-<ol>
-<li>/usr/share/matplotlib/mpl-data/fonts</li>
-<li>~/.local/lib/python3.6/site-packages/matplotlib/mpl-data/fonts</li>
-</ol>
-<p>将字体文件复制到该路径下，并将字体名添加到<code>matplotlibrc</code>文件的<code>sans-serif</code>行，如下所示<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#font.sans-serif: Microsoft YaHei, DejaVu Sans, Bitstream Vera Sans, Computer Modern Sans Serif, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif</span></div></pre></td></tr></table></figure></p>
-<p>最后，在应用时，设定rcParams[‘font.sans-serif’]为<code>Microsoft Yahei</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'Microsoft Yahei'</span>]   </div><div class="line">plt.rcParams[<span class="string">'font.family'</span>]=<span class="string">'sans-serif'</span></div></pre></td></tr></table></figure></p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
-<li><a href="https://blog.csdn.net/u012150360/article/details/72921855" target="_blank" rel="external">彻底解决matplotlib中文乱码问题</a></li>
+            <p>简单记录一下python读入tiff多通道图像的方法。尝试了<code>scipy.misc.imread</code>、<code>cv2.imread</code>等都没有成功，最后找到了用skimage读取的方法。</p>
+<p>样例如下，我的图片是一个512x512x30的stack,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</div><div class="line">img = io.imread(imgpath)</div><div class="line">img.shape</div><div class="line"></div><div class="line">(<span class="number">30</span>, <span class="number">512</span>, <span class="number">512</span>)</div></pre></td></tr></table></figure></p>
+<h4 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h4><p>在安装Opencv3的过程中，找到了一个比较简单的方法。。。也可能是已经进入python的库了吧。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3 install opencv-python</div></pre></td></tr></table></figure></p>
+<p>以前为什么那么麻烦。。。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://stackoverflow.com/questions/37722139/load-a-tiff-stack-in-a-numpy-array-with-python" target="_blank" rel="external">Load a tiff stack in a numpy array with python</a>.</li>
 </ul>
 
             
@@ -314,8 +307,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/06/read-stacked-tiff-slices-with-skimage/" data-tooltip="Read stacked tiff slices with skimage" aria-label="PREVIOUS: Read stacked tiff slices with skimage">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -324,7 +316,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/13/boosting-and-the-adaboost-algorithm/" data-tooltip="Boosting and the AdaBoost Algorithm" aria-label="NEXT: Boosting and the AdaBoost Algorithm">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/fix-font-display-of-matplotlib/" data-tooltip="Ubuntu matplotlib中文显示乱码的问题" aria-label="NEXT: Ubuntu matplotlib中文显示乱码的问题">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -342,7 +334,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/06/26/fix-font-display-of-matplotlib/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/07/06/read-stacked-tiff-slices-with-skimage/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -394,8 +386,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/06/read-stacked-tiff-slices-with-skimage/" data-tooltip="Read stacked tiff slices with skimage" aria-label="PREVIOUS: Read stacked tiff slices with skimage">
+                    <a class="post-action-btn btn btn--disabled">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -404,7 +395,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/13/boosting-and-the-adaboost-algorithm/" data-tooltip="Boosting and the AdaBoost Algorithm" aria-label="NEXT: Boosting and the AdaBoost Algorithm">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/fix-font-display-of-matplotlib/" data-tooltip="Ubuntu matplotlib中文显示乱码的问题" aria-label="NEXT: Ubuntu matplotlib中文显示乱码的问题">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -422,7 +413,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/06/26/fix-font-display-of-matplotlib/" title="Share on Weibo">
+                <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/07/06/read-stacked-tiff-slices-with-skimage/" title="Share on Weibo">
                     <i class="fa fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -455,7 +446,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/06/26/fix-font-display-of-matplotlib/">
+                <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?&amp;title=http://www.mazhixian.me/2018/07/06/read-stacked-tiff-slices-with-skimage/">
                     <i class="fa fa-weibo" aria-hidden="true"></i><span>Share on Weibo</span>
                 </a>
             </li>
@@ -513,9 +504,9 @@
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://www.mazhixian.me/2018/06/26/fix-font-display-of-matplotlib/';
+                 this.page.url = 'http://www.mazhixian.me/2018/07/06/read-stacked-tiff-slices-with-skimage/';
                  
-                    this.page.identifier = '2018/06/26/fix-font-display-of-matplotlib/';
+                    this.page.identifier = '2018/07/06/read-stacked-tiff-slices-with-skimage/';
                  
              };
             (function() {
@@ -526,24 +517,7 @@
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
-        </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+        </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 
 
