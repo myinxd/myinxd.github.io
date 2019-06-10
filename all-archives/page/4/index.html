@@ -263,6 +263,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/27/resnet-with-tensorflow-2/">
+                            Residual network II -- realization by tensorflow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-27T09:51:45+08:00">
+	
+		    Jan 27, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>来填ResNet的坑，residual network的原理已经在<a href="http://www.mazhixian.me/2018/01/21/resnet-with-tensorflow/">上一篇</a>里做了介绍，这一篇来讨论如何用<a href="https://www.tensorflow.org" target="_blank" rel="external">TensorFlow</a>实现。</p>
+<p>虽然TF提供了slim这个库，可以很方便地搭建网络，但考虑到移植和扩展性，还是决定用<code>tf.contrib.layers</code>的函数和tf基本的函数来写。我们知道，ResNet的核心模块是<strong>Bottleneck</strong>，如下图所示，每个bottleneck的输入会通过两条路径在输出汇聚，计算残差，作为下一层的输入。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_resnet.png?raw=true" height="150" width="450">
+</center>
+
+<p>多个botleneck组合成一个block，通常会在每个block的最后一个bottleneck进行降采样，以缩小特征图大小。</p>
+<p>具体的实现可以参考我的<a href="https://github.com/myinxd/canal-notebooks/blob/master/deeplearning/notebook_resnet13_digit_classification.ipynb" target="_blank" rel="external">notebook</a>, 下面贴一个在手写体识别样本上的测试结果，对比了<a href="http://www.mazhixian.me/2018/01/25/how-to-apply-the-batch-normalized-net/">这篇文章</a>里讨论的DNN网络。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180127/fig_bn_res_cmp.png?raw=true" height="280" width="400">
+</center>
+
+<p>可以看出ResNet的效果还是非常显著的。但是得强调一下，由于网络显著加深，训练时占用的显存资源非常大，普通的GPU非常吃力。</p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/27/resnet-with-tensorflow-2/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/25/how-to-apply-the-batch-normalized-net/">
                             How to apply the batch-normalized net
                         </a>
@@ -908,64 +963,6 @@ F(\mathrm{x}) = H(\mathrm{x}) - \mathrm{x}
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
-                            Adjustable learning rate for deep learning by TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-19T09:11:34+08:00">
-	
-		    Jan 19, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>趁着最近空闲一点，继续纠结TensorFlow学习率调整的问题。学习率对网路训练的影响还是挺大的，初始化时可以采用大的学习率，帮助网络快速收敛。但网络的梯度是非线性的，随着迭代次数的增加，梯度的导数趋于变小，如果继续保持大学习率，会出现优化目标在最优解附近波动的情况，如下图所示。此时，为了接近收敛点，需要调整学习率。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig1.png?raw=true" height="200" width="360">
-</center>
-
-<p>参考<a href="https://www.amazon.cn/dp/B06WGP12TV/ref=sr_1_1?ie=UTF8&amp;qid=1516326593&amp;sr=8-1&amp;keywords=Tensorflow" target="_blank" rel="external">TensorFlow: 实战Google深度学习框架</a>这本书，利用<strong>指数衰减</strong>的方法设置<a href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent" target="_blank" rel="external">梯度下降算法</a>的学习率，TensofFLow中集成了这一算法，即<code>tf.train.exponential_decay</code>。其实现了</p>
-<script type="math/tex; mode=display">
-L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学习率，$R_d$表示衰减率，$S_g$和$S_d$分别表示总Epochs和每个Epochs中的Batches。从而没迭代一轮，学习率便更新一次。</p>
-<p>在TensorFlow中可以用如下代码实现指数衰减的学习率更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">init_lr = tf.Variable(<span class="number">0.</span>, name=<span class="string">"LR"</span>)</div><div class="line">global_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"global_step"</span>)</div><div class="line">decay_step = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_step"</span>)</div><div class="line">decay_rate = tf.Variable(<span class="number">0.</span>, name=<span class="string">"decay_rate"</span>)</div><div class="line">learning_rate = tf.train.exponential_decay(</div><div class="line">    learning_rate = init_lr ,</div><div class="line">    global_step = global_step,</div><div class="line">    decay_steps = decay_step,</div><div class="line">    decay_rate = decay_rate,</div><div class="line">    staircase=<span class="keyword">False</span>,</div><div class="line">    name=<span class="keyword">None</span></div><div class="line">	)</div><div class="line"><span class="comment"># Test</span></div><div class="line">lr_init = <span class="number">0.1</span></div><div class="line">epochs = <span class="number">200</span></div><div class="line">batches = <span class="number">100.</span></div><div class="line">d_rate = <span class="number">0.9</span></div><div class="line">epoch = np.arange(<span class="number">0</span>,epochs,<span class="number">1</span>)</div><div class="line">lr = np.zeros(epoch.shape)</div><div class="line"><span class="comment"># Init a session</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> epoch.astype(int):</div><div class="line">	lr[i] = sess.run(learning_rate, </div><div class="line">                     feed_dict=&#123;init_lr: lr_init,</div><div class="line">                                global_step: i,</div><div class="line">                                decay_step: batches,</div><div class="line">                                decay_rate: d_rate</div><div class="line">                                &#125;)</div></pre></td></tr></table></figure></p>
-<p><a href="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/Learning_rate_adjust_demo.ipynb" target="_blank" rel="external">这里</a>提供了一个样例，其输出结果如下图，通过设置<code>tf.exponential_decay</code>的参数<code>staircase</code>可以控制learning rate是否为阶梯型或者平滑的。</p>
-<center>
-<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-180119/fig2.png?raw=true" height="360" width="480">
-</center>
-
-<p>而在训练网络，优化目标函数的过程中，可以参考官方手册，用如下语句进行梯度更新。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">global_step = tf.Variable(<span class="number">0</span>, trainable=<span class="keyword">False</span>)</div><div class="line">starter_learning_rate = <span class="number">0.1</span></div><div class="line">learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,</div><div class="line">                                           <span class="number">100000</span>, <span class="number">0.96</span>, staircase=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># Passing global_step to minimize() will increment it at each step.</span></div><div class="line">learning_step = (</div><div class="line">    tf.train.GradientDescentOptimizer(learning_rate)</div><div class="line">    .minimize(...my loss..., global_step=global_step)</div><div class="line">)</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a href="https://www.tensorflow.org/api_docs/python/tf/train/exponential_decay" target="_blank" rel="external">exponential decay</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -994,7 +991,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+        Copyrights &copy; 2019 Jason Ma. All Rights Reserved.
     </span>
 </footer>
 

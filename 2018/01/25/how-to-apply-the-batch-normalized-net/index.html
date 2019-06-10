@@ -22,7 +22,7 @@
 <meta property="og:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180125/fig_bn_cmp.png?raw=true">
-<meta property="og:updated_time" content="2018-01-25T09:27:17.774Z">
+<meta property="og:updated_time" content="2018-11-09T12:32:22.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to apply the batch-normalized net">
 <meta name="twitter:description" content="继续填这篇文章的坑，如何测试和应用包含了Batch Normalization层的网络？ 在训练过程中，每个BN层直接从输入样本中求取mean和variance量，不是通过学习获取的固定值。因此，在测试网络时，需要人工提供这两个值。 在BN的文章里的处理方法是，对所有参与训练的mini-batch的均值和方差进行收集，采用无偏估计的方式估计总体样本的均值和方差，来表征测试样本的均值和方差，其公式如">
@@ -399,7 +399,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+        Copyrights &copy; 2019 Jason Ma. All Rights Reserved.
     </span>
 </footer>
 

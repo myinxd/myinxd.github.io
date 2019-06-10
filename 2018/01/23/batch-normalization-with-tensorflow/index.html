@@ -21,7 +21,7 @@
 <meta property="og:description" content="ResNet的坑还没填，先挖Batch Normalization (BN)的坑吧。读了Ioffe &amp;amp; Szegedy 2015年的论文,做个笔记。参考了几篇相关的博客，还是很有帮助的。如此文所述，BN也是神经网络中的一层，并且包含待训练的参数，而这些参数也是其精髓之一。下面我将分两个部分来说，(1) BN的优势、原理及推导, 以及(2) BN在TensorFlow下的实现。 BN的优势、">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/myinxd/canal-images/blob/master/images/blog-180123/fig1.png?raw=true">
-<meta property="og:updated_time" content="2018-01-25T05:15:02.142Z">
+<meta property="og:updated_time" content="2018-11-09T12:32:22.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Batch normalization with TensorFlow">
 <meta name="twitter:description" content="ResNet的坑还没填，先挖Batch Normalization (BN)的坑吧。读了Ioffe &amp;amp; Szegedy 2015年的论文,做个笔记。参考了几篇相关的博客，还是很有帮助的。如此文所述，BN也是神经网络中的一层，并且包含待训练的参数，而这些参数也是其精髓之一。下面我将分两个部分来说，(1) BN的优势、原理及推导, 以及(2) BN在TensorFlow下的实现。 BN的优势、">
@@ -406,7 +406,7 @@ y = \frac{\gamma}{\sqrt{\mathrm{Var}[x]+\epsilon}}\cdot x + (\beta - \frac{\gamm
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+        Copyrights &copy; 2019 Jason Ma. All Rights Reserved.
     </span>
 </footer>
 

@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用copy方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而copy则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。 下面看一个例子,12345678910import numpy as npx = np.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-04T02:46:30.801Z">
+<meta property="og:updated_time" content="2018-11-09T12:32:22.729Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nupy矩阵的复制问题">
 <meta name="twitter:description" content="简单记录一下最近遇到的一个bug，利用numpy生成的矩阵在复制时不能直接赋值，而是要用copy方法。直接赋值类似于把内存中的地址 (即指针) 给了目标变量，其与被赋值变量共享同一块内存，这样做可以节省内存空间。而copy则不同，会重新申请一块内存，分配给复制后的新变量，在该变量上的操作不会对愿变量产生影响。 下面看一个例子,12345678910import numpy as npx = np.">
@@ -372,7 +372,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+        Copyrights &copy; 2019 Jason Ma. All Rights Reserved.
     </span>
 </footer>
 

@@ -262,6 +262,53 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2019/06/10/change-file-modification-time-with-python/">
+                            利用Python修改文件的最后访问和修改时间
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2019-06-10T13:21:56+08:00">
+	
+		    Jun 10, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>最近有个奇怪的需求，批量修改文件的访问和修改时间。原因是在windows下重命名的时候，批量修改了文件的名称。感觉跟说绕口令一样。针对这一需求，尝试利用python的<code>time</code>和<code>os</code>两个库来解决。</p>
+<h5 id="查看文件的历史时间"><a href="#查看文件的历史时间" class="headerlink" title="查看文件的历史时间"></a>查看文件的历史时间</h5><p>首先基于如下代码查看文件的<code>创建</code>，<code>修改</code>和<code>最后访问</code>时间，即<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">filepath = <span class="string">"./file.xxx"</span></div><div class="line"><span class="comment"># 查看文件时间戳</span></div><div class="line">time_create = os.path.getctime(filepath)</div><div class="line">time_modify = os.path.getmtime(filepath)</div><div class="line">time_access = os.path.getatime(filepath)</div></pre></td></tr></table></figure></p>
+<p>若需要得到格式化的时间，可以利用<code>time.ctime()</code>函数获取，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(time.ctime(time_create))</div><div class="line"></div><div class="line">Mon Jun <span class="number">13</span> <span class="number">07</span>:<span class="number">34</span>:<span class="number">19</span> <span class="number">2016</span></div></pre></td></tr></table></figure></p>
+<h5 id="修改文件的创建和修改时间"><a href="#修改文件的创建和修改时间" class="headerlink" title="修改文件的创建和修改时间"></a>修改文件的创建和修改时间</h5><p>由于恢复的文件名以后，文件的修改时间发生了变化，需要对其时间戳进行修改，此时采用<code>os.utime()</code>方法来实现，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">new_access_time = xxx <span class="comment"># 注意这里需要是整数</span></div><div class="line">new_modify_time = xxx <span class="comment"># 注意这里需要是整数</span></div><div class="line">os.utime(filepath, (new_access_time, new_modify_time))</div></pre></td></tr></table></figure></p>
+<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><p>[1] <a href="https://segmentfault.com/q/1010000009842773/a-1020000009846301" target="_blank" rel="external">python如何不改动文件的情况下修改文件的 修改日期</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2019/06/10/change-file-modification-time-with-python/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/07/06/read-stacked-tiff-slices-with-skimage/">
                             Read stacked tiff slices with skimage
                         </a>
@@ -932,57 +979,6 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/">
-                            Confusion matrix and generation with TensorFlow
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-17T14:45:29+08:00">
-	
-		    Mar 17, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下多分类问题中的一种评价方法及其可视化，混淆矩阵 (confusion matrix, CM)。首先给出其定义及作用，然后给出样例。</p>
-<h4 id="Confusion-matrix"><a href="#Confusion-matrix" class="headerlink" title="Confusion matrix"></a>Confusion matrix</h4><p>混淆矩阵通过比较分类器的<strong>预测</strong>和<strong>真实</strong>标签，评估分类器效果，通常用于多分类问题。TF的<a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">audio recognition tutorial</a>里对混淆矩阵的评价是, <em>This matrix can be more useful than just a single accuracy score because it gives a good summary of what mistakes the network is making.</em> 即混淆矩阵可以帮助分析分类器在哪些类上的表现最差。相对于单一的准确率这种衡量指标，更加直观。</p>
-<p>混淆矩阵是一个二维的方阵，横轴代表真实标签，枞轴代表预测标签，其中的元素<script type="math/tex">CM_{ij}</script>代表实际为第<script type="math/tex">i</script>，被分成第<script type="math/tex">j</script>类的样本数目。<strong>显然矩阵的非零元素集中在对角线时，分类器的表现更优异。</strong></p>
-<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><p>下面给出一个样例，这是一个六分类的问题，结果来自我们近期的工作。其中A的样本量约1000, B的样本量约10000，A random是随机产生预测标签的CM矩阵。如下所示，A的CM map中，多数样本集中在对角线；B的表现也不错，但(6,6)的色块显然淡了很多，说明分类器对第六类的分类效果不好；而A random，因为是随机生成的，其CM的各个元素的样本数比较均衡，因此分类准确率也非常差。</p>
-<center>
-<img src="https://github.com/myinxd/canal-notebooks/blob/master/images/fig-confmat.png?raw=true" height="200" width="720">
-</center>
-
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>[1] <a href="https://www.tensorflow.org/tutorials/audio_recognition" target="_blank" rel="external">Simple Audio Recognition</a><br>[2] <a href="https://www.tensorflow.org/api_docs/python/tf/confusion_matrix" target="_blank" rel="external">tf.confusion_matrix</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/17/confusion-matrix-and-generation-with-tensorflow/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1003,7 +999,7 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2018 Jason Ma. All Rights Reserved.
+        Copyrights &copy; 2019 Jason Ma. All Rights Reserved.
     </span>
 </footer>
 
