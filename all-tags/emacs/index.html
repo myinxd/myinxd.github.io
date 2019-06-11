@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Jason&#39;s blog">
-    <title>Archives: 2019 - Jason&#39;s blog</title>
+    <title>Tag: emacs - Jason&#39;s blog</title>
     <meta name="author" content="Jason Ma">
     
     
@@ -16,7 +16,7 @@
     <meta name="description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Jason&#39;s blog">
-<meta property="og:url" content="http://www.mazhixian.me/all-archives/2019/index.html">
+<meta property="og:url" content="http://www.mazhixian.me/all-tags/emacs/index.html">
 <meta property="og:site_name" content="Jason&#39;s blog">
 <meta property="og:description" content="Valar morghulis, valar dohaeris.">
 <meta property="og:locale" content="en">
@@ -368,53 +368,6 @@ x = a + b
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2019/06/10/change-file-modification-time-with-python/">
-                            利用Python修改文件的最后访问和修改时间
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2019-06-10T13:21:56+08:00">
-	
-		    Jun 10, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>最近有个奇怪的需求，批量修改文件的访问和修改时间。原因是在windows下重命名的时候，批量修改了文件的名称。感觉跟说绕口令一样。针对这一需求，尝试利用python的<code>time</code>和<code>os</code>两个库来解决。</p>
-<h5 id="查看文件的历史时间"><a href="#查看文件的历史时间" class="headerlink" title="查看文件的历史时间"></a>查看文件的历史时间</h5><p>首先基于如下代码查看文件的<code>创建</code>，<code>修改</code>和<code>最后访问</code>时间，即<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">filepath = <span class="string">"./file.xxx"</span></div><div class="line"><span class="comment"># 查看文件时间戳</span></div><div class="line">time_create = os.path.getctime(filepath)</div><div class="line">time_modify = os.path.getmtime(filepath)</div><div class="line">time_access = os.path.getatime(filepath)</div></pre></td></tr></table></figure></p>
-<p>若需要得到格式化的时间，可以利用<code>time.ctime()</code>函数获取，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(time.ctime(time_create))</div><div class="line"></div><div class="line">Mon Jun <span class="number">13</span> <span class="number">07</span>:<span class="number">34</span>:<span class="number">19</span> <span class="number">2016</span></div></pre></td></tr></table></figure></p>
-<h5 id="修改文件的创建和修改时间"><a href="#修改文件的创建和修改时间" class="headerlink" title="修改文件的创建和修改时间"></a>修改文件的创建和修改时间</h5><p>由于恢复的文件名以后，文件的修改时间发生了变化，需要对其时间戳进行修改，此时采用<code>os.utime()</code>方法来实现，例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">new_access_time = xxx <span class="comment"># 注意这里需要是整数</span></div><div class="line">new_modify_time = xxx <span class="comment"># 注意这里需要是整数</span></div><div class="line">os.utime(filepath, (new_access_time, new_modify_time))</div></pre></td></tr></table></figure></p>
-<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><p>[1] <a href="https://segmentfault.com/q/1010000009842773/a-1020000009846301" target="_blank" rel="external">python如何不改动文件的情况下修改文件的 修改日期</a></p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2019/06/10/change-file-modification-time-with-python/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -424,7 +377,6 @@ x = a + b
 </div>
 
 </section>
-
 
 
                 <footer id="footer" class="main-content-wrap">

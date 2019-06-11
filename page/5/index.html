@@ -262,6 +262,76 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/">
+                            cpp notebook 1
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-01-20T10:38:03+08:00">
+	
+		    Jan 20, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>生成CPP应用程序的步骤，</p>
+<ol>
+<li>编写cpp代码；</li>
+<li>使用编译器对代码进行编译，将代码转换为包含在目标文件中的机器语言版本;</li>
+<li>使用链接器链接编译器的输出，生成可执行文件，如.exe</li>
+</ol>
+<p>编译器每次转换一个代码文件，都会生成一个扩展名为<code>.o</code>或<code>.obj</code>的目标文件，忽略这个cpp文件与其他文件中代码的依赖。解析这些依存关系的工作由链接程序负责。</p>
+<p>集成开发环境 (integrated development environment, IDE)<br>Tip:<a href="http://www.tutorialspoing.com/compile_cpp_online.php_" target="_blank" rel="external">online IDE</a></p>
+<p>强烈安利<a href="https://code.visualstudio.com/" target="_blank" rel="external">visual studio code</a>，一个轻量级的IDE，支持多种语言(java, python, c/c++)以及文本编辑器(vim)。</p>
+<p>下面以’Hello World’来入门，并说明VS code的使用步骤，还是有点麻烦的。。。</p>
+<ol>
+<li>MinGW</li>
+<li>GNU C++</li>
+</ol>
+<p>CPP中，一条语句可以跨越多行；还可在一行中包含多条语句，只要每条语句都以;结尾</p>
+<p>预处理器编译指令#include<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;&gt; // 标准头文件</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"..."</span> <span class="comment">// 用户自建的头文件</span></span></div></pre></td></tr></table></figure></p>
+<p>除非明确声明了不返回值，否则函数必须有return语句</p>
+<p>名称空间的概念：给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具给代码指定的名称，有助具降低命名冲突的风险。<br>例如std，用来调用获得ISO标准委员会批准的函数、流和工具。其声明方法是”using namespace”</p>
+<p>C++中的main函数必须返回int，没有void main这种定义方式，<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div></pre></td></tr></table></figure></p>
+<p>定义变量<br>VariableType VariableName;<br>VariableType VariableName = InitialValue;<br>变量类型向编译器指出了变量可存储的数据的性质，编译器将为变量预留必要的空间。</p>
+<p>最高有效位 most significant bit<br>最低有效位 least significant bit</p>
+<h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><p>C++14的<code>chunking separator</code>，即用但引号作为组块分隔符，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x = <span class="number">100'000</span>;</div></pre></td></tr></table></figure></p>
+<p>测试了一下，gcc-7.2支持这一新的标准，但是gcc-5.5还不支持，<strong>Check 一下</strong></p>
+<p>sizeof 用于确定变量的长度，是个运算符。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sizeof(int)</div></pre></td></tr></table></figure></p>
+<p>C++11中引入的列表初始化避免缩窄转换错误，造成执行中隐藏的bug<br>例如，如下的代码，就会有这样的警告，并且无法编译通过，但直接写就不会警告<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">int16__t</span> largeNumber = <span class="number">257</span>;</div><div class="line"><span class="keyword">int8_t</span> smallNumber = largeNumber;  <span class="comment">// No warning</span></div><div class="line"><span class="keyword">int8_t</span> smallNumberList = &#123;largeNumber&#125;; <span class="comment">// warning| narrowing conversion of</span></div></pre></td></tr></table></figure></p>
+<p>auto自动推断类型<br>如果使用的编译器支持C++11或更高的版本，可以不显式地指定变量的类型，即<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> flag = True; <span class="comment">// flag将被设定为bool</span></div></pre></td></tr></table></figure></p>
+<p>注意：使用auto时，必须对变量进行初始化。</p>
+<p>使用typeof替换变量类型<br>C_++允许将变量类型替换为认为方便的名称，例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> STRICTLY__POSITIVE_INTEGER;</div><div class="line">STRICTLY_POSITIVE_INTEGER num = <span class="number">1234</span>;</div></pre></td></tr></table></figure></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/01/20/cpp-notebook-1/cpp-notebook-1/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/01/19/adjustable-learning-rate-for-deep-learning-by-tensorflow/">
                             Adjustable learning rate for deep learning by TensorFlow
                         </a>
@@ -780,51 +850,6 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2017/12/24/Learning-HTML-2/">
-                            HTML notebook2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2017-12-24T21:47:18+08:00">
-	
-		    Dec 24, 2017
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <h2 id="HTML-notebook-2-Construction"><a href="#HTML-notebook-2-Construction" class="headerlink" title="HTML notebook 2: Construction"></a>HTML notebook 2: Construction</h2><p>在文档的head部分，通常要指明页面标题，提供为搜索引擎准备的关于页面本身的信息，加载样式表，以及加载JavaScript文件，不过处于性能考虑，多数时候在页面底部&lt;/body&gt;标签结束前加载JavaScript.</p>
-<p>body元素包住页面的内容，包含文本、图像、表单、音频、视频以及其他交互式内容。</p>
-<p>title元素是必需的，且不能包含人和格式、HTML、图像或指向其他页面的链接。title是搜索引擎抓取网站的基础，因此应该重视。</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2017/12/24/Learning-HTML-2/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -843,7 +868,7 @@ L^{t+1}_{R} = L^{t}_{R} \cdot R_{d}^{S_g/S_d},</script><p>其中$L_R$表示学�
             </a>
           </li>
         
-        <li class="pagination-number">page 5 of 7</li>
+        <li class="pagination-number">page 5 of 8</li>
     </ul>
 </div>
 

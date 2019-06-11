@@ -263,6 +263,118 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2019/06/11/use-spacemacs-under-org-mode-notebook-1/">
+                            利用Spacemacs的org-mode记笔记
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2019-06-11T16:34:21+08:00">
+	
+		    Jun 11, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>在师兄的安利下入坑了emacs，一个传说中学习曲线比vim还陡的编辑器 (好像Vim更陡一点)，目前的体会是<strong>小拇指疼</strong>。但是，上手以后就真的不想用其他的编辑器了 (小声BB我正在用markdown写博客)。集成了Vim使用习惯的spacemacs非常适合用来记笔记，如果熟悉latex语法的话，甚至能比手写效率高。写代码的话，还是gedit吧，除了缩进不好用，其实还行 (感觉要被码农口水淹死)。。。</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-190611/fig1.png?raw=true" height="300" width="500">
+</center>
+
+<p>这篇笔记简单记录一下spacemacs的安装流程 (Ubuntu 18.04和macOS)，基于org-mode的语法和导出为pdf的流程，以及添加spacemacs对中文的支持。最后一点算是重点内容，谷歌了很久找到了相对容易理解的方法。</p>
+<h2 id="spacemacs的安装-Ubuntu和macOS"><a href="#spacemacs的安装-Ubuntu和macOS" class="headerlink" title="spacemacs的安装 (Ubuntu和macOS)"></a>spacemacs的安装 (Ubuntu和macOS)</h2><p>针对spacemacs的安装，参考其github上的<a href="https://github.com/syl20bnr/spacemacs#default-installation" target="_blank" rel="external">README</a>即可，我会简述一下在Ubuntu 18.04 (Linux) 和macOS上的安装和配置方式，目前都是默认配置。</p>
+<h4 id="Ubuntu-18-04"><a href="#Ubuntu-18-04" class="headerlink" title="Ubuntu 18.04"></a>Ubuntu 18.04</h4><p>针对Ubuntu 18.04的spacemacs安装过程分为以下三步，即</p>
+<ol>
+<li><p>下载emacs (要求版本高于emacs 24，Ubuntu14.04貌似不支持，需要独立下载并编译)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo apt update</div><div class="line"><span class="meta">$</span> sudo apt install emacs</div><div class="line"><span class="meta">#</span> 查看一下版本信息</div><div class="line"><span class="meta">$</span> emacs --version</div><div class="line">GNU Emacs 25.2.2</div><div class="line">Copyright (C) 2017 Free Software Foundation, Inc.</div><div class="line">GNU Emacs comes with ABSOLUTELY NO WARRANTY.</div><div class="line">You may redistribute copies of GNU Emacs</div><div class="line">under the terms of the GNU General Public License.</div><div class="line">For more information about these matters, see the file named COPYING.</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置spacemacs<br>参考spacemacs的default installation，首先克隆其repository到/home/xxx(这里的xxx是用户名)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装相关插件<br>命令行输入emacs初始化spacemacs环境，完成安装。这一步具体安装什么还没太懂，后面慢慢研究一下。<strong>建议安装过程中选择默认的编辑工具为vim</strong>，个人感觉vim比较适合初学者，掌握几个基本命令就可以工作了。</p>
+</li>
+</ol>
+<h4 id="macOS-10-14"><a href="#macOS-10-14" class="headerlink" title="macOS 10.14"></a>macOS 10.14</h4><p>针对macOS，我的系统是10.14 Mojave。因为用户习惯，我把macOS的terminal当linux用，所以这里的安装步骤与Ubuntu类似，仅在第一步有区别。即安装emacs时，采用<code>homebrew</code>工具，具体的命令行写法如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> brew install emacs</div></pre></td></tr></table></figure></p>
+<p>除此之外，spacemacs官方也提供了安装教程，可以参考<a href="https://github.com/syl20bnr/spacemacs#macos" target="_blank" rel="external">这里</a>。</p>
+<h2 id="org-mode的基本语法"><a href="#org-mode的基本语法" class="headerlink" title="org-mode的基本语法"></a>org-mode的基本语法</h2><p>介绍完spacemacs的安装，便可以开始记笔记了，这里采用的是<a href="https://orgmode.org/" target="_blank" rel="external">org-mode</a>，org除了提供将文本导出为html和pdf格式外，还可以制作TODO list和日历等，非常适合日常的工作。对于工科孩子，笔记或者小论文的内容主要包含文字、公式、图表、链接和参考文献等，简单举例说明一下他们的语法，详细内容可以参考<a href="https://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html" target="_blank" rel="external">这篇博客</a>，翻译自org的官方文档，非常详细。我在<a href="https://github.com/myinxd/canal-notebooks/blob/master/org-template/org-template.org" target="_blank" rel="external">这里</a>提供了一个与本文内容相同的org笔记以及导出的pdf，感兴趣的话可以作为参考模板。效果如下图</p>
+<center>
+<img src="https://github.com/myinxd/canal-images/blob/master/images/blog-190611/fig2.png?raw=true" height="480" width="750">
+</center>
+
+<p><strong>注意：如果要导出pdf，需要预先安装tex套件，建议Texlive</strong>，在Ubuntu下可以之间用<code>sudo apt install texlive-2016</code>实现。</p>
+<h4 id="文档初始化"><a href="#文档初始化" class="headerlink" title="文档初始化"></a>文档初始化</h4><p>spacemacs通过文件的后缀名识别文档的类型，对于org-mode，文件的后缀需要为<code>.org</code>。可以采用如下方式初始化笔记并保存，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> emacs notebook.org</div></pre></td></tr></table></figure></p>
+<h4 id="添加笔记的标题和作者等信息"><a href="#添加笔记的标题和作者等信息" class="headerlink" title="添加笔记的标题和作者等信息"></a>添加笔记的标题和作者等信息</h4><p>通过在文档头部添加相关的称为”In-buffer settings”的关键字及相关的内容，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#+TITLE: A notebook of spacemacs</div><div class="line">#+AUTHOR: Pikachu</div><div class="line">#+DATE: 2016-06-11</div></pre></td></tr></table></figure></p>
+<h4 id="不同级别标题的基本语法"><a href="#不同级别标题的基本语法" class="headerlink" title="不同级别标题的基本语法"></a>不同级别标题的基本语法</h4><p>与markdown类似，org提供了由<code>*</code>引导的分级标题的语法规则，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">* 一级标题</div><div class="line">** 二级标题</div><div class="line">*** 三级标题</div><div class="line">普通文字</div></pre></td></tr></table></figure></p>
+<p>一旦该行设定为标题，spacemacs会对该标题所在区域进行自动折叠，通过<code>TAB</code>键可以实现段落的展开和折叠。</p>
+<h4 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h4><p>同样的，与markdown类似，org支持添加表格，常用的表格样例如下，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">| Name  | Phone | Age |</div><div class="line">|------ +-------+-----|</div><div class="line">| Alice | 12345 | 20  |</div><div class="line">| Bob   | 23456 | 21  |</div></pre></td></tr></table></figure></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Phone</th>
+<th style="text-align:center">Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Alice</td>
+<td style="text-align:center">12345</td>
+<td style="text-align:center">20</td>
+</tr>
+<tr>
+<td style="text-align:center">Bob</td>
+<td style="text-align:center">23456</td>
+<td style="text-align:center">21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>在表格的填写过程中，有几个快捷键非常好用，例如<code>TAB</code>键用于对齐和增加新的行，其他快捷键建议参考<a href="https://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html#sec-3" target="_blank" rel="external">这里</a>。</p>
+<h4 id="公式和代码"><a href="#公式和代码" class="headerlink" title="公式和代码"></a>公式和代码</h4><p>在org-mode下插入公式等价于在latex文档中的操作，直接以equation环境或者<code>$</code>环境即可，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">\begin&#123;equation&#125;</div><div class="line">	x = a + b</div><div class="line">\end&#123;equation&#125;</div></pre></td></tr></table></figure></p>
+<script type="math/tex; mode=display">
+\begin{equation}
+x = a + b
+\end{equation}</script><p>插入代码则采用由<code>#+</code>引导的block，即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#+BEGIN_SRC &lt;language&gt;</div><div class="line">code body</div><div class="line">#+END_SRC</div><div class="line"></div><div class="line"># For example</div><div class="line">#+BEGIN_SRC python</div><div class="line">print(&quot;Hello world!&quot;)</div><div class="line">#+END_SRC</div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">"Hello world!"</span>)</div></pre></td></tr></table></figure>
+<h4 id="超链接和脚注"><a href="#超链接和脚注" class="headerlink" title="超链接和脚注"></a>超链接和脚注</h4><p>org对于超链接的支持要优于markdown，能够支持网址、本地文件、文档内部超链接等功能，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 网址</div><div class="line">[[&lt;网址&gt;][&lt;描述&gt;]]</div><div class="line"># 本地文件</div><div class="line">[[./file.xxx]]</div><div class="line"># 文档内部超链接</div><div class="line">[[超链接和脚注]]</div></pre></td></tr></table></figure></p>
+<p>而脚注的添加方式有两种，即org-mode和基于latex语法的方式，二者在生成的pdf中效果相同。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># org-mode</div><div class="line">引用方式： 这是一个脚注[fn:1]，它的位置在本页下方。</div><div class="line">脚注格式: [fn:1] 这是一个脚注。</div><div class="line"></div><div class="line"># latex格式</div><div class="line">这是一个脚注\footnote&#123;这是一个脚注&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="导出为pdf"><a href="#导出为pdf" class="headerlink" title="导出为pdf"></a>导出为pdf</h4><p>最后，需要将记录的文档导出为pdf文件，导出方法是<code>Ctrl+c-Ctrl+e-l-p</code>。</p>
+<h2 id="添加中文支持"><a href="#添加中文支持" class="headerlink" title="添加中文支持"></a>添加中文支持</h2><p>受到系统语言设置的限制，spacemacs对于中文的支持存在一些小bug。当系统的语言设定为中文时，直接借助已经安装的拼音输入法便可以实现中文的输入。但是当系统语言为英文时，需要添加对中文的支持。</p>
+<h4 id="系统语言为英文时如何在spacemacs添加对中文输入法的支持"><a href="#系统语言为英文时如何在spacemacs添加对中文输入法的支持" class="headerlink" title="系统语言为英文时如何在spacemacs添加对中文输入法的支持"></a>系统语言为英文时如何在spacemacs添加对中文输入法的支持</h4><p>笔者的系统是Ubuntu18.04，系统语言为英文，安装了fcitx中文中文输入法，在spacemacs中添加中文支持的一种简单方法是在初始化spacemacs时添加如下语句，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LC_CTYPE=zh_CN.UTF-8 emacs</div></pre></td></tr></table></figure></p>
+<p>其中<code>LC_CTYPE</code>表示本地字符和字符串的编码格式，这里强制设定为中文UTF-8。如果笔记的内容主要为中文，可以在shell的配置文件中固定这一命令，即<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias emacszh="LC_CTYPE=zh_CN.UTF-8 emacs"</div></pre></td></tr></table></figure></p>
+<h4 id="解决导出的PDF中文不显示的问题"><a href="#解决导出的PDF中文不显示的问题" class="headerlink" title="解决导出的PDF中文不显示的问题"></a>解决导出的PDF中文不显示的问题</h4><p>在解决spacemacs对中文输入法的支持后，还需要将默认的latex编译命令由<code>pdflatex</code>修改为<code>xelatex</code>，因为前者不支持中文。参考emacs-china中的问题，可以通过如下方式修改编译指令，即在文档头部增加，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#+LATEX_HEADER: \usepackage&#123;ctex&#125;</div><div class="line">#+LATEX_COMPILIER: xelatex</div></pre></td></tr></table></figure></p>
+<p>当然，针对这一问题的解决方案还挺多的，多数涉及到LISP的语法和修改spacemacs的配置文件，还是挺麻烦的。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>[1] <a href="http://spacemacs.org/#" target="_blank" rel="external">spacemacs</a><br>[2] <a href="https://github.com/syl20bnr/spacemacs#default-installation" target="_blank" rel="external">spacemacs default installation</a><br>[3] <a href="https://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html" target="_blank" rel="external">Org-mode 简明手册</a><br>[4] <a href="https://emacs-china.org/t/topic/4465" target="_blank" rel="external">Org-mode 添加中文支持</a><br>[5] <a href="https://emacs-china.org/t/topic/2540" target="_blank" rel="external">Orgmode导出PDF显示不了中文</a></p>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2019/06/11/use-spacemacs-under-org-mode-notebook-1/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2019/06/10/change-file-modification-time-with-python/">
                             利用Python修改文件的最后访问和修改时间
                         </a>
@@ -930,56 +1042,6 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/">
-                            Configure permalinks in wordpress with nginx and avoid 404
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-25T15:18:36+08:00">
-	
-		    Mar 25, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>简单记录一下wordpress配置静态链接后，页面无法重定向，网页404的解决方法。可参考的posts特别多，我罗列了一些在references里。我会从三个方面来说这个问题，(1) wordpress静态链接的配置； (2) 导致404的原因及解决方法； (3) 自定义链接插件</p>
-<h4 id="wordpress静态链接的配置"><a href="#wordpress静态链接的配置" class="headerlink" title="wordpress静态链接的配置"></a>wordpress静态链接的配置</h4><p>Wordpress可供配置的静态链接很多</p>
-<h4 id="自定义链接插件"><a href="#自定义链接插件" class="headerlink" title="自定义链接插件"></a>自定义链接插件</h4><p>custom permalinks plugin</p>
-<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ol>
-<li><a href="https://blog.csdn.net/hanshileiai/article/details/45580457" target="_blank" rel="external">ubuntu 下 wordpress 设置 Permalink 为 自定义结构后出现404页面 nginx - 404 not found page for permalinks</a></li>
-<li><a href="https://wordpress.org/plugins/custom-permalinks/" target="_blank" rel="external">Custom Permalinks plugin</a></li>
-<li><a href="http://www.mazhixian.me/2018/01/23/multiple-websites-with-nginx/">multiple websites with nginx</a></li>
-</ol>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -991,7 +1053,7 @@ D(x) = \frac{P_\mathrm{data}(x)}{P_\mathrm{data}(x)+P_{G}(x)}
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 7</li>
+        <li class="pagination-number">page 1 of 8</li>
     </ul>
 </div>
 
