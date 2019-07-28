@@ -263,6 +263,60 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/26/range-based-for-loop-by-cpp/">
+                            Range based for loop by cpp
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-26T22:03:19+08:00">
+	
+		    Mar 26, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>最近落了好多没写了，感觉已经废了。继续C++的笔记，关于<em>range-based for loop</em>的使用，一个C++11的标准。首先我会给出样例，然后针对gcc的报错，说明Ubuntu16.04-LTS下gcc的更新方法。</p>
+<h4 id="range-based-for-loop"><a href="#range-based-for-loop" class="headerlink" title="range-based for loop"></a>range-based for loop</h4><p>C++11标准中增加了一种新的for循环的方式，称为range-based for loop，即基于范围的for循环，这个类似于python中直接进行列表索引的for循环。请看下面的样例，分别是C++和python的for循环写法，</p>
+<h5 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> numArray[<span class="number">5</span>] = &#123;<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>&#125;;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> num : numArray)</div><div class="line">	    <span class="built_in">cout</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="python"><a href="#python" class="headerlink" title="python"></a>python</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">numArray = [<span class="number">0</span>, <span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numArray:</div><div class="line">    print(num)</div></pre></td></tr></table></figure>
+<p>二者的输出结果均为如下形式，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">11</div><div class="line">22</div><div class="line">33</div><div class="line">44</div></pre></td></tr></table></figure></p>
+<p>显然，相对于C99的for循环，基于范围的这种for循环能够减少多行代码量。</p>
+<h4 id="g-update"><a href="#g-update" class="headerlink" title="g++ update"></a>g++ update</h4><p>为了应用C++11/14的新标准，<code>gcc/g++</code>也需要做相应的更新，由于我还在Ubuntu-16.04 LTS的坑里，gcc的最高版本为5.4。如果编译时看到如下的警告，则需要对gcc进行更新。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">warning: range-based ‘<span class="keyword">for</span>’ loops only available with -std=c++11 or -std=gnu++11</div></pre></td></tr></table></figure></p>
+<p>更新方法如下，<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r/<span class="built_in">test</span></div><div class="line">sudo apt update</div><div class="line">sudo apt install gcc-7 g++-7</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.linuxidc.com/Linux/2016-11/136840.htm" target="_blank" rel="external">Ubuntu升级GCC版本</a></li>
+<li>Sams Teach Yourself C++ in One Hour a Day</li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/26/range-based-for-loop-by-cpp/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/25/configure-permalinks-in-wordpress-with-nginx-and-avoid-404/">
                             Configure permalinks in wordpress with nginx and avoid 404
                         </a>
@@ -924,55 +978,6 @@ L_P = \frac{1}{2}{\left\| \mathbf{w} \right \|} - \sum^{N}_{i=1}{\lambda_i\{y_i(
                     
                         <p>
                             <a href="/2018/03/04/a-numpy-matrix-copy-problem/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/03/03/deepcopy-of-list-in-python/">
-                            Python 列表嵌套复制
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-03-03T12:42:16+08:00">
-	
-		    Mar 03, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
-<p>则<code>y</code>和<code>x</code>变为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">2</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
-<p>list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决方法是用copy库中的<code>deepcopy</code>方法，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</div><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
-<p>此时的<code>x</code>和<code>y</code>为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://www.cnblogs.com/pyramid1001/p/5844905.html" target="_blank" rel="external">Python——列表深浅拷贝</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/03/deepcopy-of-list-in-python/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

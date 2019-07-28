@@ -262,6 +262,55 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title" itemprop="headline">
                     
+                        <a class="link-unstyled" href="/2018/03/03/deepcopy-of-list-in-python/">
+                            Python 列表嵌套复制
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time itemprop="datePublished" datetime="2018-03-03T12:42:16+08:00">
+	
+		    Mar 03, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content" itemprop="articleBody">
+                    <p>最近写autoencoder的时候，遇到嵌套列表复制和reverse的问题。虽然list提供了copy方法，但涉及嵌套复制时就会出错。例如，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>则<code>y</code>和<code>x</code>变为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">2</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<p>list.copy()对最外层的列表实现了复制，但内部的列表并没有。解决方法是用copy库中的<code>deepcopy</code>方法，如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</div><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = x.copy()</div><div class="line">y.reverse()</div><div class="line">y[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>此时的<code>x</code>和<code>y</code>为，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">1</span>, <span class="number">2</span>], <span class="number">3</span>]</div><div class="line">y = [<span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>]]</div></pre></td></tr></table></figure></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://www.cnblogs.com/pyramid1001/p/5844905.html" target="_blank" rel="external">Python——列表深浅拷贝</a></li>
+</ul>
+
+                    
+                        
+
+                    
+                    
+                        <p>
+                            <a href="/2018/03/03/deepcopy-of-list-in-python/#post-footer" class="postShorten-excerpt_link link">
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title" itemprop="headline">
+                    
                         <a class="link-unstyled" href="/2018/03/01/ubuntu-16-10-no-network-problem/">
                             Ubuntu 16.10 无法联网的问题
                         </a>
@@ -768,55 +817,6 @@
                     
                         <p>
                             <a href="/2018/02/04/train-selected-variables-in-tensorflow-graph/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title" itemprop="headline">
-                    
-                        <a class="link-unstyled" href="/2018/01/31/transpose-convolution-by-tensorflow/">
-                            Transpose convolution by tensorflow--odd kernel shape
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time itemprop="datePublished" datetime="2018-01-31T10:07:44+08:00">
-	
-		    Jan 31, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content" itemprop="articleBody">
-                    <p>The auto-encoder has been applied widely for unsupervised learning, which is usually composed of two symmetric parts namely encoder and decoder. It is easy to realize an autoencoder only with fully-connected layers, i.e., DNN, but which is not that clear in CNN. </p>
-<p>For convolution case, the layer in the decoder maintains the shape and kernel configurations for its symmetric layer in the encoder, thus the deconvolution, or <a href="deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">transpose convolution</a> operation will be used instead of the convolution operation.</p>
-<p>TensorFlow provides a method namedly <code>conv2d_transpose</code> in both <code>tf.nn</code> module and <code>tf.contrib.layers</code> module, which are very convenient. However, for <code>tf.contrib.layers.conv2d_transpose</code>, if the output shape of the transpose convolutution is odd when convolution stride setting as 2, it cannot control the output shape to desired one. </p>
-<p>For example, denote a [None, 9, 9, 1] 4D-tensor $X$, convolved by a kernel of size [3, 3] with a 2 step stride and halp padding (SAME), the output 4D tensor $y$ will be [None, 5, 5, 1]. However, the transpose convolution from y by the same parameters setting generates $x’$ into a [None, 10, 10, 1] tensor, not [None, 9, 9, 1].  </p>
-<p>To handle this, I provide a naive but effective way, see as follows,</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.layers <span class="keyword">as</span> layers</div><div class="line"></div><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>])</div><div class="line">y = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">1</span>])</div><div class="line">kernel_size = [<span class="number">3</span>, <span class="number">3</span>]</div><div class="line">stride = <span class="number">2</span></div><div class="line"></div><div class="line">x_r = layers.conv2d_transpose(</div><div class="line">        inputs=x,</div><div class="line">        num_outputs=x.get_shape().as_list()[<span class="number">1</span>],</div><div class="line">        kernel_size=kenerl_size,</div><div class="line">        padding=<span class="string">'SAME'</span>,</div><div class="line">        stride=stride,</div><div class="line">        scope=<span class="string">'conv2d_transpose'</span></div><div class="line">        )</div><div class="line"></div><div class="line">x_r = x_r[:, <span class="number">0</span>:<span class="number">-1</span>, <span class="number">0</span>:<span class="number">-1</span>, :]</div></pre></td></tr></table></figure>
-<p>Above solution played well in my code, though ths crop may introduce bias..</p>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/01/31/transpose-convolution-by-tensorflow/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>
